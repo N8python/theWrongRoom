@@ -59,7 +59,15 @@ async function sendMessage(message) {
 function addMessageToChat(message, isUser = true) {
     const chatContainer = document.getElementById('chat-container');
     const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+    
+    if (isUser === 'system') {
+        messageDiv.className = 'message system-message';
+    } else {
+        messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+        // Remove <LEAVES> tag from displayed message if present
+        message = message.replace('<LEAVES>', '');
+    }
+    
     messageDiv.textContent = message;
     chatContainer.appendChild(messageDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -86,6 +94,18 @@ document.addEventListener('DOMContentLoaded', async() => {
         // Get and add AI response
         const response = await sendMessage(message);
         addMessageToChat(response, false);
+
+        // Check if the response contains <LEAVES>
+        if (response.includes('<LEAVES>')) {
+            // Add a system message indicating the subject left
+            addMessageToChat('Subject has left the room. Initializing new subject...', false);
+            
+            // Wait a moment before starting new session
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Start a new session
+            await initializeSession();
+        }
 
         // Re-enable input and button
         messageInput.disabled = false;
