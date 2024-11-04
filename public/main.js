@@ -10,6 +10,30 @@ let successCount = 0;
 let totalCount = 0;
 let currentCharacterSprite = null;
 let animationFrameId = null;
+let isAnimating = false;
+
+function animate(currentTime) {
+    const displayCanvas = document.getElementById('subject-sprite');
+    const ctx = displayCanvas.getContext('2d');
+    
+    ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+    
+    if (currentCharacterSprite) {
+        currentCharacterSprite.update(currentTime);
+        currentCharacterSprite.draw(ctx);
+        
+        if (isAnimating) {
+            // Handle any active animations here
+            if (currentCharacterSprite.y > 0 && currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.LEFT) {
+                currentCharacterSprite.y -= 0.5;
+            } else if (currentCharacterSprite.y < displayCanvas.height && currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.DOWN) {
+                currentCharacterSprite.y += 0.5;
+            }
+        }
+    }
+    
+    animationFrameId = requestAnimationFrame(animate);
+}
 
 async function initializeSession() {
     try {
@@ -32,28 +56,13 @@ async function initializeSession() {
         currentCharacterSprite.setDirection(spriteSheet.FACING.LEFT);
         currentCharacterSprite.y = 32; // Start lower
 
-        // Animation function
-        function animate(currentTime) {
-            ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
-            currentCharacterSprite.update(currentTime);
-            currentCharacterSprite.draw(ctx);
-
-            // Move character up until they reach y=0
-            if (currentCharacterSprite.y > 0) {
-                currentCharacterSprite.y -= 0.5;
-                animationFrameId = requestAnimationFrame(animate);
-            } else {
-                // Stop at idle frame when reaching destination
-                currentCharacterSprite.walkFrame = 0;
-                currentCharacterSprite.draw(ctx);
-            }
+        // Start continuous animation if not already running
+        if (!animationFrameId) {
+            animationFrameId = requestAnimationFrame(animate);
         }
-
-        // Start the animation
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-        }
-        animationFrameId = requestAnimationFrame(animate);
+        
+        // Set flag to animate entrance
+        isAnimating = true;
 
         document.getElementById('subject-name').textContent = name;
         document.getElementById('subject-sex').textContent = sex[0].toUpperCase() + sex.slice(1);
@@ -287,26 +296,17 @@ document.addEventListener('DOMContentLoaded', async() => {
             currentCharacterSprite.setDirection(currentCharacterSprite.spriteSheet.FACING.DOWN);
             currentCharacterSprite.y = 0;
 
-            function animateExit(currentTime) {
-                ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
-                currentCharacterSprite.update(currentTime);
-                currentCharacterSprite.draw(ctx);
-
-                // Move character down until they leave view
-                if (currentCharacterSprite.y < displayCanvas.height) {
-                    currentCharacterSprite.y += 0.5;
-                    animationFrameId = requestAnimationFrame(animateExit);
-                } else {
-                    // Add system message after character has left
+            // Set direction and start exit animation
+            currentCharacterSprite.setDirection(currentCharacterSprite.spriteSheet.FACING.DOWN);
+            isAnimating = true;
+            
+            // Check for animation completion in a separate interval
+            const checkInterval = setInterval(() => {
+                if (currentCharacterSprite.y >= displayCanvas.height) {
+                    clearInterval(checkInterval);
                     addMessageToChat('Subject has left the room. Click "Next Subject" to continue...', 'system');
                 }
-            }
-
-            // Start exit animation
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-            }
-            animationFrameId = requestAnimationFrame(animateExit);
+            }, 100);
 
             // Show the guess interface
             document.getElementById('guess-container').style.display = 'block';
