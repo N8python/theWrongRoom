@@ -1,5 +1,6 @@
 import { faker } from 'https://esm.sh/@faker-js/faker';
 import { generateRandomSprite, initializeSpriteAssets } from './sprite-generator.js';
+import { SpriteSheet, CharacterSprite } from './sprite-animation.js';
 const resistances = ['NONE', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
 const emotions = ['angry', 'defensive', 'in denial', 'fearful', 'nervous', 'reluctant', 'suspicious', 'uncooperative', 'pleading', 'confused', 'hostile', 'evasive', 'calm', 'cooperative', 'confident'];
 
@@ -7,6 +8,8 @@ let currentSessionId = null;
 let currentCodeWord = null;
 let successCount = 0;
 let totalCount = 0;
+let currentCharacterSprite = null;
+let animationFrameId = null;
 
 async function initializeSession() {
     try {
@@ -16,13 +19,41 @@ async function initializeSession() {
         const resistance = resistances[Math.floor(Math.random() * resistances.length)];
 
         // Update the subject info in the UI
-        // Generate and set sprite with sex parameter
-        const spriteDataUrl = await generateRandomSprite(sex);
-        const spriteContainer = document.getElementById('subject-sprite');
-        spriteContainer.style.backgroundImage = `url(${spriteDataUrl})`;
-        spriteContainer.style.backgroundSize = 'contain';
-        spriteContainer.style.backgroundRepeat = 'no-repeat';
-        spriteContainer.style.backgroundPosition = 'center';
+        // Generate sprite and start entrance animation
+        const spriteCanvas = await generateRandomSprite(sex);
+        const spriteSheet = new SpriteSheet(spriteCanvas);
+        currentCharacterSprite = new CharacterSprite(spriteSheet, 24, 32);
+        
+        // Set up the sprite canvas
+        const displayCanvas = document.getElementById('subject-sprite');
+        const ctx = displayCanvas.getContext('2d');
+        
+        // Start with character walking up
+        currentCharacterSprite.setDirection(spriteSheet.FACING.UP);
+        currentCharacterSprite.y = 32; // Start lower
+        
+        // Animation function
+        function animate(currentTime) {
+            ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+            currentCharacterSprite.update(currentTime);
+            currentCharacterSprite.draw(ctx);
+            
+            // Move character up until they reach y=0
+            if (currentCharacterSprite.y > 0) {
+                currentCharacterSprite.y -= 0.5;
+                animationFrameId = requestAnimationFrame(animate);
+            } else {
+                // Stop at idle frame when reaching destination
+                currentCharacterSprite.walkFrame = 0;
+                currentCharacterSprite.draw(ctx);
+            }
+        }
+        
+        // Start the animation
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        animationFrameId = requestAnimationFrame(animate);
 
         document.getElementById('subject-name').textContent = name;
         document.getElementById('subject-sex').textContent = sex[0].toUpperCase() + sex.slice(1);
@@ -248,8 +279,34 @@ document.addEventListener('DOMContentLoaded', async() => {
             // Replace leaves
             editLastMessage((msg) => msg.replace('<LEAVES>', ''));
 
-            // Add a system message indicating the subject left
-            addMessageToChat('Subject has left the room. Click "Next Subject" to continue...', 'system');
+            // Animate the subject leaving
+            const displayCanvas = document.getElementById('subject-sprite');
+            const ctx = displayCanvas.getContext('2d');
+            
+            // Set character to walk down/away
+            currentCharacterSprite.setDirection(currentCharacterSprite.spriteSheet.FACING.DOWN);
+            currentCharacterSprite.y = 0;
+            
+            function animateExit(currentTime) {
+                ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+                currentCharacterSprite.update(currentTime);
+                currentCharacterSprite.draw(ctx);
+                
+                // Move character down until they leave view
+                if (currentCharacterSprite.y < displayCanvas.height) {
+                    currentCharacterSprite.y += 0.5;
+                    animationFrameId = requestAnimationFrame(animateExit);
+                } else {
+                    // Add system message after character has left
+                    addMessageToChat('Subject has left the room. Click "Next Subject" to continue...', 'system');
+                }
+            }
+            
+            // Start exit animation
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            animationFrameId = requestAnimationFrame(animateExit);
 
             // Show the guess interface
             document.getElementById('guess-container').style.display = 'block';

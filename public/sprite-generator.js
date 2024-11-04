@@ -73,5 +73,5 @@ export async function generateRandomSprite(sex) {
         }
     }
 
-    return canvas.toDataURL();
+    return canvas;
 }
