@@ -77,73 +77,45 @@
             width: 100%;
         }
 
-        .speech-bubble {
-            position: absolute;
-            background: #fff;
-            border-radius: 10px;
+        #message-history {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            width: 400px;
+            max-height: 60vh;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 5px;
             padding: 15px;
-            max-width: 300px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            z-index: 3;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            font-size: 14px;
-            line-height: 1.4;
+            overflow-y: auto;
+            z-index: 100;
+            color: white;
         }
 
-        .speech-bubble:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border: 10px solid transparent;
-            border-top-color: #fff;
-            border-bottom: 0;
-            margin-left: -10px;
+        .message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            word-wrap: break-word;
         }
 
-        .speech-bubble.visible {
-            opacity: 1;
+        .message.user {
+            background: rgba(0, 123, 255, 0.3);
+            margin-left: 20px;
+        }
+
+        .message.ai {
+            background: rgba(255, 255, 255, 0.1);
+            margin-right: 20px;
         }
 
         #input-container {
             position: fixed;
             bottom: 20px;
             left: 20px;
-            right: 20px;
+            width: 400px;
             display: flex;
             gap: 10px;
             z-index: 100;
-        }
-
-        .speech-bubble.user {
-            background: #e3f2fd;
-            bottom: 80px;
-            left: 20px;
-        }
-
-        .speech-bubble.user:after {
-            border-top-color: #e3f2fd;
-        }
-
-        .speech-bubble.ai {
-            background: #f5f5f5;
-            position: absolute;
-            top: 40%;
-            left: 35%;
-            transform: translate(-50%, -50%);
-        }
-
-        .speech-bubble.ai:after {
-            border-top-color: #f5f5f5;
-            top: 50%;
-            left: 100%;
-            border: 10px solid transparent;
-            border-left: 10px solid #f5f5f5;
-            border-right: 0;
-            margin-top: -10px;
         }
         
         #message-input {
@@ -193,7 +165,7 @@
             <p><strong>Sex:</strong> <span id="subject-sex"></span></p>
             <p><strong>Profession:</strong> <span id="subject-profession"></span></p>
         </div>
-        <div id="speech-bubbles"></div>
+        <div id="message-history"></div>
         <div id="input-container">
             <input type="text" id="message-input" placeholder="Type your message...">
             <button id="send-button">Send</button>
