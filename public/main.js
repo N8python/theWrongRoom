@@ -196,7 +196,8 @@ document.addEventListener('DOMContentLoaded', async() => {
         messageInput.disabled = false;
         sendButton.disabled = false;
         
-        // Start a new session
+        // Reset subject left flag and start new session
+        subjectHasLeft = false;
         await initializeSession();
     });
 
@@ -237,6 +238,9 @@ document.addEventListener('DOMContentLoaded', async() => {
             document.getElementById('guess-container').style.display = 'block';
             document.getElementById('code-word-guess').focus();
             
+            // Mark that the subject has left
+            subjectHasLeft = true;
+            
 
             // Delete the current session
             if (currentSessionId) {
@@ -257,8 +261,10 @@ document.addEventListener('DOMContentLoaded', async() => {
     }
 
     sendButton.addEventListener('click', handleSendMessage);
+    let subjectHasLeft = false;
+    
     messageInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !subjectHasLeft) {
             handleSendMessage();
         }
     });
