@@ -7,8 +7,14 @@ let currentSessionId = null;
 async function initializeSession() {
     try {
         const name = faker.person.fullName();
+        const sex = faker.person.sex();
         const profession = faker.person.jobTitle();
         const resistance = resistances[Math.floor(Math.random() * resistances.length)];
+
+        // Update the subject info in the UI
+        document.getElementById('subject-name').textContent = name;
+        document.getElementById('subject-sex').textContent = sex;
+        document.getElementById('subject-profession').textContent = profession;
         const codeWord = faker.word.noun();
         const emotion = emotions[Math.floor(Math.random() * emotions.length)];
 

@@ -59,11 +59,31 @@
         button:disabled {
             background-color: #ccc;
         }
+
+        #subject-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+        }
+
+        #subject-info h2 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: #495057;
+        }
     </style>
 </head>
 
 <body>
     <h1>Chat with AI</h1>
+    <div id="subject-info">
+        <h2>Subject Information</h2>
+        <p><strong>Name:</strong> <span id="subject-name"></span></p>
+        <p><strong>Sex:</strong> <span id="subject-sex"></span></p>
+        <p><strong>Profession:</strong> <span id="subject-profession"></span></p>
+    </div>
     <div id="chat-container"></div>
     <div id="input-container">
         <input type="text" id="message-input" placeholder="Type your message...">
