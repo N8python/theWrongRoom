@@ -47,6 +47,7 @@ class AnimationController {
         this.isAnimating = false;
         this.type = 'idle';
     }
+}
 
 class Renderer {
     constructor() {
