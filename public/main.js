@@ -23,21 +23,21 @@ async function initializeSession() {
         const spriteCanvas = await generateRandomSprite(sex);
         const spriteSheet = new SpriteSheet(spriteCanvas);
         currentCharacterSprite = new CharacterSprite(spriteSheet, 24, 32);
-        
+
         // Set up the sprite canvas
         const displayCanvas = document.getElementById('subject-sprite');
         const ctx = displayCanvas.getContext('2d');
-        
+
         // Start with character walking up
-        currentCharacterSprite.setDirection(spriteSheet.FACING.UP);
+        currentCharacterSprite.setDirection(spriteSheet.FACING.LEFT);
         currentCharacterSprite.y = 32; // Start lower
-        
+
         // Animation function
         function animate(currentTime) {
             ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
             currentCharacterSprite.update(currentTime);
             currentCharacterSprite.draw(ctx);
-            
+
             // Move character up until they reach y=0
             if (currentCharacterSprite.y > 0) {
                 currentCharacterSprite.y -= 0.5;
@@ -48,7 +48,7 @@ async function initializeSession() {
                 currentCharacterSprite.draw(ctx);
             }
         }
-        
+
         // Start the animation
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);
@@ -282,16 +282,16 @@ document.addEventListener('DOMContentLoaded', async() => {
             // Animate the subject leaving
             const displayCanvas = document.getElementById('subject-sprite');
             const ctx = displayCanvas.getContext('2d');
-            
+
             // Set character to walk down/away
             currentCharacterSprite.setDirection(currentCharacterSprite.spriteSheet.FACING.DOWN);
             currentCharacterSprite.y = 0;
-            
+
             function animateExit(currentTime) {
                 ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
                 currentCharacterSprite.update(currentTime);
                 currentCharacterSprite.draw(ctx);
-                
+
                 // Move character down until they leave view
                 if (currentCharacterSprite.y < displayCanvas.height) {
                     currentCharacterSprite.y += 0.5;
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                     addMessageToChat('Subject has left the room. Click "Next Subject" to continue...', 'system');
                 }
             }
-            
+
             // Start exit animation
             if (animationFrameId) {
                 cancelAnimationFrame(animationFrameId);
