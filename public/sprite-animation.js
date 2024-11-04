@@ -17,26 +17,25 @@ export class SpriteSheet {
             UP: 2,
             RIGHT: 3
         };
+        this.scale = 14;
     }
 
     drawFrame(ctx, frameX, frameY, canvasX, canvasY) {
         // Draw shadow first
         ctx.save();
-        ctx.translate(canvasX + this.frameWidth * 7, canvasY + this.frameHeight * 14);
+        ctx.translate(canvasX + this.frameWidth * (this.scale / 2) + this.scale * this.frameHeight * (1 / 5) + this.frameHeight * 4 / 5, canvasY + this.frameHeight * (this.scale * 4 / 5));
         ctx.transform(1, 0, -0.5, 0.2, 0, 0); // Skew and flatten
-        ctx.globalAlpha = 0.2; // Make shadow semi-transparent
-        
+        ctx.globalAlpha = 1.0; // Make shadow semi-transparent
+
         // Draw the shadow (skewed sprite)
         ctx.drawImage(
             this.image,
             frameX * this.frameWidth,
             frameY * this.frameHeight,
             this.frameWidth,
-            this.frameHeight,
-            0,
-            0,
-            this.frameWidth * 14,
-            this.frameHeight * 14
+            this.frameHeight, 0, 0,
+            this.frameWidth * this.scale,
+            this.frameHeight * this.scale
         );
         ctx.restore();
 
@@ -49,8 +48,8 @@ export class SpriteSheet {
             this.frameHeight,
             canvasX,
             canvasY,
-            this.frameWidth * 14,
-            this.frameHeight * 14
+            this.frameWidth * this.scale,
+            this.frameHeight * this.scale
         );
     }
 
