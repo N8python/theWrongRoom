@@ -16,6 +16,7 @@ const successProbabilities = {
     "HIGH": 0.15,
     "CRITICAL": 0.05
 };
+const openers = ['formal', 'casual', 'aggressive', 'friendly', 'suspicious', 'confused', 'direct', 'indirect', 'polite', 'rude', 'professional', 'personal', 'intimidating', 'sympathetic', 'robotic', 'apathetic'];
 
 async function generateScript() {
     const name = faker.person.fullName();
@@ -45,6 +46,7 @@ CRITICAL - NEAR IMPOSSIBLE FOR DIVULGENCE TO OCCUR
 In this dialogue, the codeword ${divulged ? `IS` : `IS NOT`} divulged.
 
 The suspect is ${suspectEmotion}.
+The investigator should use a ${openers[Math.floor(Math.random() * openers.length)]} opening line to start the conversation.
 
 The dialogue should have the following format exactly, with no additional annotations or adornment:
 
@@ -92,7 +94,7 @@ async function generateBatch(batchSize) {
 
 async function main() {
     const BATCH_SIZE = 10;
-    const NUM_BATCHES = 2;
+    const NUM_BATCHES = 700;
     
     if (!fs.existsSync('output')) {
         fs.mkdirSync('output');
