@@ -15,24 +15,42 @@ let animationType = 'idle';
 
 function animate(currentTime) {
     const displayCanvas = document.getElementById('subject-sprite');
-    const subjectContainer = document.getElementById('subject-info');
     const backgroundCanvas = document.getElementById('background-interrogation');
-    const widthOfContainer = subjectContainer.clientWidth - 32;
-    displayCanvas.width = widthOfContainer;
-    displayCanvas.height = 96 * 2;
+    
+    // Make canvas fill the screen while maintaining aspect ratio
+    const scale = Math.min(window.innerWidth / backgroundCanvas.width, window.innerHeight / backgroundCanvas.height);
+    displayCanvas.width = window.innerWidth;
+    displayCanvas.height = window.innerHeight;
     const ctx = displayCanvas.getContext('2d');
     ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
-    ctx.drawImage(backgroundCanvas, 0, 0, displayCanvas.width, displayCanvas.height);
+    // Draw background scaled to fill screen
+    ctx.drawImage(
+        backgroundCanvas, 
+        0, 0, backgroundCanvas.width, backgroundCanvas.height,
+        0, 0, displayCanvas.width, displayCanvas.height
+    );
 
     ctx.enableImageSmoothing = false;
     ctx.imageSmoothingEnabled = false;
     if (currentCharacterSprite) {
+        // Scale and center the character sprite
+        ctx.save();
+        const spriteScale = (displayCanvas.height * 0.2) / 96; // Character takes up 20% of screen height
+        ctx.scale(spriteScale, spriteScale);
+        
+        // Center horizontally, place near bottom vertically
+        const scaledCharX = currentCharacterSprite.x * spriteScale;
+        const scaledCharY = currentCharacterSprite.y * spriteScale;
         currentCharacterSprite.draw(ctx);
+        ctx.restore();
 
         if (isAnimating) {
             currentCharacterSprite.update(currentTime);
             // Handle any active animations here
-            if (currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.RIGHT && (animationType === 'exit' ? currentCharacterSprite.x < Infinity : currentCharacterSprite.x < displayCanvas.width / 2 - 48)) {
+            if (currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.RIGHT && 
+                (animationType === 'exit' ? 
+                    currentCharacterSprite.x < displayCanvas.width / spriteScale : 
+                    currentCharacterSprite.x < (displayCanvas.width / spriteScale) / 2 - 48)) {
                 currentCharacterSprite.x += 1;
             } else {
                 isAnimating = false;
@@ -208,7 +226,6 @@ document.addEventListener('DOMContentLoaded', async() => {
     // Hide loading screen and show game interface
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('subject-info').style.display = 'block';
-    document.getElementById('subject-canvas').style.display = 'block';
 
 
     // Then initialize the game session
