@@ -254,9 +254,21 @@ document.addEventListener('DOMContentLoaded', async() => {
 
     const guessInput = document.getElementById('code-word-guess');
     const submitGuessButton = document.getElementById('submit-guess');
+    const giveUpButton = document.getElementById('give-up');
     const guessResult = document.getElementById('guess-result');
 
     let remainingGuesses = 3;
+
+    giveUpButton.addEventListener('click', () => {
+        guessResult.textContent = 'Subject resisted interrogation.';
+        guessResult.style.color = 'red';
+        guessInput.disabled = true;
+        submitGuessButton.disabled = true;
+        giveUpButton.disabled = true;
+        document.getElementById('next-subject').style.display = 'block';
+        totalCount++;
+        updateStats();
+    });
 
     submitGuessButton.addEventListener('click', () => {
         const guess = guessInput.value.trim().toLowerCase();
@@ -300,7 +312,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         messageHistory.innerHTML = '';
 
         // Reset guessing interface
-        document.getElementById('code-word-panel').style.display = 'none';
+        document.getElementById('guessing-section').style.display = 'none';
         document.getElementById('next-subject').style.display = 'none';
         guessInput.value = '';
         guessResult.textContent = '';
@@ -367,8 +379,8 @@ document.addEventListener('DOMContentLoaded', async() => {
                 }
             }, 100);
 
-            // Show the guess interface
-            document.getElementById('code-word-panel').style.display = 'block';
+            // Show the guessing section
+            document.getElementById('guessing-section').style.display = 'block';
             document.getElementById('code-word-guess').focus();
 
             // Mark that the subject has left

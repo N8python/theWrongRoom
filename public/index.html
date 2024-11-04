@@ -171,13 +171,16 @@
             <button id="send-button">Send</button>
             <button id="next-subject" style="display: none;">Next Subject</button>
         </div>
-        <div id="code-word-panel" style="display: none;">
-            <input type="text" id="code-word-guess" placeholder="Guess the code word...">
-            <button id="submit-guess">Submit Guess</button>
-            <div id="guess-result"></div>
-            <div id="guesses-remaining">Remaining guesses: 3</div>
+        <div id="code-word-panel">
             <div class="stats">
                 <p>Code words extracted: <span id="success-count">0</span>/<span id="total-count">0</span> (<span id="success-rate">0%</span>)</p>
+            </div>
+            <div id="guessing-section" style="display: none;">
+                <input type="text" id="code-word-guess" placeholder="Guess the code word...">
+                <button id="submit-guess">Submit Guess</button>
+                <button id="give-up">I Don't Know</button>
+                <div id="guess-result"></div>
+                <div id="guesses-remaining">Remaining guesses: 3</div>
             </div>
         </div>
     </div>
