@@ -31,14 +31,14 @@ function animate(currentTime) {
     
     if (screenAspect > bgAspect) {
         // Screen is wider than background
-        drawWidth = displayCanvas.height * bgAspect;
-        drawHeight = displayCanvas.height;
-        offsetX = (displayCanvas.width - drawWidth) / 2;
-    } else {
-        // Screen is taller than background
         drawWidth = displayCanvas.width;
         drawHeight = displayCanvas.width / bgAspect;
         offsetY = (displayCanvas.height - drawHeight) / 2;
+    } else {
+        // Screen is taller than background
+        drawWidth = displayCanvas.height * bgAspect;
+        drawHeight = displayCanvas.height;
+        offsetX = (displayCanvas.width - drawWidth) / 2;
     }
     
     // Draw background scaled to fit screen while maintaining aspect ratio
