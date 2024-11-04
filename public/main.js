@@ -16,8 +16,8 @@ async function initializeSession() {
         const resistance = resistances[Math.floor(Math.random() * resistances.length)];
 
         // Update the subject info in the UI
-        // Generate and set sprite
-        const spriteDataUrl = await generateRandomSprite();
+        // Generate and set sprite with sex parameter
+        const spriteDataUrl = await generateRandomSprite(sex);
         const spriteContainer = document.getElementById('subject-sprite');
         spriteContainer.style.backgroundImage = `url(${spriteDataUrl})`;
         spriteContainer.style.backgroundSize = 'contain';

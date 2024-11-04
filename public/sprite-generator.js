@@ -40,7 +40,7 @@ export async function initializeSpriteAssets() {
     }
 }
 
-export async function generateRandomSprite() {
+export async function generateRandomSprite(sex) {
     const canvas = document.createElement('canvas');
     canvas.width = 64;
     canvas.height = 96;
@@ -50,7 +50,24 @@ export async function generateRandomSprite() {
     for (const layer of Object.keys(imageCache)) {
         const images = imageCache[layer];
         if (images.length > 0) {
-            const randomImg = images[Math.floor(Math.random() * images.length)];
+            let availableImages = images;
+            
+            // Special handling for hair based on sex
+            if (layer === 'hair') {
+                const nonConforming = Math.random() < 0.05; // 5% chance
+                
+                if (sex !== 'intersex' && !nonConforming) {
+                    // Filter images based on filename containing 'male' or 'female'
+                    availableImages = images.filter(img => {
+                        const imgSrc = img.src.toLowerCase();
+                        return sex === 'male' ? 
+                            imgSrc.includes('male') && !imgSrc.includes('female') :
+                            imgSrc.includes('female');
+                    });
+                }
+            }
+
+            const randomImg = availableImages[Math.floor(Math.random() * availableImages.length)];
             ctx.drawImage(randomImg, 0, 0);
         }
     }
