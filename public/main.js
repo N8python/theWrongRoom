@@ -220,28 +220,42 @@ document.addEventListener('DOMContentLoaded', async() => {
     const submitGuessButton = document.getElementById('submit-guess');
     const guessResult = document.getElementById('guess-result');
 
+    let remainingGuesses = 3;
+    
     submitGuessButton.addEventListener('click', () => {
         const guess = guessInput.value.trim().toLowerCase();
         const correct = guess === currentCodeWord.toLowerCase();
+        
+        remainingGuesses--;
+        document.getElementById('guesses-remaining').textContent = `Remaining guesses: ${remainingGuesses}`;
 
         if (correct) {
             successCount++;
             guessResult.textContent = '✅ Correct! You extracted the code word!';
             guessResult.style.color = 'green';
+            
+            // End guessing on correct answer
+            guessInput.disabled = true;
+            submitGuessButton.disabled = true;
+            document.getElementById('next-subject').style.display = 'block';
+            totalCount++;
+            updateStats();
         } else {
-            guessResult.textContent = '❌ Incorrect guess';
-            guessResult.style.color = 'red';
+            if (remainingGuesses > 0) {
+                guessResult.textContent = `❌ Incorrect guess. ${remainingGuesses} ${remainingGuesses === 1 ? 'try' : 'tries'} left`;
+                guessResult.style.color = 'red';
+                guessInput.value = '';
+                guessInput.focus();
+            } else {
+                guessResult.textContent = `❌ Out of guesses! The code word was: ${currentCodeWord}`;
+                guessResult.style.color = 'red';
+                guessInput.disabled = true;
+                submitGuessButton.disabled = true;
+                document.getElementById('next-subject').style.display = 'block';
+                totalCount++;
+                updateStats();
+            }
         }
-
-        totalCount++;
-        updateStats();
-
-        // Disable guess input and button after one attempt
-        guessInput.disabled = true;
-        submitGuessButton.disabled = true;
-
-        // Show the next subject button after guessing
-        document.getElementById('next-subject').style.display = 'block';
     });
 
     nextSubjectButton.addEventListener('click', async() => {
@@ -249,13 +263,15 @@ document.addEventListener('DOMContentLoaded', async() => {
         const chatContainer = document.getElementById('chat-container');
         chatContainer.innerHTML = '';
 
-        // Hide the guess interface and next subject button
+        // Reset guessing interface
         document.getElementById('guess-container').style.display = 'none';
         document.getElementById('next-subject').style.display = 'none';
         guessInput.value = '';
         guessResult.textContent = '';
         guessInput.disabled = false;
         submitGuessButton.disabled = false;
+        remainingGuesses = 3;
+        document.getElementById('guesses-remaining').textContent = 'Remaining guesses: 3';
 
         // Re-enable input
         messageInput.disabled = false;
