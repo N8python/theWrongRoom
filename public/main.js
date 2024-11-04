@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                 guessInput.value = '';
                 guessInput.focus();
             } else {
-                guessResult.textContent = `❌ Out of guesses! The code word was: ${currentCodeWord}`;
+                guessResult.textContent = `❌ Out of guesses! Subject resisted interrogation.`;
                 guessResult.style.color = 'red';
                 guessInput.disabled = true;
                 submitGuessButton.disabled = true;
@@ -312,7 +312,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         //  chatContainer.innerHTML = '';
 
         // Reset guessing interface
-        document.getElementById('guess-container').style.display = 'none';
+        document.getElementById('code-word-panel').style.display = 'none';
         document.getElementById('next-subject').style.display = 'none';
         guessInput.value = '';
         guessResult.textContent = '';
@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             }, 100);
 
             // Show the guess interface
-            document.getElementById('guess-container').style.display = 'block';
+            document.getElementById('code-word-panel').style.display = 'block';
             document.getElementById('code-word-guess').focus();
 
             // Mark that the subject has left
