@@ -51,21 +51,22 @@ export async function generateRandomSprite(sex) {
         const images = imageCache[layer];
         if (images.length > 0) {
             let availableImages = images;
-            
+
             // Special handling for hair based on sex
             if (layer === 'hair') {
                 const nonConforming = Math.random() < 0.05; // 5% chance
-                
+
                 if (sex !== 'intersex' && !nonConforming) {
                     // Filter images based on filename containing 'male' or 'female'
                     availableImages = images.filter(img => {
                         const imgSrc = img.src.toLowerCase();
-                        return sex === 'male' ? 
-                            imgSrc.includes('male') && !imgSrc.includes('female') :
-                            imgSrc.includes('female');
+                        return sex === 'male' ?
+                            imgSrc.includes('boy') && !imgSrc.includes('girl') :
+                            imgSrc.includes('girl');
                     });
                 }
             }
+            console.log(availableImages, layer);
 
             const randomImg = availableImages[Math.floor(Math.random() * availableImages.length)];
             ctx.drawImage(randomImg, 0, 0);
