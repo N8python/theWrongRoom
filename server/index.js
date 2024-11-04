@@ -9,6 +9,19 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
+// Endpoint to get sprite part files
+app.get('/sprite-parts/*', (req, res) => {
+    const requestedPath = req.params[0];
+    const fullPath = path.join(__dirname, '..', 'public', 'sprites', requestedPath);
+    
+    try {
+        const files = fs.readdirSync(fullPath);
+        res.json(files.filter(file => file.endsWith('.png')));
+    } catch (error) {
+        res.status(500).json({ error: 'Error reading sprite directory' });
+    }
+});
+
 // Initialize Llama
 const llama = await getLlama();
 const model = await llama.loadModel({

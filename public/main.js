@@ -1,4 +1,5 @@
 import { faker } from 'https://esm.sh/@faker-js/faker';
+import { generateRandomSprite } from './sprite-generator.js';
 const resistances = ['NONE', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
 const emotions = ['angry', 'defensive', 'in denial', 'fearful', 'nervous', 'reluctant', 'suspicious', 'uncooperative', 'pleading', 'confused', 'hostile', 'evasive', 'calm', 'cooperative', 'confident'];
 
@@ -15,6 +16,14 @@ async function initializeSession() {
         const resistance = resistances[Math.floor(Math.random() * resistances.length)];
 
         // Update the subject info in the UI
+        // Generate and set sprite
+        const spriteDataUrl = await generateRandomSprite();
+        const spriteContainer = document.getElementById('subject-sprite');
+        spriteContainer.style.backgroundImage = `url(${spriteDataUrl})`;
+        spriteContainer.style.backgroundSize = 'contain';
+        spriteContainer.style.backgroundRepeat = 'no-repeat';
+        spriteContainer.style.backgroundPosition = 'center';
+
         document.getElementById('subject-name').textContent = name;
         document.getElementById('subject-sex').textContent = sex;
         document.getElementById('subject-profession').textContent = profession;
