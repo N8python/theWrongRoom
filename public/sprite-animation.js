@@ -5,11 +5,11 @@ export class SpriteSheet {
         this.frameHeight = frameHeight;
         this.sheetWidth = sheetWidth;
         this.sheetHeight = sheetHeight;
-        
+
         // Calculate frames per row/column
         this.framesPerRow = Math.floor(sheetWidth / frameWidth);
         this.framesPerColumn = Math.floor(sheetHeight / frameHeight);
-        
+
         // Direction constants (matching sheet layout)
         this.FACING = {
             LEFT: 0,
@@ -20,6 +20,7 @@ export class SpriteSheet {
     }
 
     drawFrame(ctx, frameX, frameY, canvasX, canvasY) {
+
         ctx.drawImage(
             this.image,
             frameX * this.frameWidth,
@@ -28,15 +29,15 @@ export class SpriteSheet {
             this.frameHeight,
             canvasX,
             canvasY,
-            this.frameWidth,
-            this.frameHeight
+            this.frameWidth * 14,
+            this.frameHeight * 14
         );
     }
 
     getFrameForDirection(direction, walkFrame = 0) {
         return {
-            x: walkFrame % this.framesPerRow,
-            y: direction
+            x: direction,
+            y: walkFrame % 3
         };
     }
 }
@@ -48,13 +49,13 @@ export class CharacterSprite {
         this.y = y;
         this.currentDirection = spriteSheet.FACING.DOWN;
         this.walkFrame = 0;
-        this.animationSpeed = 150; // ms per frame
+        this.animationSpeed = 50; // ms per frame
         this.lastFrameTime = 0;
     }
 
     update(currentTime) {
         if (currentTime - this.lastFrameTime > this.animationSpeed) {
-            this.walkFrame = (this.walkFrame + 1) % 4;
+            this.walkFrame = (this.walkFrame + 1) % 3;
             this.lastFrameTime = currentTime;
         }
     }
