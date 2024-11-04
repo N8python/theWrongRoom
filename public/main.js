@@ -22,13 +22,14 @@ function animate(currentTime) {
     displayCanvas.height = window.innerHeight;
     const ctx = displayCanvas.getContext('2d');
     ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
-    
+
     // Calculate scaled dimensions maintaining aspect ratio
     const bgAspect = backgroundCanvas.width / backgroundCanvas.height;
     const screenAspect = displayCanvas.width / displayCanvas.height;
-    
-    let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
-    
+
+    let drawWidth, drawHeight, offsetX = 0,
+        offsetY = 0;
+
     if (screenAspect > bgAspect) {
         // Screen is wider than background
         drawWidth = displayCanvas.width;
@@ -40,7 +41,7 @@ function animate(currentTime) {
         drawHeight = displayCanvas.height;
         offsetX = (displayCanvas.width - drawWidth) / 2;
     }
-    
+
     // Draw background scaled to fit screen while maintaining aspect ratio
     ctx.drawImage(
         backgroundCanvas,
@@ -216,7 +217,7 @@ function editLastMessage(f) {
 
 function addMessageToChat(message, isUser = true) {
     const bubbleContainer = document.getElementById('speech-bubbles');
-    
+
     // Remove old bubbles if there are more than 2
     while (bubbleContainer.children.length > 1) {
         bubbleContainer.removeChild(bubbleContainer.firstChild);
@@ -233,7 +234,7 @@ function addMessageToChat(message, isUser = true) {
     // Remove <LEAVES> tag from displayed message if present
     message = message.replace('<LEAVES>', '');
     bubble.textContent = message;
-    
+
     bubbleContainer.appendChild(bubble);
     // Trigger reflow to enable transition
     bubble.offsetHeight;
@@ -307,8 +308,8 @@ document.addEventListener('DOMContentLoaded', async() => {
 
     nextSubjectButton.addEventListener('click', async() => {
         // Clear the chat container
-        const chatContainer = document.getElementById('chat-container');
-        chatContainer.innerHTML = '';
+        //   const chatContainer = document.getElementById('chat-container');
+        //  chatContainer.innerHTML = '';
 
         // Reset guessing interface
         document.getElementById('guess-container').style.display = 'none';
@@ -368,6 +369,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 
             // Check for animation completion in a separate interval
             const checkInterval = setInterval(() => {
+                const displayCanvas = document.getElementById('subject-sprite');
                 if (currentCharacterSprite.x >= displayCanvas.width) {
                     clearInterval(checkInterval);
                     addMessageToChat('Subject has left the room. Click "Next Subject" to continue...', 'system');
