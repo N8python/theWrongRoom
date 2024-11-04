@@ -11,12 +11,12 @@ async function getRandomFileFromDir(dirPath) {
 
 export async function generateRandomSprite() {
     const canvas = document.createElement('canvas');
-    canvas.width = 64;  // Adjust based on your sprite size
-    canvas.height = 64;
+    canvas.width = 64; // Adjust based on your sprite size
+    canvas.height = 96;
     const ctx = canvas.getContext('2d');
 
     const layers = ['skin', 'top', 'pants', 'shoes', 'hair', 'extras'];
-    
+
     for (const layer of layers) {
         const file = await getRandomFileFromDir(`/npc-parts/${layer}`);
         if (file) {
