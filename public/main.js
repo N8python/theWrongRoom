@@ -11,27 +11,35 @@ let totalCount = 0;
 let currentCharacterSprite = null;
 let animationFrameId = null;
 let isAnimating = false;
+let animationType = 'idle';
 
 function animate(currentTime) {
     const displayCanvas = document.getElementById('subject-sprite');
+    const subjectContainer = document.getElementById('subject-info');
+    const widthOfContainer = subjectContainer.clientWidth - 32;
+    displayCanvas.width = widthOfContainer;
     const ctx = displayCanvas.getContext('2d');
-    
+
     ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
-    
+
+    ctx.enableImageSmoothing = false;
+    ctx.imageSmoothingEnabled = false;
     if (currentCharacterSprite) {
-        currentCharacterSprite.update(currentTime);
         currentCharacterSprite.draw(ctx);
-        
+
         if (isAnimating) {
+            currentCharacterSprite.update(currentTime);
             // Handle any active animations here
-            if (currentCharacterSprite.y > 0 && currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.LEFT) {
-                currentCharacterSprite.y -= 0.5;
-            } else if (currentCharacterSprite.y < displayCanvas.height && currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.DOWN) {
-                currentCharacterSprite.y += 0.5;
+            if (currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.RIGHT && (animationType === 'exit' ? currentCharacterSprite.x < Infinity : currentCharacterSprite.x < displayCanvas.width / 2 - 32)) {
+                currentCharacterSprite.x += 0.5;
+            } else {
+                isAnimating = false;
+                currentCharacterSprite.walkFrame = 0;
+                currentCharacterSprite.setDirection(currentCharacterSprite.spriteSheet.FACING.DOWN);
             }
         }
     }
-    
+
     animationFrameId = requestAnimationFrame(animate);
 }
 
@@ -48,21 +56,19 @@ async function initializeSession() {
         const spriteSheet = new SpriteSheet(spriteCanvas);
         currentCharacterSprite = new CharacterSprite(spriteSheet, 24, 32);
 
-        // Set up the sprite canvas
-        const displayCanvas = document.getElementById('subject-sprite');
-        const ctx = displayCanvas.getContext('2d');
-
         // Start with character walking up
-        currentCharacterSprite.setDirection(spriteSheet.FACING.LEFT);
-        currentCharacterSprite.y = 32; // Start lower
+        currentCharacterSprite.setDirection(spriteSheet.FACING.RIGHT);
+        currentCharacterSprite.x = 0; // Start lower
+        currentCharacterSprite.y = -8;
 
         // Start continuous animation if not already running
         if (!animationFrameId) {
             animationFrameId = requestAnimationFrame(animate);
         }
-        
+
         // Set flag to animate entrance
         isAnimating = true;
+        animationType = 'entrance';
 
         document.getElementById('subject-name').textContent = name;
         document.getElementById('subject-sex').textContent = sex[0].toUpperCase() + sex.slice(1);
@@ -200,6 +206,8 @@ document.addEventListener('DOMContentLoaded', async() => {
     // Hide loading screen and show game interface
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('subject-info').style.display = 'block';
+    document.getElementById('subject-canvas').style.display = 'block';
+
 
     // Then initialize the game session
     await initializeSession();
@@ -288,21 +296,16 @@ document.addEventListener('DOMContentLoaded', async() => {
             // Replace leaves
             editLastMessage((msg) => msg.replace('<LEAVES>', ''));
 
-            // Animate the subject leaving
-            const displayCanvas = document.getElementById('subject-sprite');
-            const ctx = displayCanvas.getContext('2d');
-
             // Set character to walk down/away
-            currentCharacterSprite.setDirection(currentCharacterSprite.spriteSheet.FACING.DOWN);
-            currentCharacterSprite.y = 0;
 
             // Set direction and start exit animation
-            currentCharacterSprite.setDirection(currentCharacterSprite.spriteSheet.FACING.DOWN);
+            currentCharacterSprite.setDirection(currentCharacterSprite.spriteSheet.FACING.RIGHT);
             isAnimating = true;
-            
+            animationType = 'exit';
+
             // Check for animation completion in a separate interval
             const checkInterval = setInterval(() => {
-                if (currentCharacterSprite.y >= displayCanvas.height) {
+                if (currentCharacterSprite.x >= displayCanvas.width) {
                     clearInterval(checkInterval);
                     addMessageToChat('Subject has left the room. Click "Next Subject" to continue...', 'system');
                 }
