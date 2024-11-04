@@ -164,12 +164,16 @@ document.addEventListener('DOMContentLoaded', async() => {
             guessResult.textContent = '✅ Correct! You extracted the code word!';
             guessResult.style.color = 'green';
         } else {
-            guessResult.textContent = `❌ Incorrect. The code word was: ${currentCodeWord}`;
+            guessResult.textContent = '❌ Incorrect guess';
             guessResult.style.color = 'red';
         }
         
         totalCount++;
         updateStats();
+        
+        // Disable guess input and button after one attempt
+        guessInput.disabled = true;
+        submitGuessButton.disabled = true;
         
         // Show the next subject button after guessing
         document.getElementById('next-subject').style.display = 'block';
@@ -185,6 +189,8 @@ document.addEventListener('DOMContentLoaded', async() => {
         document.getElementById('next-subject').style.display = 'none';
         guessInput.value = '';
         guessResult.textContent = '';
+        guessInput.disabled = false;
+        submitGuessButton.disabled = false;
         
         // Re-enable input
         messageInput.disabled = false;
@@ -231,9 +237,6 @@ document.addEventListener('DOMContentLoaded', async() => {
             document.getElementById('guess-container').style.display = 'block';
             document.getElementById('code-word-guess').focus();
             
-            // Disable the chat input
-            messageInput.disabled = true;
-            sendButton.disabled = true;
 
             // Delete the current session
             if (currentSessionId) {
