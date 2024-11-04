@@ -164,6 +164,10 @@ document.addEventListener('DOMContentLoaded', async() => {
             // Replace leaves
             editLastMessage((msg) => msg.replace('<LEAVES>', ''));
 
+            // Clear the chat container
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.innerHTML = '';
+            
             // Add a system message indicating the subject left
             addMessageToChat('Subject has left the room. Initializing new subject...', 'system');
 
