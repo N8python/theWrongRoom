@@ -68,7 +68,7 @@
             background-color: #ccc;
         }
         
-        #subject-canvas {
+        #subject-info {
             background-color: #f8f9fa;
             padding: 15px;
             border-radius: 5px 5px 0 0;
@@ -80,7 +80,7 @@
             top: 20px;
         }
         
-        #subject-info {
+        #subject-canvas {
             background-color: #f8f9fa;
             padding: 15px;
             border-radius: 0 0 5px 5px;
@@ -122,14 +122,14 @@
             }
         }
     </style>
-    <div id="subject-canvas" style="display: none;">
-        <canvas id="subject-sprite" width="100%" height="64" style="margin: 0 auto 15px auto;"></canvas>
-    </div>
     <div id="subject-info" style="display: none;">
         <h2>Subject Information</h2>
         <p><strong>Name:</strong> <span id="subject-name"></span></p>
         <p><strong>Sex:</strong> <span id="subject-sex"></span></p>
         <p><strong>Profession:</strong> <span id="subject-profession"></span></p>
+    </div>
+    <div id="subject-canvas" style="display: none;">
+        <canvas id="subject-sprite" width="100%" height="64" style="margin: 0 auto 15px auto;"></canvas>
     </div>
     <div class="chat-section">
         <h1>Interrogation Window</h1>
