@@ -17,17 +17,35 @@ function animate(currentTime) {
     const displayCanvas = document.getElementById('subject-sprite');
     const backgroundCanvas = document.getElementById('background-interrogation');
 
-    // Make canvas fill the screen while maintaining aspect ratio
-    const scale = Math.min(window.innerWidth / backgroundCanvas.width, window.innerHeight / backgroundCanvas.height);
+    // Make canvas fill the screen
     displayCanvas.width = window.innerWidth;
     displayCanvas.height = window.innerHeight;
     const ctx = displayCanvas.getContext('2d');
     ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
-    // Draw background scaled to fill screen
+    
+    // Calculate scaled dimensions maintaining aspect ratio
+    const bgAspect = backgroundCanvas.width / backgroundCanvas.height;
+    const screenAspect = displayCanvas.width / displayCanvas.height;
+    
+    let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
+    
+    if (screenAspect > bgAspect) {
+        // Screen is wider than background
+        drawWidth = displayCanvas.height * bgAspect;
+        drawHeight = displayCanvas.height;
+        offsetX = (displayCanvas.width - drawWidth) / 2;
+    } else {
+        // Screen is taller than background
+        drawWidth = displayCanvas.width;
+        drawHeight = displayCanvas.width / bgAspect;
+        offsetY = (displayCanvas.height - drawHeight) / 2;
+    }
+    
+    // Draw background scaled to fit screen while maintaining aspect ratio
     ctx.drawImage(
         backgroundCanvas,
         0, 0, backgroundCanvas.width, backgroundCanvas.height,
-        0, 0, displayCanvas.width, displayCanvas.height
+        offsetX, offsetY, drawWidth, drawHeight
     );
 
     ctx.enableImageSmoothing = false;
