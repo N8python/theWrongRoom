@@ -1,5 +1,5 @@
 import { faker } from 'https://esm.sh/@faker-js/faker';
-import { generateRandomSprite } from './sprite-generator.js';
+import { generateRandomSprite, initializeSpriteAssets } from './sprite-generator.js';
 const resistances = ['NONE', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
 const emotions = ['angry', 'defensive', 'in denial', 'fearful', 'nervous', 'reluctant', 'suspicious', 'uncooperative', 'pleading', 'confused', 'hostile', 'evasive', 'calm', 'cooperative', 'confident'];
 
@@ -11,7 +11,7 @@ let totalCount = 0;
 async function initializeSession() {
     try {
         const name = faker.person.fullName();
-        const sex = faker.person.sex();
+        const sex = Math.random() < 0.99 ? faker.person.sex() : 'intersex';
         const profession = faker.person.jobTitle();
         const resistance = resistances[Math.floor(Math.random() * resistances.length)];
 
@@ -25,7 +25,7 @@ async function initializeSession() {
         spriteContainer.style.backgroundPosition = 'center';
 
         document.getElementById('subject-name').textContent = name;
-        document.getElementById('subject-sex').textContent = sex;
+        document.getElementById('subject-sex').textContent = sex[0].toUpperCase() + sex.slice(1);
         document.getElementById('subject-profession').textContent = profession;
         currentCodeWord = faker.word.noun();
         const emotion = emotions[Math.floor(Math.random() * emotions.length)];
@@ -156,11 +156,11 @@ function updateStats() {
 document.addEventListener('DOMContentLoaded', async() => {
     // First load all sprites
     await initializeSpriteAssets();
-    
+
     // Hide loading screen and show game interface
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('subject-info').style.display = 'block';
-    
+
     // Then initialize the game session
     await initializeSession();
 
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     submitGuessButton.addEventListener('click', () => {
         const guess = guessInput.value.trim().toLowerCase();
         const correct = guess === currentCodeWord.toLowerCase();
-        
+
         if (correct) {
             successCount++;
             guessResult.textContent = '✅ Correct! You extracted the code word!';
@@ -184,23 +184,23 @@ document.addEventListener('DOMContentLoaded', async() => {
             guessResult.textContent = '❌ Incorrect guess';
             guessResult.style.color = 'red';
         }
-        
+
         totalCount++;
         updateStats();
-        
+
         // Disable guess input and button after one attempt
         guessInput.disabled = true;
         submitGuessButton.disabled = true;
-        
+
         // Show the next subject button after guessing
         document.getElementById('next-subject').style.display = 'block';
     });
 
-    nextSubjectButton.addEventListener('click', async () => {
+    nextSubjectButton.addEventListener('click', async() => {
         // Clear the chat container
         const chatContainer = document.getElementById('chat-container');
         chatContainer.innerHTML = '';
-        
+
         // Hide the guess interface and next subject button
         document.getElementById('guess-container').style.display = 'none';
         document.getElementById('next-subject').style.display = 'none';
@@ -208,11 +208,11 @@ document.addEventListener('DOMContentLoaded', async() => {
         guessResult.textContent = '';
         guessInput.disabled = false;
         submitGuessButton.disabled = false;
-        
+
         // Re-enable input
         messageInput.disabled = false;
         sendButton.disabled = false;
-        
+
         // Reset subject left flag and start new session
         subjectHasLeft = false;
         await initializeSession();
@@ -254,10 +254,10 @@ document.addEventListener('DOMContentLoaded', async() => {
             // Show the guess interface
             document.getElementById('guess-container').style.display = 'block';
             document.getElementById('code-word-guess').focus();
-            
+
             // Mark that the subject has left
             subjectHasLeft = true;
-            
+
 
             // Delete the current session
             if (currentSessionId) {
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 
     sendButton.addEventListener('click', handleSendMessage);
     let subjectHasLeft = false;
-    
+
     messageInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && !subjectHasLeft) {
             handleSendMessage();
