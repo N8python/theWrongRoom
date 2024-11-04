@@ -98,15 +98,18 @@ async function main() {
         fs.mkdirSync('output');
     }
 
+    const outputFile = 'output/dialogues.jsonl';
+
     for (let i = 0; i < NUM_BATCHES; i++) {
         console.log(`Generating batch ${i + 1}/${NUM_BATCHES}...`);
         const batch = await generateBatch(BATCH_SIZE);
         
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const filename = `output/batch_${i + 1}_${timestamp}.json`;
+        // Append each item in the batch as a separate line
+        batch.forEach(item => {
+            fs.appendFileSync(outputFile, JSON.stringify(item) + '\n');
+        });
         
-        fs.writeFileSync(filename, JSON.stringify(batch, null, 2));
-        console.log(`Saved ${batch.length} scripts to ${filename}`);
+        console.log(`Appended ${batch.length} scripts to ${outputFile}`);
     }
 }
 
