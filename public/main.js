@@ -183,51 +183,61 @@ async function sendMessage(message) {
 }
 
 function updateLastMessage(chunk) {
-    const chatContainer = document.getElementById('chat-container');
-    let lastMessage = chatContainer.lastElementChild;
+    const bubbleContainer = document.getElementById('speech-bubbles');
+    let lastBubble = bubbleContainer.lastElementChild;
 
-    // If there's no last message or it's not an AI message, create a new one
-    if (!lastMessage || !lastMessage.classList.contains('ai-message')) {
-        lastMessage = document.createElement('div');
-        lastMessage.className = 'message ai-message';
-        chatContainer.appendChild(lastMessage);
+    if (!lastBubble || !lastBubble.classList.contains('ai')) {
+        lastBubble = document.createElement('div');
+        lastBubble.className = 'speech-bubble ai';
+        bubbleContainer.appendChild(lastBubble);
+        // Trigger reflow to enable transition
+        lastBubble.offsetHeight;
+        lastBubble.classList.add('visible');
     }
-    console.log(chunk)
 
-    lastMessage.textContent = (lastMessage.textContent || '') + chunk;
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    lastBubble.textContent = (lastBubble.textContent || '') + chunk;
 }
 
 function editLastMessage(f) {
-    const chatContainer = document.getElementById('chat-container');
-    let lastMessage = chatContainer.lastElementChild;
+    const bubbleContainer = document.getElementById('speech-bubbles');
+    let lastBubble = bubbleContainer.lastElementChild;
 
-    // If there's no last message or it's not an AI message, create a new one
-    if (!lastMessage || !lastMessage.classList.contains('ai-message')) {
-        lastMessage = document.createElement('div');
-        lastMessage.className = 'message ai-message';
-        chatContainer.appendChild(lastMessage);
+    if (!lastBubble || !lastBubble.classList.contains('ai')) {
+        lastBubble = document.createElement('div');
+        lastBubble.className = 'speech-bubble ai';
+        bubbleContainer.appendChild(lastBubble);
+        // Trigger reflow to enable transition
+        lastBubble.offsetHeight;
+        lastBubble.classList.add('visible');
     }
 
-    lastMessage.textContent = f(lastMessage.textContent || '');
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    lastBubble.textContent = f(lastBubble.textContent || '');
 }
 
 function addMessageToChat(message, isUser = true) {
-    const chatContainer = document.getElementById('chat-container');
-    const messageDiv = document.createElement('div');
-
-    if (isUser === 'system') {
-        messageDiv.className = 'message system-message';
-    } else {
-        messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
-        // Remove <LEAVES> tag from displayed message if present
-        message = message.replace('<LEAVES>', '');
+    const bubbleContainer = document.getElementById('speech-bubbles');
+    
+    // Remove old bubbles if there are more than 2
+    while (bubbleContainer.children.length > 1) {
+        bubbleContainer.removeChild(bubbleContainer.firstChild);
     }
 
-    messageDiv.textContent = message;
-    chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    if (isUser === 'system') {
+        // Handle system messages differently - maybe as an overlay or alert
+        alert(message);
+        return;
+    }
+
+    const bubble = document.createElement('div');
+    bubble.className = `speech-bubble ${isUser ? 'user' : 'ai'}`;
+    // Remove <LEAVES> tag from displayed message if present
+    message = message.replace('<LEAVES>', '');
+    bubble.textContent = message;
+    
+    bubbleContainer.appendChild(bubble);
+    // Trigger reflow to enable transition
+    bubble.offsetHeight;
+    bubble.classList.add('visible');
 }
 
 function updateStats() {

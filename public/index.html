@@ -39,40 +39,56 @@
             z-index: 2;
         }
 
-        #chat-container {
+        .speech-bubble {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 20px;
-            height: 200px;
-            overflow-y: auto;
-            backdrop-filter: blur(5px);
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            max-width: 300px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            font-size: 14px;
+            line-height: 1.4;
         }
-        
-        .message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
+
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-top-color: #fff;
+            border-bottom: 0;
+            margin-left: -10px;
         }
-        
-        .user-message {
-            background-color: #e3f2fd;
-            margin-left: 20%;
+
+        .speech-bubble.visible {
+            opacity: 1;
         }
-        
-        .ai-message {
-            background-color: #f5f5f5;
-            margin-right: 20%;
+
+        .speech-bubble.user {
+            background: #e3f2fd;
+            bottom: 120px;
+            left: 20px;
         }
-        
-        .system-message {
-            background-color: #fff3cd;
-            margin: 10px 10%;
-            text-align: center;
-            font-style: italic;
+
+        .speech-bubble.user:after {
+            border-top-color: #e3f2fd;
+        }
+
+        .speech-bubble.ai {
+            background: #f5f5f5;
+            bottom: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .speech-bubble.ai:after {
+            border-top-color: #f5f5f5;
         }
         
         #input-container {
@@ -127,7 +143,7 @@
             <p><strong>Sex:</strong> <span id="subject-sex"></span></p>
             <p><strong>Profession:</strong> <span id="subject-profession"></span></p>
         </div>
-        <div id="chat-container"></div>
+        <div id="speech-bubbles"></div>
         <div id="input-container">
             <input type="text" id="message-input" placeholder="Type your message...">
             <button id="send-button">Send</button>
