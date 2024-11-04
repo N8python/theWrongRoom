@@ -327,6 +327,8 @@ document.addEventListener('DOMContentLoaded', async() => {
 
         // Reset subject left flag and start new session
         subjectHasLeft = false;
+        // Get rid of speech bubbles
+
         await initializeSession();
     });
 
@@ -366,13 +368,14 @@ document.addEventListener('DOMContentLoaded', async() => {
             currentCharacterSprite.setDirection(currentCharacterSprite.spriteSheet.FACING.RIGHT);
             isAnimating = true;
             animationType = 'exit';
+            const bubbleContainer = document.getElementById('speech-bubbles');
+            //bubbleContainer.innerHTML = '';
 
             // Check for animation completion in a separate interval
             const checkInterval = setInterval(() => {
                 const displayCanvas = document.getElementById('subject-sprite');
                 if (currentCharacterSprite.x >= displayCanvas.width) {
                     clearInterval(checkInterval);
-                    addMessageToChat('Subject has left the room. Click "Next Subject" to continue...', 'system');
                 }
             }, 100);
 
