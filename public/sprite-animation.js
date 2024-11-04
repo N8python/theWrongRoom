@@ -25,7 +25,8 @@ export class SpriteSheet {
         ctx.save();
         ctx.translate(canvasX + this.frameWidth * (this.scale / 2) + this.scale * this.frameHeight * (1 / 5) + this.frameHeight * 4 / 5, canvasY + this.frameHeight * (this.scale * 4 / 5));
         ctx.transform(1, 0, -0.5, 0.2, 0, 0); // Skew and flatten
-        ctx.globalAlpha = 1.0; // Make shadow semi-transparent
+        ctx.fillStyle = 'black';
+        ctx.globalAlpha = 0.5; // Make shadow semi-transparent
 
         // Draw the shadow (skewed sprite)
         ctx.drawImage(
