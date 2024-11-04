@@ -16,11 +16,13 @@ let animationType = 'idle';
 function animate(currentTime) {
     const displayCanvas = document.getElementById('subject-sprite');
     const subjectContainer = document.getElementById('subject-info');
+    const backgroundCanvas = document.getElementById('background-interrogation');
     const widthOfContainer = subjectContainer.clientWidth - 32;
     displayCanvas.width = widthOfContainer;
+    displayCanvas.height = 96 * 2;
     const ctx = displayCanvas.getContext('2d');
-
     ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+    ctx.drawImage(backgroundCanvas, 0, 0, displayCanvas.width, displayCanvas.height);
 
     ctx.enableImageSmoothing = false;
     ctx.imageSmoothingEnabled = false;
@@ -30,8 +32,8 @@ function animate(currentTime) {
         if (isAnimating) {
             currentCharacterSprite.update(currentTime);
             // Handle any active animations here
-            if (currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.RIGHT && (animationType === 'exit' ? currentCharacterSprite.x < Infinity : currentCharacterSprite.x < displayCanvas.width / 2 - 32)) {
-                currentCharacterSprite.x += 0.5;
+            if (currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.RIGHT && (animationType === 'exit' ? currentCharacterSprite.x < Infinity : currentCharacterSprite.x < displayCanvas.width / 2 - 48)) {
+                currentCharacterSprite.x += 1;
             } else {
                 isAnimating = false;
                 currentCharacterSprite.walkFrame = 0;
@@ -59,7 +61,7 @@ async function initializeSession() {
         // Start with character walking up
         currentCharacterSprite.setDirection(spriteSheet.FACING.RIGHT);
         currentCharacterSprite.x = 0; // Start lower
-        currentCharacterSprite.y = -8;
+        currentCharacterSprite.y = 60;
 
         // Start continuous animation if not already running
         if (!animationFrameId) {
@@ -221,11 +223,11 @@ document.addEventListener('DOMContentLoaded', async() => {
     const guessResult = document.getElementById('guess-result');
 
     let remainingGuesses = 3;
-    
+
     submitGuessButton.addEventListener('click', () => {
         const guess = guessInput.value.trim().toLowerCase();
         const correct = guess === currentCodeWord.toLowerCase();
-        
+
         remainingGuesses--;
         document.getElementById('guesses-remaining').textContent = `Remaining guesses: ${remainingGuesses}`;
 
@@ -233,7 +235,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             successCount++;
             guessResult.textContent = '✅ Correct! You extracted the code word!';
             guessResult.style.color = 'green';
-            
+
             // End guessing on correct answer
             guessInput.disabled = true;
             submitGuessButton.disabled = true;
