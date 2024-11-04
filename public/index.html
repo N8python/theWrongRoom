@@ -32,11 +32,31 @@
 
         #chat-container,
         #input-container,
-        #guess-container,
-        #stats,
         #subject-info {
             position: relative;
             z-index: 2;
+        }
+
+        #guess-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        #stats {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         .speech-bubble {
