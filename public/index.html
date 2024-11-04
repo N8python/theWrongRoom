@@ -9,18 +9,37 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            display: flex;
-            gap: 40px;
-            padding: 40px;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            background: black;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
         }
         
+        #subject-sprite {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
         #chat-container {
-            border: 1px solid #ccc;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
             padding: 20px;
-            height: 400px;
+            height: 200px;
             overflow-y: auto;
-            margin-bottom: 20px;
+            backdrop-filter: blur(5px);
         }
         
         .message {
@@ -69,36 +88,16 @@
             background-color: #ccc;
         }
         
-        .subject-container {
-            width: 280px;
-            position: sticky;
-            top: 40px;
-            flex-shrink: 0;
-        }
-        
         #subject-info {
-            background-color: #f8f9fa;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
             padding: 15px;
             border-radius: 5px;
-            border: 1px solid #dee2e6;
-            width: 100%;
-            height: fit-content;
-            margin-bottom: 20px;
-        }
-        
-        #subject-canvas {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
-            width: 100%;
-            height: fit-content;
-        }
-        
-        .chat-section {
-            flex-grow: 1;
-            max-width: 600px;
-            min-width: 400px;
+            width: 280px;
+            backdrop-filter: blur(5px);
         }
         
         #subject-info h2 {
@@ -110,7 +109,31 @@
 </head>
 
 <body>
-    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: flex; justify-content: center; align-items: center; z-index: 1000;">
+    <div id="game-container">
+        <canvas id="subject-sprite"></canvas>
+        <div id="subject-info" style="display: none;">
+            <h2>Subject Information</h2>
+            <p><strong>Name:</strong> <span id="subject-name"></span></p>
+            <p><strong>Sex:</strong> <span id="subject-sex"></span></p>
+            <p><strong>Profession:</strong> <span id="subject-profession"></span></p>
+        </div>
+        <div id="chat-container"></div>
+        <div id="input-container">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-button">Send</button>
+            <button id="next-subject" style="display: none;">Next Subject</button>
+        </div>
+        <div id="guess-container" style="display: none;">
+            <input type="text" id="code-word-guess" placeholder="Guess the code word...">
+            <button id="submit-guess">Submit Guess</button>
+            <div id="guess-result"></div>
+            <div id="guesses-remaining">Remaining guesses: 3</div>
+        </div>
+        <div id="stats">
+            <p>Code words extracted: <span id="success-count">0</span>/<span id="total-count">0</span> (<span id="success-rate">0%</span>)</p>
+        </div>
+    </div>
+    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); color: white; display: flex; justify-content: center; align-items: center; z-index: 1000;">
         <div style="text-align: center;">
             <h2>Loading Sprites...</h2>
             <div class="spinner" style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
@@ -126,35 +149,6 @@
             }
         }
     </style>
-    <div class="subject-container" style="display: flex; flex-direction: column;">
-        <div id="subject-info" style="display: none;">
-            <h2>Subject Information</h2>
-            <p><strong>Name:</strong> <span id="subject-name"></span></p>
-            <p><strong>Sex:</strong> <span id="subject-sex"></span></p>
-            <p><strong>Profession:</strong> <span id="subject-profession"></span></p>
-        </div>
-        <div id="subject-canvas" style="display: none;">
-            <canvas id="subject-sprite" width="100%" height="64" style="margin: 0 auto 15px auto;"></canvas>
-        </div>
-    </div>
-    <div class="chat-section">
-        <h1>Interrogation Window</h1>
-        <div id="chat-container"></div>
-        <div id="input-container">
-            <input type="text" id="message-input" placeholder="Type your message...">
-            <button id="send-button">Send</button>
-            <button id="next-subject" style="display: none;">Next Subject</button>
-        </div>
-        <div id="guess-container" style="display: none; margin-top: 20px;">
-            <input type="text" id="code-word-guess" placeholder="Guess the code word...">
-            <button id="submit-guess">Submit Guess</button>
-            <div id="guess-result" style="margin-top: 10px;"></div>
-            <div id="guesses-remaining" style="margin-top: 5px;">Remaining guesses: 3</div>
-        </div>
-        <div id="stats" style="margin-top: 20px;">
-            <p>Code words extracted: <span id="success-count">0</span>/<span id="total-count">0</span> (<span id="success-rate">0%</span>)</p>
-        </div>
-    </div>
     <img src="sprites/background-interrogation.png" style="display: none;" id="background-interrogation">
     <script src="main.js" type="module"></script>
 </body>
