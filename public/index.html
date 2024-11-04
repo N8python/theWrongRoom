@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
             margin: 0 auto;
             padding: 20px;
         }
+        
         #chat-container {
             border: 1px solid #ccc;
             padding: 20px;
@@ -18,27 +20,33 @@
             overflow-y: auto;
             margin-bottom: 20px;
         }
+        
         .message {
             margin-bottom: 10px;
             padding: 10px;
             border-radius: 5px;
         }
+        
         .user-message {
             background-color: #e3f2fd;
             margin-left: 20%;
         }
+        
         .ai-message {
             background-color: #f5f5f5;
             margin-right: 20%;
         }
+        
         #input-container {
             display: flex;
             gap: 10px;
         }
+        
         #message-input {
             flex-grow: 1;
             padding: 10px;
         }
+        
         button {
             padding: 10px 20px;
             background-color: #007bff;
@@ -47,11 +55,13 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        
         button:disabled {
             background-color: #ccc;
         }
     </style>
 </head>
+
 <body>
     <h1>Chat with AI</h1>
     <div id="chat-container"></div>
@@ -59,7 +69,7 @@
         <input type="text" id="message-input" placeholder="Type your message...">
         <button id="send-button">Send</button>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker@8.4.1/dist/faker.min.js"></script>
     <script src="main.js" type="module"></script>
 </body>
+
 </html>
