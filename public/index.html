@@ -70,9 +70,19 @@
             opacity: 1;
         }
 
+        #input-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
         .speech-bubble.user {
             background: #e3f2fd;
-            bottom: 120px;
+            bottom: 80px;
             left: 20px;
         }
 
@@ -82,18 +92,13 @@
 
         .speech-bubble.ai {
             background: #f5f5f5;
-            bottom: 200px;
+            bottom: 160px;
             left: 50%;
             transform: translateX(-50%);
         }
 
         .speech-bubble.ai:after {
             border-top-color: #f5f5f5;
-        }
-        
-        #input-container {
-            display: flex;
-            gap: 10px;
         }
         
         #message-input {
