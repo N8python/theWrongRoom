@@ -56,24 +56,24 @@ async function sendMessage(message) {
         while (true) {
             const { value, done } = await reader.read();
             if (done) break;
-            
+
             const text = decoder.decode(value);
             const lines = text.split('\n');
-            
+
             for (const line of lines) {
                 if (line.startsWith('data: ')) {
                     const data = JSON.parse(line.slice(6));
-                    
+
                     if (data.error) {
                         throw new Error(data.error);
                     }
-                    
+
                     if (data.chunk) {
                         // Update the current message in chat
                         updateLastMessage(data.chunk);
                         fullResponse += data.chunk;
                     }
-                    
+
                     if (data.done) {
                         return fullResponse;
                     }
@@ -89,22 +89,38 @@ async function sendMessage(message) {
 function updateLastMessage(chunk) {
     const chatContainer = document.getElementById('chat-container');
     let lastMessage = chatContainer.lastElementChild;
-    
+
     // If there's no last message or it's not an AI message, create a new one
     if (!lastMessage || !lastMessage.classList.contains('ai-message')) {
         lastMessage = document.createElement('div');
         lastMessage.className = 'message ai-message';
         chatContainer.appendChild(lastMessage);
     }
-    
+    console.log(chunk)
+
     lastMessage.textContent = (lastMessage.textContent || '') + chunk;
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function editLastMessage(f) {
+    const chatContainer = document.getElementById('chat-container');
+    let lastMessage = chatContainer.lastElementChild;
+
+    // If there's no last message or it's not an AI message, create a new one
+    if (!lastMessage || !lastMessage.classList.contains('ai-message')) {
+        lastMessage = document.createElement('div');
+        lastMessage.className = 'message ai-message';
+        chatContainer.appendChild(lastMessage);
+    }
+
+    lastMessage.textContent = f(lastMessage.textContent || '');
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
 function addMessageToChat(message, isUser = true) {
     const chatContainer = document.getElementById('chat-container');
     const messageDiv = document.createElement('div');
-    
+
     if (isUser === 'system') {
         messageDiv.className = 'message system-message';
     } else {
@@ -112,7 +128,7 @@ function addMessageToChat(message, isUser = true) {
         // Remove <LEAVES> tag from displayed message if present
         message = message.replace('<LEAVES>', '');
     }
-    
+
     messageDiv.textContent = message;
     chatContainer.appendChild(messageDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -138,15 +154,19 @@ document.addEventListener('DOMContentLoaded', async() => {
 
         // Create empty AI message container
         addMessageToChat('', false);
-        
+
         // Get streaming response
         const response = await sendMessage(message);
-        
+        // Replace '<LEAVES>' with empty string if it is
+
         // Check if the response contains <LEAVES>
         if (response.includes('<LEAVES>')) {
+            // Replace leaves
+            editLastMessage((msg) => msg.replace('<LEAVES>', ''));
+
             // Add a system message indicating the subject left
             addMessageToChat('Subject has left the room. Initializing new subject...', 'system');
-            
+
             // Delete the current session
             if (currentSessionId) {
                 try {
@@ -157,10 +177,10 @@ document.addEventListener('DOMContentLoaded', async() => {
                     console.error('Error closing session:', error);
                 }
             }
-            
+
             // Wait a moment before starting new session
             await new Promise(resolve => setTimeout(resolve, 1500));
-            
+
             // Start a new session
             await initializeSession();
         }
