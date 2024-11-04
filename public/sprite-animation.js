@@ -28,16 +28,8 @@ export class SpriteSheet {
         ctx.fillStyle = 'black';
         ctx.globalAlpha = 0.5; // Make shadow semi-transparent
 
-        // Draw the shadow (skewed sprite)
-        ctx.drawImage(
-            this.image,
-            frameX * this.frameWidth,
-            frameY * this.frameHeight,
-            this.frameWidth,
-            this.frameHeight, 0, 0,
-            this.frameWidth * this.scale,
-            this.frameHeight * this.scale
-        );
+        // Draw a solid black shadow shape
+        ctx.fillRect(0, 0, this.frameWidth * this.scale, this.frameHeight * this.scale);
         ctx.restore();
 
         // Draw the actual sprite
