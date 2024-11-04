@@ -107,6 +107,14 @@
             <button id="send-button">Send</button>
             <button id="next-subject" style="display: none;">Next Subject</button>
         </div>
+        <div id="guess-container" style="display: none; margin-top: 20px;">
+            <input type="text" id="code-word-guess" placeholder="Guess the code word...">
+            <button id="submit-guess">Submit Guess</button>
+            <div id="guess-result" style="margin-top: 10px;"></div>
+        </div>
+        <div id="stats" style="margin-top: 20px;">
+            <p>Code words extracted: <span id="success-count">0</span>/<span id="total-count">0</span> (<span id="success-rate">0%</span>)</p>
+        </div>
     </div>
     <script src="main.js" type="module"></script>
 </body>
