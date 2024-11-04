@@ -16,7 +16,7 @@ let animationType = 'idle';
 function animate(currentTime) {
     const displayCanvas = document.getElementById('subject-sprite');
     const backgroundCanvas = document.getElementById('background-interrogation');
-    
+
     // Make canvas fill the screen while maintaining aspect ratio
     const scale = Math.min(window.innerWidth / backgroundCanvas.width, window.innerHeight / backgroundCanvas.height);
     displayCanvas.width = window.innerWidth;
@@ -25,7 +25,7 @@ function animate(currentTime) {
     ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
     // Draw background scaled to fill screen
     ctx.drawImage(
-        backgroundCanvas, 
+        backgroundCanvas,
         0, 0, backgroundCanvas.width, backgroundCanvas.height,
         0, 0, displayCanvas.width, displayCanvas.height
     );
@@ -37,7 +37,7 @@ function animate(currentTime) {
         ctx.save();
         const spriteScale = (displayCanvas.height * 0.2) / 96; // Character takes up 20% of screen height
         ctx.scale(spriteScale, spriteScale);
-        
+
         // Center horizontally, place near bottom vertically
         const scaledCharX = currentCharacterSprite.x * spriteScale;
         const scaledCharY = currentCharacterSprite.y * spriteScale;
@@ -47,11 +47,11 @@ function animate(currentTime) {
         if (isAnimating) {
             currentCharacterSprite.update(currentTime);
             // Handle any active animations here
-            if (currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.RIGHT && 
-                (animationType === 'exit' ? 
-                    currentCharacterSprite.x < displayCanvas.width / spriteScale : 
-                    currentCharacterSprite.x < (displayCanvas.width / spriteScale) / 2 - 48)) {
-                currentCharacterSprite.x += 1;
+            if (currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.RIGHT &&
+                (animationType === 'exit' ?
+                    currentCharacterSprite.x < displayCanvas.width / spriteScale :
+                    currentCharacterSprite.x < (displayCanvas.width / spriteScale) / 2 - 14 * 8)) {
+                currentCharacterSprite.x += 3;
             } else {
                 isAnimating = false;
                 currentCharacterSprite.walkFrame = 0;
@@ -79,7 +79,7 @@ async function initializeSession() {
         // Start with character walking up
         currentCharacterSprite.setDirection(spriteSheet.FACING.RIGHT);
         currentCharacterSprite.x = 0; // Start lower
-        currentCharacterSprite.y = 60;
+        currentCharacterSprite.y = window.innerHeight / 2 - 400; // Start at bottom of screen
 
         // Start continuous animation if not already running
         if (!animationFrameId) {
