@@ -7,6 +7,7 @@ import { getLlama, LlamaChatSession } from "node-llama-cpp";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 app.use(express.json());
+app.use(express.static('public'));
 
 // Initialize Llama
 const llama = await getLlama();
