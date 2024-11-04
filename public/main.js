@@ -42,6 +42,7 @@ function animate(currentTime) {
         offsetX = (displayCanvas.width - drawWidth) / 2;
     }
 
+    ctx.imageSmoothingEnabled = false;
     // Draw background scaled to fit screen while maintaining aspect ratio
     ctx.drawImage(
         backgroundCanvas,
@@ -68,7 +69,7 @@ function animate(currentTime) {
             // Handle any active animations here
             if (currentCharacterSprite.currentDirection === currentCharacterSprite.spriteSheet.FACING.RIGHT &&
                 (animationType === 'exit' ?
-                    currentCharacterSprite.x < displayCanvas.width / spriteScale :
+                    currentCharacterSprite.x < displayCanvas.width :
                     currentCharacterSprite.x < (displayCanvas.width / spriteScale) / 2 - 14 * 8)) {
                 currentCharacterSprite.x += 3;
             } else {
@@ -254,21 +255,10 @@ document.addEventListener('DOMContentLoaded', async() => {
 
     const guessInput = document.getElementById('code-word-guess');
     const submitGuessButton = document.getElementById('submit-guess');
-    const giveUpButton = document.getElementById('give-up');
+    const dontKnowButton = document.getElementById('give-up');
     const guessResult = document.getElementById('guess-result');
 
     let remainingGuesses = 3;
-
-    giveUpButton.addEventListener('click', () => {
-        guessResult.textContent = 'Subject resisted interrogation.';
-        guessResult.style.color = 'red';
-        guessInput.disabled = true;
-        submitGuessButton.disabled = true;
-        giveUpButton.disabled = true;
-        document.getElementById('next-subject').style.display = 'block';
-        totalCount++;
-        updateStats();
-    });
 
     submitGuessButton.addEventListener('click', () => {
         const guess = guessInput.value.trim().toLowerCase();
@@ -305,14 +295,22 @@ document.addEventListener('DOMContentLoaded', async() => {
             }
         }
     });
-
+    dontKnowButton.addEventListener('click', () => {
+        guessResult.textContent = `❌ Subject resisted interrogation.`;
+        guessResult.style.color = 'red';
+        guessInput.disabled = true;
+        submitGuessButton.disabled = true;
+        document.getElementById('next-subject').style.display = 'block';
+        totalCount++;
+        updateStats();
+    });
     nextSubjectButton.addEventListener('click', async() => {
         // Clear the message history
         const messageHistory = document.getElementById('message-history');
         messageHistory.innerHTML = '';
 
         // Reset guessing interface
-        document.getElementById('guessing-section').style.display = 'none';
+        document.getElementById('code-word-panel').style.display = 'none';
         document.getElementById('next-subject').style.display = 'none';
         guessInput.value = '';
         guessResult.textContent = '';
@@ -327,8 +325,8 @@ document.addEventListener('DOMContentLoaded', async() => {
 
         // Reset subject left flag and start new session
         subjectHasLeft = false;
-        // Get rid of speech bubbles
-
+        alert("YAY")
+            // Get rid of speech bubbles
         await initializeSession();
     });
 
@@ -358,7 +356,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         // Replace '<LEAVES>' with empty string if it is
 
         // Check if the response contains <LEAVES>
-        if (response.includes('<LEAVES>')) {
+        if (response.includes('<LEAVES>') || true) {
             // Replace leaves
             editLastMessage((msg) => msg.replace('<LEAVES>', ''));
 
@@ -368,20 +366,19 @@ document.addEventListener('DOMContentLoaded', async() => {
             currentCharacterSprite.setDirection(currentCharacterSprite.spriteSheet.FACING.RIGHT);
             isAnimating = true;
             animationType = 'exit';
-            const bubbleContainer = document.getElementById('speech-bubbles');
             //bubbleContainer.innerHTML = '';
 
             // Check for animation completion in a separate interval
-            const checkInterval = setInterval(() => {
+            /*const checkInterval = setInterval(() => {
                 const displayCanvas = document.getElementById('subject-sprite');
                 if (currentCharacterSprite.x >= displayCanvas.width) {
+                    resolve
                     clearInterval(checkInterval);
                 }
-            }, 100);
+            }, 100);*/
 
-            // Show the guessing section
+            // Show the guess interface
             document.getElementById('guessing-section').style.display = 'block';
-            document.getElementById('code-word-guess').focus();
 
             // Mark that the subject has left
             subjectHasLeft = true;
