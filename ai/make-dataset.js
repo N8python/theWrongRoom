@@ -62,10 +62,15 @@ The last turn of the dialogue should have a special <LEAVES> attached to the end
 `;
 
     try {
-        const msg = await openai.chat.completions.create({
-            model: "anthropic/claude-3.5-sonnet",
-            messages: [{ role: "user", content: prompt }]
-        });
+        const msg = await Promise.race([
+            openai.chat.completions.create({
+                model: "anthropic/claude-3.5-sonnet",
+                messages: [{ role: "user", content: prompt }]
+            }),
+            new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('API timeout after 20 seconds')), 20000)
+            )
+        ]);
         
         return {
             script: msg.choices[0].message.content,
