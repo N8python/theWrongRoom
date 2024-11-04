@@ -52,10 +52,26 @@ app.post('/sessions/:sessionId/chat', async (req, res) => {
             return res.status(404).json({ error: 'Session not found' });
         }
 
-        const response = await sessionData.session.prompt(message);
-        res.json({ response });
+        // Set headers for SSE
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
+        let fullResponse = '';
+        
+        await sessionData.session.prompt(message, {
+            onTextChunk(chunk) {
+                fullResponse += chunk;
+                res.write(`data: ${JSON.stringify({ chunk })}\n\n`);
+            }
+        });
+
+        // Send end event
+        res.write(`data: ${JSON.stringify({ done: true, fullResponse })}\n\n`);
+        res.end();
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
+        res.end();
     }
 });
 

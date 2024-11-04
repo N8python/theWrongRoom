@@ -48,12 +48,57 @@ async function sendMessage(message) {
             },
             body: JSON.stringify({ message })
         });
-        const data = await response.json();
-        return data.response;
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullResponse = '';
+
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            
+            const text = decoder.decode(value);
+            const lines = text.split('\n');
+            
+            for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                    const data = JSON.parse(line.slice(6));
+                    
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    
+                    if (data.chunk) {
+                        // Update the current message in chat
+                        updateLastMessage(data.chunk);
+                        fullResponse += data.chunk;
+                    }
+                    
+                    if (data.done) {
+                        return fullResponse;
+                    }
+                }
+            }
+        }
     } catch (error) {
         console.error('Error sending message:', error);
         return 'Error: Could not get response from server';
     }
+}
+
+function updateLastMessage(chunk) {
+    const chatContainer = document.getElementById('chat-container');
+    let lastMessage = chatContainer.lastElementChild;
+    
+    // If there's no last message or it's not an AI message, create a new one
+    if (!lastMessage || !lastMessage.classList.contains('ai-message')) {
+        lastMessage = document.createElement('div');
+        lastMessage.className = 'message ai-message';
+        chatContainer.appendChild(lastMessage);
+    }
+    
+    lastMessage.textContent = (lastMessage.textContent || '') + chunk;
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
 function addMessageToChat(message, isUser = true) {
@@ -91,10 +136,12 @@ document.addEventListener('DOMContentLoaded', async() => {
         addMessageToChat(message, true);
         messageInput.value = '';
 
-        // Get and add AI response
+        // Create empty AI message container
+        addMessageToChat('', false);
+        
+        // Get streaming response
         const response = await sendMessage(message);
-        addMessageToChat(response, false);
-
+        
         // Check if the response contains <LEAVES>
         if (response.includes('<LEAVES>')) {
             // Add a system message indicating the subject left
