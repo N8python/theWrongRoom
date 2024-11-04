@@ -26,10 +26,10 @@ export class SpriteSheet {
         ctx.transform(1, 0, 0, 0.2, 0, 0); // Flatten vertically
         ctx.globalAlpha = 0.3; // Make shadow semi-transparent
         ctx.fillStyle = 'black';
-        
+
         // Draw the shadow shape
         ctx.beginPath();
-        ctx.ellipse(0, 0, this.frameWidth * 4, this.frameWidth * 2, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, this.frameWidth * 8, this.frameWidth * 4 + 64, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
