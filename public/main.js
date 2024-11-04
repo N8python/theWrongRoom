@@ -98,7 +98,18 @@ document.addEventListener('DOMContentLoaded', async() => {
         // Check if the response contains <LEAVES>
         if (response.includes('<LEAVES>')) {
             // Add a system message indicating the subject left
-            addMessageToChat('Subject has left the room. Initializing new subject...', false);
+            addMessageToChat('Subject has left the room. Initializing new subject...', 'system');
+            
+            // Delete the current session
+            if (currentSessionId) {
+                try {
+                    await fetch(`/sessions/${currentSessionId}`, {
+                        method: 'DELETE'
+                    });
+                } catch (error) {
+                    console.error('Error closing session:', error);
+                }
+            }
             
             // Wait a moment before starting new session
             await new Promise(resolve => setTimeout(resolve, 1500));
