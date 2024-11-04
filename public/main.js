@@ -154,6 +154,14 @@ function updateStats() {
 }
 
 document.addEventListener('DOMContentLoaded', async() => {
+    // First load all sprites
+    await initializeSpriteAssets();
+    
+    // Hide loading screen and show game interface
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('subject-info').style.display = 'block';
+    
+    // Then initialize the game session
     await initializeSession();
 
     const messageInput = document.getElementById('message-input');

@@ -39,8 +39,26 @@ async function initializeSpriteAssets() {
     }
 }
 
-// Initialize on script load
-initializeSpriteAssets();
+// Export the initialization function so we can await it
+export async function initializeSpriteAssets() {
+    const layers = Object.keys(imageCache);
+    
+    for (const layer of layers) {
+        try {
+            const response = await fetch(`/sprite-parts/npc-parts/${layer}`);
+            const files = await response.json();
+            
+            const loadPromises = files.map(file => 
+                loadImage(`/sprites/npc-parts/${layer}/${file}`)
+                    .then(img => imageCache[layer].push(img))
+            );
+            
+            await Promise.all(loadPromises);
+        } catch (error) {
+            console.error(`Error loading ${layer} sprites:`, error);
+        }
+    }
+}
 
 export async function generateRandomSprite() {
     const canvas = document.createElement('canvas');
