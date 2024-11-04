@@ -139,6 +139,23 @@ document.addEventListener('DOMContentLoaded', async() => {
 
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
+    const nextSubjectButton = document.getElementById('next-subject');
+
+    nextSubjectButton.addEventListener('click', async () => {
+        // Clear the chat container
+        const chatContainer = document.getElementById('chat-container');
+        chatContainer.innerHTML = '';
+        
+        // Hide the next subject button
+        nextSubjectButton.style.display = 'none';
+        
+        // Re-enable input
+        messageInput.disabled = false;
+        sendButton.disabled = false;
+        
+        // Start a new session
+        await initializeSession();
+    });
 
     async function handleSendMessage() {
         const message = messageInput.value.trim();
@@ -164,12 +181,15 @@ document.addEventListener('DOMContentLoaded', async() => {
             // Replace leaves
             editLastMessage((msg) => msg.replace('<LEAVES>', ''));
 
-            // Clear the chat container
-            const chatContainer = document.getElementById('chat-container');
-            chatContainer.innerHTML = '';
-            
             // Add a system message indicating the subject left
-            addMessageToChat('Subject has left the room. Initializing new subject...', 'system');
+            addMessageToChat('Subject has left the room. Click "Next Subject" to continue...', 'system');
+
+            // Show the next subject button
+            document.getElementById('next-subject').style.display = 'block';
+            
+            // Disable the chat input
+            messageInput.disabled = true;
+            sendButton.disabled = true;
 
             // Delete the current session
             if (currentSessionId) {
@@ -181,12 +201,6 @@ document.addEventListener('DOMContentLoaded', async() => {
                     console.error('Error closing session:', error);
                 }
             }
-
-            // Wait a moment before starting new session
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // Start a new session
-            await initializeSession();
         }
 
         // Re-enable input and button
