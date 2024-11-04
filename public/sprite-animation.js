@@ -22,15 +22,22 @@ export class SpriteSheet {
     drawFrame(ctx, frameX, frameY, canvasX, canvasY) {
         // Draw shadow first
         ctx.save();
-        ctx.translate(canvasX + this.frameWidth * 7, canvasY + this.frameHeight * 13.5);
-        ctx.transform(1, 0, 0, 0.2, 0, 0); // Flatten vertically
-        ctx.globalAlpha = 0.3; // Make shadow semi-transparent
-        ctx.fillStyle = 'black';
-
-        // Draw the shadow shape
-        ctx.beginPath();
-        ctx.ellipse(0, 0, this.frameWidth * 8, this.frameWidth * 4 + 64, 0, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.translate(canvasX + this.frameWidth * 7, canvasY + this.frameHeight * 14);
+        ctx.transform(1, 0, -0.5, 0.2, 0, 0); // Skew and flatten
+        ctx.globalAlpha = 0.2; // Make shadow semi-transparent
+        
+        // Draw the shadow (skewed sprite)
+        ctx.drawImage(
+            this.image,
+            frameX * this.frameWidth,
+            frameY * this.frameHeight,
+            this.frameWidth,
+            this.frameHeight,
+            0,
+            0,
+            this.frameWidth * 14,
+            this.frameHeight * 14
+        );
         ctx.restore();
 
         // Draw the actual sprite
