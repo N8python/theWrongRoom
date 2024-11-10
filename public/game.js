@@ -90,19 +90,22 @@ class Game {
     toggleTTS() {
         window.TTS = !window.TTS;
         const btn = document.getElementById('toggle-tts');
-        btn.textContent = `Voice Synthesis: ${window.TTS ? 'ON' : 'OFF'}`;
+        btn.classList.toggle('disabled', !window.TTS);
+        btn.textContent = window.TTS ? '🗣️' : '🔇';
     }
 
     toggleWhisper() {
         this.isWhisperInitialized = !this.isWhisperInitialized;
         const btn = document.getElementById('toggle-whisper');
-        btn.textContent = `Voice Recognition: ${this.isWhisperInitialized ? 'ON' : 'OFF'}`;
+        btn.classList.toggle('disabled', !this.isWhisperInitialized);
+        btn.textContent = this.isWhisperInitialized ? '🎤' : '🔇';
     }
 
     toggleGameAudio() {
         this.audioEnabled = !this.audioEnabled;
         const btn = document.getElementById('toggle-sound');
-        btn.textContent = `Game Audio: ${this.audioEnabled ? 'ON' : 'OFF'}`;
+        btn.classList.toggle('disabled', !this.audioEnabled);
+        btn.textContent = this.audioEnabled ? '🔊' : '🔇';
         
         if (this.audioEnabled) {
             this.audioManager.backgroundTrack.play();

@@ -196,16 +196,27 @@
         .audio-toggle {
             background-color: #5a4836;
             color: #e6d4b6;
-            padding: 12px;
+            padding: 8px;
             border: 1px solid #666;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.2s;
+            font-size: 20px;
+            transition: all 0.2s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .audio-toggle:hover {
             background-color: #6a583f;
+            transform: scale(1.05);
+        }
+
+        .audio-toggle.disabled {
+            background-color: #3e2f23;
+            color: #a89b86;
         }
         
         #subject-info h2 {
@@ -301,12 +312,11 @@
             </div>
 
             <!-- Audio Controls -->
-            <div id="audio-controls" style="margin-top: 24px; background: rgba(62, 47, 35, 0.9); padding: 18px; border-radius: 6px; border: 2px solid #e6d4b6;">
-                <h3 style="margin-top: 0; margin-bottom: 18px; color: #e6d4b6;">Audio Settings</h3>
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                    <button id="toggle-tts" class="audio-toggle">Voice Synthesis: ON</button>
-                    <button id="toggle-whisper" class="audio-toggle">Voice Recognition: ON</button>
-                    <button id="toggle-sound" class="audio-toggle">Game Audio: ON</button>
+            <div id="audio-controls" style="margin-top: 24px; background: rgba(62, 47, 35, 0.9); padding: 12px; border-radius: 6px; border: 2px solid #e6d4b6;">
+                <div style="display: flex; gap: 8px;">
+                    <button id="toggle-tts" class="audio-toggle" title="Voice Synthesis">🗣️</button>
+                    <button id="toggle-whisper" class="audio-toggle" title="Voice Recognition">🎤</button>
+                    <button id="toggle-sound" class="audio-toggle" title="Game Audio">🔊</button>
                 </div>
             </div>
         </div>

@@ -38,7 +38,7 @@ class MessageManager {
             return action;
         });
 
-        if (TTS) {
+        if (window.TTS) {
             const wav = await tts.predict({
                 text: response,
                 voiceId: 'en_GB-vctk-medium',
