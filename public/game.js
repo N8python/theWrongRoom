@@ -43,7 +43,7 @@ class Game {
 
         this.uiManager.addEventListeners();
         this.setupSettingsMenu();
-        
+
         // Only start gameplay if specified
         if (startGameplay) {
             await this.startGameplay();
@@ -53,7 +53,7 @@ class Game {
     async startGameplay() {
         // Start the actual gameplay loop
         await this.sessionManager.initializeSession();
-        
+
         // Add audio control listeners
         document.getElementById('toggle-tts').addEventListener('click', () => this.toggleTTS());
         document.getElementById('toggle-whisper').addEventListener('click', () => this.toggleWhisper());
@@ -125,22 +125,23 @@ class Game {
         window.TTS = !window.TTS;
         const btn = document.getElementById('toggle-tts');
         btn.classList.toggle('disabled', !window.TTS);
-        btn.textContent = window.TTS ? '🗣️' : '🔇';
+        btn.innerHTML = window.TTS ? '<span class="icon">🗣️</span><span class="label">Voice Synthesis</span>' : '<span class="icon">🔇</span><span class="label">Voice Synthesis (Off)</span>';
     }
 
     toggleWhisper() {
         this.isWhisperInitialized = !this.isWhisperInitialized;
         const btn = document.getElementById('toggle-whisper');
         btn.classList.toggle('disabled', !this.isWhisperInitialized);
-        btn.textContent = this.isWhisperInitialized ? '🎤' : '🔇';
+        //btn.textContent = this.isWhisperInitialized ? '🎤' : '🔇';
+        btn.innerHTML = this.isWhisperInitialized ? '<span class="icon">🎤</span><span class="label">Voice Recognition</span>' : '<span class="icon">🔇</span><span class="label">Voice Recognition (Off)</span>';
     }
 
     toggleGameAudio() {
         this.audioEnabled = !this.audioEnabled;
         const btn = document.getElementById('toggle-sound');
         btn.classList.toggle('disabled', !this.audioEnabled);
-        btn.textContent = this.audioEnabled ? '🔊' : '🔇';
-        
+        btn.textContent = this.audioEnabled ? '<span class="icon">🔊</span><span class="label">Game Audio</span>' : '<span class="icon">🔇</span><span class="label">Game Audio (Off)</span>';
+
         if (this.audioEnabled) {
             this.audioManager.backgroundTrack.play();
             this.audioManager.backgroundOfficeAmbience.play();
