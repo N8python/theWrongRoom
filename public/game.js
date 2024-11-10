@@ -33,21 +33,29 @@ class Game {
         this.audioEnabled = true;
     }
 
-    async initialize() {
-        // Initialize components
+    async initialize(startGameplay = false) {
+        // Initialize components but don't start gameplay loop
         await this.renderer.initialize();
         await this.audioManager.initialize();
         await this.sessionManager.initialize();
         await this.characterManager.initialize();
 
         this.uiManager.addEventListeners();
+        
+        // Only start gameplay if specified
+        if (startGameplay) {
+            await this.startGameplay();
+        }
+    }
+
+    async startGameplay() {
+        // Start the actual gameplay loop
         await this.sessionManager.initializeSession();
+        
         // Add audio control listeners
         document.getElementById('toggle-tts').addEventListener('click', () => this.toggleTTS());
         document.getElementById('toggle-whisper').addEventListener('click', () => this.toggleWhisper());
         document.getElementById('toggle-sound').addEventListener('click', () => this.toggleGameAudio());
-        
-        document.getElementById('loading-screen').style.display = 'none';
     }
 
     async cleanup() {
