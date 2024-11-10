@@ -30,6 +30,7 @@ class Game {
         this.debugCamera = false;
         this.playingAudio = false;
         this.noise = new Noise();
+        this.audioEnabled = true;
     }
 
     async initialize() {
@@ -41,6 +42,11 @@ class Game {
 
         this.uiManager.addEventListeners();
         await this.sessionManager.initializeSession();
+        // Add audio control listeners
+        document.getElementById('toggle-tts').addEventListener('click', () => this.toggleTTS());
+        document.getElementById('toggle-whisper').addEventListener('click', () => this.toggleWhisper());
+        document.getElementById('toggle-sound').addEventListener('click', () => this.toggleGameAudio());
+        
         document.getElementById('loading-screen').style.display = 'none';
     }
 
@@ -79,6 +85,34 @@ class Game {
 
     stopTranscription() {
         this.audioManager.stopTranscription();
+    }
+
+    toggleTTS() {
+        window.TTS = !window.TTS;
+        const btn = document.getElementById('toggle-tts');
+        btn.textContent = `Voice Synthesis: ${window.TTS ? 'ON' : 'OFF'}`;
+    }
+
+    toggleWhisper() {
+        this.isWhisperInitialized = !this.isWhisperInitialized;
+        const btn = document.getElementById('toggle-whisper');
+        btn.textContent = `Voice Recognition: ${this.isWhisperInitialized ? 'ON' : 'OFF'}`;
+    }
+
+    toggleGameAudio() {
+        this.audioEnabled = !this.audioEnabled;
+        const btn = document.getElementById('toggle-sound');
+        btn.textContent = `Game Audio: ${this.audioEnabled ? 'ON' : 'OFF'}`;
+        
+        if (this.audioEnabled) {
+            this.audioManager.backgroundTrack.play();
+            this.audioManager.backgroundOfficeAmbience.play();
+        } else {
+            this.audioManager.backgroundTrack.pause();
+            this.audioManager.backgroundOfficeAmbience.pause();
+            this.audioManager.footsteps.pause();
+            this.audioManager.lightFlicker.pause();
+        }
     }
 }
 

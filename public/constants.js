@@ -1,1 +1,2 @@
-export const TTS = true;
+window.TTS = true;
+export const TTS = window.TTS;
