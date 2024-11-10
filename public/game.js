@@ -14,6 +14,7 @@ class Game {
         this.messageManager = new MessageManager(this);
         this.audioManager = new AudioManager(this);
         this.sessionManager = new SessionManager(this);
+        this.settingsOpen = false;
 
         this.currentSessionId = null;
         this.currentCodeWord = null;
@@ -41,6 +42,7 @@ class Game {
         await this.characterManager.initialize();
 
         this.uiManager.addEventListeners();
+        this.setupSettingsMenu();
         
         // Only start gameplay if specified
         if (startGameplay) {
@@ -56,6 +58,30 @@ class Game {
         document.getElementById('toggle-tts').addEventListener('click', () => this.toggleTTS());
         document.getElementById('toggle-whisper').addEventListener('click', () => this.toggleWhisper());
         document.getElementById('toggle-sound').addEventListener('click', () => this.toggleGameAudio());
+    }
+
+    setupSettingsMenu() {
+        const settingsButton = document.getElementById('settings-button');
+        const settingsMenu = document.getElementById('settings-menu');
+        const closeSettings = document.getElementById('close-settings');
+
+        settingsButton.addEventListener('click', () => {
+            settingsMenu.style.display = 'flex';
+            this.settingsOpen = true;
+        });
+
+        closeSettings.addEventListener('click', () => {
+            settingsMenu.style.display = 'none';
+            this.settingsOpen = false;
+        });
+
+        // Optional: Close settings when pressing Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.settingsOpen) {
+                settingsMenu.style.display = 'none';
+                this.settingsOpen = false;
+            }
+        });
     }
 
     async cleanup() {

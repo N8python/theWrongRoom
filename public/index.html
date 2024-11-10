@@ -193,42 +193,117 @@
             cursor: not-allowed;
         }
 
-        #audio-controls {
+        .settings-button {
             position: fixed;
             bottom: 24px;
             right: 24px;
-            background: rgba(62, 47, 35, 0.9);
-            padding: 12px;
-            border-radius: 6px;
+            width: 48px;
+            height: 48px;
+            font-size: 24px;
+            background-color: #5a4836;
+            color: #e6d4b6;
             border: 2px solid #e6d4b6;
+            border-radius: 8px;
+            cursor: pointer;
             z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .settings-button:hover {
+            background-color: #6a583f;
+            transform: scale(1.05);
+        }
+
+        .settings-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(62, 47, 35, 0.95);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .settings-content {
+            background: #3e2f23;
+            border: 2px solid #e6d4b6;
+            border-radius: 12px;
+            padding: 32px;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .settings-content h2 {
+            margin: 0;
+            color: #e6d4b6;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .settings-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
         .audio-toggle {
-            background-color: #5a4836;
-            color: #e6d4b6;
-            padding: 8px;
-            border: 1px solid #666;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 20px;
-            transition: all 0.2s;
-            width: 40px;
-            height: 40px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            filter: sepia(1);
+            gap: 12px;
+            width: 100%;
+            padding: 16px;
+            background-color: #5a4836;
+            color: #e6d4b6;
+            border: 1px solid #e6d4b6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
         }
 
         .audio-toggle:hover {
             background-color: #6a583f;
-            transform: scale(1.05);
+            transform: scale(1.02);
         }
 
         .audio-toggle.disabled {
             background-color: #3e2f23;
             color: #a89b86;
+        }
+
+        .audio-toggle .icon {
+            font-size: 24px;
+            width: 32px;
+            text-align: center;
+        }
+
+        .audio-toggle .label {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .close-settings {
+            width: 100%;
+            padding: 16px;
+            background-color: #5a4836;
+            color: #e6d4b6;
+            border: 2px solid #e6d4b6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        .close-settings:hover {
+            background-color: #6a583f;
+            transform: scale(1.02);
         }
         
         #subject-info h2 {
@@ -373,12 +448,26 @@
         </div>
     </div>
 
-    <!-- Audio Controls -->
-    <div id="audio-controls">
-        <div style="display: flex; gap: 8px;">
-            <button id="toggle-tts" class="audio-toggle" title="Voice Synthesis">🗣️</button>
-            <button id="toggle-whisper" class="audio-toggle" title="Voice Recognition">🎤</button>
-            <button id="toggle-sound" class="audio-toggle" title="Game Audio">🔊</button>
+    <button id="settings-button" class="settings-button" title="Settings">⚙️</button>
+
+    <div id="settings-menu" class="settings-menu" style="display: none;">
+        <div class="settings-content">
+            <h2>Settings</h2>
+            <div class="settings-buttons">
+                <button id="toggle-tts" class="audio-toggle" title="Voice Synthesis">
+                    <span class="icon">🗣️</span>
+                    <span class="label">Voice Synthesis</span>
+                </button>
+                <button id="toggle-whisper" class="audio-toggle" title="Voice Recognition">
+                    <span class="icon">🎤</span>
+                    <span class="label">Voice Recognition</span>
+                </button>
+                <button id="toggle-sound" class="audio-toggle" title="Game Audio">
+                    <span class="icon">🔊</span>
+                    <span class="label">Game Audio</span>
+                </button>
+            </div>
+            <button id="close-settings" class="close-settings">Back to Game</button>
         </div>
     </div>
 
