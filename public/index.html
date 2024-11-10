@@ -207,6 +207,9 @@
             cursor: pointer;
             z-index: 100;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .settings-button:hover {
@@ -274,18 +277,24 @@
 
         .audio-toggle.disabled {
             background-color: #3e2f23;
-            color: #a89b86;
+            cursor: not-allowed;
         }
 
         .audio-toggle .icon {
             font-size: 24px;
             width: 32px;
             text-align: center;
+            opacity: 1;
+        }
+
+        .audio-toggle.disabled .icon {
+            opacity: 0.5;
         }
 
         .audio-toggle .label {
             flex-grow: 1;
             text-align: left;
+            opacity: 1;
         }
 
         .close-settings {
