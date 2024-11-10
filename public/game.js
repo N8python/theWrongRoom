@@ -64,6 +64,7 @@ class Game {
         const settingsButton = document.getElementById('settings-button');
         const settingsMenu = document.getElementById('settings-menu');
         const closeSettings = document.getElementById('close-settings');
+        const backToMenu = document.getElementById('back-to-menu');
 
         settingsButton.addEventListener('click', () => {
             settingsMenu.style.display = 'flex';
@@ -75,6 +76,10 @@ class Game {
             this.settingsOpen = false;
         });
 
+        backToMenu.addEventListener('click', async () => {
+            await this.returnToMainMenu();
+        });
+
         // Optional: Close settings when pressing Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.settingsOpen) {
@@ -82,6 +87,51 @@ class Game {
                 this.settingsOpen = false;
             }
         });
+    }
+
+    async returnToMainMenu() {
+        // Clean up current session
+        await this.cleanup();
+        
+        // Reset game state
+        this.currentSessionId = null;
+        this.currentCodeWord = null;
+        this.successCount = 0;
+        this.totalCount = 0;
+        this.currentCharacterSprite = null;
+        this.isAnimating = false;
+        this.animationType = 'idle';
+        this.remainingGuesses = 3;
+        this.subjectHasLeft = false;
+        
+        // Clear UI
+        this.uiManager.messageHistory.innerHTML = '';
+        this.uiManager.messageInput.value = '';
+        this.uiManager.guessInput.value = '';
+        this.uiManager.guessResult.textContent = '';
+        document.getElementById('guessing-section').style.display = 'none';
+        document.getElementById('success-count').textContent = '0';
+        document.getElementById('total-count').textContent = '0';
+        document.getElementById('success-rate').textContent = '0%';
+        
+        // Hide game UI elements
+        this.uiManager.nextSubjectButton.style.display = 'none';
+        
+        // Hide settings menu
+        document.getElementById('settings-menu').style.display = 'none';
+        this.settingsOpen = false;
+        
+        // Show main menu
+        document.getElementById('main-menu').style.display = 'flex';
+        
+        // Remove character if present
+        if (this.currentCharacterSprite && this.currentCharacterSprite.mesh) {
+            this.renderer.scene.remove(this.currentCharacterSprite.mesh);
+            this.currentCharacterSprite.mesh.traverse((child) => {
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) child.material.dispose();
+            });
+        }
     }
 
     async cleanup() {
