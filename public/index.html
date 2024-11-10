@@ -193,6 +193,17 @@
             cursor: not-allowed;
         }
 
+        #audio-controls {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: rgba(62, 47, 35, 0.9);
+            padding: 12px;
+            border-radius: 6px;
+            border: 2px solid #e6d4b6;
+            z-index: 100;
+        }
+
         .audio-toggle {
             background-color: #5a4836;
             color: #e6d4b6;
@@ -207,6 +218,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            filter: sepia(1);
         }
 
         .audio-toggle:hover {
@@ -311,14 +323,6 @@
                 </div>
             </div>
 
-            <!-- Audio Controls -->
-            <div id="audio-controls" style="margin-top: 24px; background: rgba(62, 47, 35, 0.9); padding: 12px; border-radius: 6px; border: 2px solid #e6d4b6;">
-                <div style="display: flex; gap: 8px;">
-                    <button id="toggle-tts" class="audio-toggle" title="Voice Synthesis">🗣️</button>
-                    <button id="toggle-whisper" class="audio-toggle" title="Voice Recognition">🎤</button>
-                    <button id="toggle-sound" class="audio-toggle" title="Game Audio">🔊</button>
-                </div>
-            </div>
         </div>
 
         <div id="message-history"></div>
@@ -326,6 +330,15 @@
             <input type="text" id="message-input" placeholder="Type your message...">
             <button id="send-button">Send</button>
             <button id="next-subject" style="display: none;" disabled>Next Subject</button>
+        </div>
+    </div>
+
+    <!-- Audio Controls -->
+    <div id="audio-controls">
+        <div style="display: flex; gap: 8px;">
+            <button id="toggle-tts" class="audio-toggle" title="Voice Synthesis">🗣️</button>
+            <button id="toggle-whisper" class="audio-toggle" title="Voice Recognition">🎤</button>
+            <button id="toggle-sound" class="audio-toggle" title="Game Audio">🔊</button>
         </div>
     </div>
 
