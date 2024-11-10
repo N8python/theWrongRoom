@@ -4,17 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with AI</title>
+    <title>Interrogation</title>
+    <!-- Include Google Font for pixelated text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
     <style>
+        /* Reset some default styles */
+        
+        body,
+        h2,
+        p,
+        input,
+        button {
+            margin: 0;
+            padding: 0;
+            font-family: "Pixelify Sans";
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             overflow: hidden;
             height: 100vh;
-            background: black;
+            background: #3e2f23;
+            /* Dark sepia background */
+            color: #e6d4b6;
+            /* Light sepia text */
+            font-size: 18px;
+            /* Increased base font size */
         }
-
+        
         #game-container {
             position: relative;
             width: 100vw;
@@ -28,170 +51,186 @@
             width: 100%;
             height: 100%;
             z-index: 1;
+            image-rendering: pixelated;
+            /* Pixelated images */
         }
-
+        
         #chat-container,
-        #input-container,
-        #subject-info {
+        #input-container {
             position: relative;
             z-index: 2;
         }
-
-        #code-word-panel {
+        /* Create a right-side panel container */
+        
+        .right-side-panels {
             position: fixed;
-            top: 180px;
-            right: 20px;
-            width: 300px;
+            top: 24px;
+            right: 24px;
+            width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
             z-index: 99;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px;
-            border-radius: 5px;
-            color: white;
         }
-
+        
+        #subject-info {
+            position: relative;
+            background: rgba(62, 47, 35, 0.9);
+            color: #e6d4b6;
+            padding: 18px;
+            border-radius: 6px;
+            backdrop-filter: blur(6px);
+            border: 2px solid #e6d4b6;
+        }
+        
+        #code-word-panel {
+            position: relative;
+            background: rgba(62, 47, 35, 0.9);
+            padding: 18px;
+            border-radius: 6px;
+            color: #e6d4b6;
+            border: 2px solid #e6d4b6;
+        }
+        
         #code-word-panel .stats {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(230, 212, 182, 0.2);
         }
-
+        
         #guess-result {
-            margin-top: 10px;
-            font-weight: bold;
+            margin-top: 12px;
         }
-
+        
         #guesses-remaining {
-            margin-top: 5px;
-            font-style: italic;
+            margin-top: 6px;
         }
-
+        
         #code-word-guess {
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 8px;
-            border-radius: 4px;
+            margin-bottom: 12px;
+            width: calc(100% - 18px);
+            padding: 10px;
+            margin-right: 12px;
+            border-radius: 5px;
             border: 1px solid #666;
+            background: #2f261d;
+            color: #e6d4b6;
+            font-size: 18px;
         }
-
-        #submit-guess {
-            width: 100%;
-        }
-
+        
         #message-history {
             position: fixed;
-            bottom: 80px;
-            left: 20px;
-            width: 400px;
+            bottom: 96px;
+            left: 24px;
+            width: 444px;
             max-height: 60vh;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 5px;
-            padding: 15px;
+            background: rgba(62, 47, 35, 0.9);
+            border-radius: 6px;
+            padding: 18px;
             overflow-y: auto;
             z-index: 100;
-            color: white;
+            color: #e6d4b6;
+            border: 2px solid #e6d4b6;
         }
-
+        
         .message {
-            margin-bottom: 10px;
-            padding: 8px;
-            border-radius: 4px;
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 5px;
             word-wrap: break-word;
+            background: rgba(62, 47, 35, 0.8);
+            border: 1px solid #e6d4b6;
         }
-
+        
         .message.user {
-            background: rgba(0, 123, 255, 0.3);
-            margin-left: 20px;
+            background: rgba(128, 90, 45, 0.3);
+            margin-left: 24px;
         }
-
+        
         .message.ai {
-            background: rgba(255, 255, 255, 0.1);
-            margin-right: 20px;
+            background: rgba(230, 212, 182, 0.1);
+            margin-right: 24px;
         }
-
+        
         #input-container {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 400px;
+            bottom: 24px;
+            left: 24px;
+            width: 480px;
             display: flex;
-            gap: 10px;
+            gap: 12px;
             z-index: 100;
         }
         
         #message-input {
             flex-grow: 1;
-            padding: 10px;
+            padding: 12px;
+            background: #2f261d;
+            border: 1px solid #666;
+            color: #e6d4b6;
+            font-size: 18px;
+        }
+        /* Increase placeholder text size */
+        
+        #message-input::placeholder {
+            font-size: 18px;
+            color: #a89b86;
         }
         
         button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
+            padding: 12px 24px;
+            background-color: #5a4836;
+            color: #e6d4b6;
+            border: 1px solid #666;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 18px;
         }
         
         button:disabled {
-            background-color: #ccc;
-        }
-        
-        #subject-info {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            width: 280px;
-            backdrop-filter: blur(5px);
+            background-color: #3e2f23;
+            color: #a89b86;
+            cursor: not-allowed;
         }
         
         #subject-info h2 {
             margin-top: 0;
             font-size: 1.2em;
-            color: #495057;
+            color: #a89b86;
         }
-    </style>
-</head>
-
-<body>
-    <div id="game-container">
-        <canvas id="subject-sprite"></canvas>
-        <div id="subject-info" style="display: none;">
-            <h2>Subject Information</h2>
-            <p><strong>Name:</strong> <span id="subject-name"></span></p>
-            <p><strong>Sex:</strong> <span id="subject-sex"></span></p>
-            <p><strong>Profession:</strong> <span id="subject-profession"></span></p>
-        </div>
-        <div id="message-history"></div>
-        <div id="input-container">
-            <input type="text" id="message-input" placeholder="Type your message...">
-            <button id="send-button">Send</button>
-            <button id="next-subject" style="display: none;">Next Subject</button>
-        </div>
-        <div id="code-word-panel">
-            <h2 style="margin-top: 0; margin-bottom: 15px; color: white;">Information Reconnaissance</h2>
-            <div class="stats">
-                <p>Code words extracted: <span id="success-count">0</span>/<span id="total-count">0</span> (<span id="success-rate">0%</span>)</p>
-            </div>
-            <div id="guessing-section" style="display: none;">
-                <input type="text" id="code-word-guess" placeholder="Guess the code word...">
-                <button id="submit-guess">Submit Guess</button>
-                <button id="give-up">I Don't Know</button>
-                <div id="guess-result"></div>
-                <div id="guesses-remaining">Remaining guesses: 3</div>
-            </div>
-        </div>
-    </div>
-    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); color: white; display: flex; justify-content: center; align-items: center; z-index: 1000;">
-        <div style="text-align: center;">
-            <h2>Loading Sprites...</h2>
-            <div class="spinner" style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-        </div>
-    </div>
-    <style>
+        
+        .button-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        /* Loading screen styles */
+        
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(62, 47, 35, 0.9);
+            color: #e6d4b6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #a89b86;
+            border-top: 6px solid #e6d4b6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        /* Keyframes for spinner */
+        
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
@@ -200,8 +239,71 @@
                 transform: rotate(360deg);
             }
         }
+        /* Make images pixelated */
+        
+        img {
+            image-rendering: pixelated;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container">
+        <canvas id="subject-sprite"></canvas>
+
+        <!-- Right side panels container -->
+        <div class="right-side-panels">
+            <!-- Subject info panel -->
+            <div id="subject-info">
+                <h2>Subject Information</h2>
+                <p><strong>Name:</strong> <span id="subject-name"></span></p>
+                <p><strong>Sex:</strong> <span id="subject-sex"></span></p>
+                <p><strong>Profession:</strong> <span id="subject-profession"></span></p>
+                <p><strong>History:</strong> <span id="subject-history"></span></p>
+                <p><strong>Background:</strong> <span id="subject-background"></span></p>
+                <p><strong>Secret Type:</strong> <span id="subject-secret-type"></span></p>
+                <p><strong>Emotion:</strong> <span id="subject-emotion"></span></p>
+                <p><strong>Resistance:</strong> <span id="subject-resistance"></span></p>
+            </div>
+
+            <!-- Code word panel -->
+            <div id="code-word-panel">
+                <h3 style="margin-top: 0; margin-bottom: 18px; color: #e6d4b6;">Information Reconnaissance</h3>
+                <div class="stats">
+                    <p>Code words extracted: <span id="success-count">0</span>/<span id="total-count">0</span> (<span id="success-rate">0%</span>)</p>
+                </div>
+                <div id="guessing-section" style="display: none;">
+                    <input type="text" id="code-word-guess" placeholder="Guess the code word...">
+                    <br>
+                    <div class="button-container">
+                        <button id="submit-guess">Submit Guess</button>
+                        <button id="give-up">I Don't Know</button>
+                    </div>
+                    <div id="guess-result"></div>
+                    <div id="guesses-remaining">Remaining guesses: 3</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="message-history"></div>
+        <div id="input-container">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-button">Send</button>
+            <button id="next-subject" style="display: none;" disabled>Next Subject</button>
+        </div>
+    </div>
+
+    <div id="loading-screen">
+        <div style="text-align: center;">
+            <h2 id="loading-message">Loading Sprites...</h2>
+            <div class="spinner"></div>
+        </div>
+    </div>
     <img src="sprites/background-interrogation.png" style="display: none;" id="background-interrogation">
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/" } }
+    </script>
     <script src="main.js" type="module"></script>
 </body>
 
