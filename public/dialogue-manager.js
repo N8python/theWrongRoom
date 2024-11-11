@@ -7,7 +7,7 @@ export class DialogueManager {
         this.frameTime = 0;
         this.dialogueLines = [
             "Hello there.",
-            "This is line two.", 
+            "This is line two.",
             "Joe biden joe biden good luck."
         ];
         this.isActive = false;
@@ -16,13 +16,13 @@ export class DialogueManager {
 
     async initialize() {
         // Load boss images
-        for(let i = 1; i <= 4; i++) {
+        for (let i = 1; i <= 4; i++) {
             const img = new Image();
             img.src = `sprites/boss${i}.png`;
             await new Promise(resolve => img.onload = resolve);
             this.bossFrames.push(img);
         }
-        
+
         // Create dialogue overlay
         this.overlay = document.createElement('div');
         this.overlay.style.cssText = `
@@ -61,7 +61,7 @@ export class DialogueManager {
 
         this.overlay.appendChild(this.bossImage);
         this.overlay.appendChild(this.dialogueBox);
-        
+
         // Add click handler
         this.overlay.addEventListener('click', () => this.advance());
     }
