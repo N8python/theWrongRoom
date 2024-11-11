@@ -5,6 +5,7 @@ import { MessageManager } from './message.js';
 import { AudioManager } from './audio.js';
 import { SessionManager } from './session.js';
 import { DialogueManager } from './dialogue-manager.js';
+import { ShopManager } from './shop.js';
 import { TTS } from './constants.js';
 
 class Game {
