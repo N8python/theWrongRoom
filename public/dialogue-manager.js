@@ -7,11 +7,16 @@ export class DialogueManager {
         this.frameTime = 0;
         this.dialogueLines = [
             "Hello there.",
-            "This is line two.",
+            "This is line two.", 
             "Joe biden joe biden good luck."
         ];
         this.isActive = false;
         this.frameRate = 200; // ms per frame
+        this.currentText = '';
+        this.targetText = '';
+        this.charIndex = 0;
+        this.typewriterSpeed = 50; // ms per character
+        this.lastTypeTime = 0;
     }
 
     async initialize() {
@@ -77,6 +82,13 @@ export class DialogueManager {
     }
 
     advance() {
+        if (this.currentText.length < this.targetText.length) {
+            // If still typing, complete the current text immediately
+            this.currentText = this.targetText;
+            this.dialogueBox.textContent = this.currentText;
+            return;
+        }
+
         this.currentLine++;
         if (this.currentLine >= this.dialogueLines.length) {
             this.end();
@@ -86,17 +98,31 @@ export class DialogueManager {
     }
 
     updateDialogue() {
-        this.dialogueBox.textContent = this.dialogueLines[this.currentLine];
+        this.targetText = this.dialogueLines[this.currentLine];
+        this.currentText = '';
+        this.charIndex = 0;
+        this.lastTypeTime = performance.now();
     }
 
     animate() {
         if (!this.isActive) return;
 
         const currentTime = performance.now();
+        
+        // Handle frame animation
         if (currentTime - this.frameTime > this.frameRate) {
             this.currentFrame = (this.currentFrame + 1) % this.bossFrames.length;
             this.bossImage.src = this.bossFrames[this.currentFrame].src;
             this.frameTime = currentTime;
+        }
+
+        // Handle typewriter animation
+        if (this.currentText.length < this.targetText.length && 
+            currentTime - this.lastTypeTime > this.typewriterSpeed) {
+            this.currentText += this.targetText[this.charIndex];
+            this.charIndex++;
+            this.lastTypeTime = currentTime;
+            this.dialogueBox.textContent = this.currentText;
         }
 
         requestAnimationFrame(() => this.animate());
