@@ -32,17 +32,23 @@ class Game {
         this.playingAudio = false;
         this.noise = new Noise();
         this.audioEnabled = true;
+        this.firstGame = true;
     }
 
     async initialize(startGameplay = false) {
         // Initialize components but don't start gameplay loop
-        await this.renderer.initialize();
-        await this.audioManager.initialize();
-        await this.sessionManager.initialize();
-        await this.characterManager.initialize();
-
-        this.uiManager.addEventListeners();
-        this.setupSettingsMenu();
+        //    await this.renderer.initialize();
+        //    await this.audioManager.initialize();
+        //    await this.sessionManager.initialize();
+        //    await this.characterManager.initialize();
+        if (this.firstGame) {
+            await this.renderer.initialize();
+            await this.audioManager.initialize();
+            await this.sessionManager.initialize();
+            await this.characterManager.initialize();
+            this.uiManager.addEventListeners();
+            this.setupSettingsMenu();
+        }
 
         // Only start gameplay if specified
         if (startGameplay) {
@@ -55,9 +61,12 @@ class Game {
         await this.sessionManager.initializeSession();
 
         // Add audio control listeners
-        document.getElementById('toggle-tts').addEventListener('click', () => this.toggleTTS());
-        document.getElementById('toggle-whisper').addEventListener('click', () => this.toggleWhisper());
-        document.getElementById('toggle-sound').addEventListener('click', () => this.toggleGameAudio());
+        if (this.firstGame) {
+            document.getElementById('toggle-tts').addEventListener('click', () => this.toggleTTS());
+            document.getElementById('toggle-whisper').addEventListener('click', () => this.toggleWhisper());
+            document.getElementById('toggle-sound').addEventListener('click', () => this.toggleGameAudio());
+        }
+        this.firstGame = false;
     }
 
     setupSettingsMenu() {
@@ -76,7 +85,7 @@ class Game {
             this.settingsOpen = false;
         });
 
-        backToMenu.addEventListener('click', async () => {
+        backToMenu.addEventListener('click', async() => {
             await this.returnToMainMenu();
         });
 
@@ -91,8 +100,23 @@ class Game {
 
     async returnToMainMenu() {
         // Clean up current session
-        await this.cleanup();
-        
+        //await this.cleanup();
+        // Remove character if present
+        if (this.currentCharacterSprite && this.currentCharacterSprite.mesh) {
+            this.renderer.scene.remove(this.currentCharacterSprite.mesh);
+            this.currentCharacterSprite.mesh.traverse((child) => {
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) child.material.dispose();
+            });
+        }
+        document.getElementById('subject-name').textContent = '';
+        document.getElementById('subject-sex').textContent = '';
+        document.getElementById('subject-profession').textContent = '';
+        document.getElementById('subject-resistance').textContent = '';
+        document.getElementById('subject-emotion').textContent = '';
+        document.getElementById('subject-background').textContent = '';
+        document.getElementById('subject-history').textContent = '';
+        document.getElementById('subject-secret-type').textContent = '';
         // Reset game state
         this.currentSessionId = null;
         this.currentCodeWord = null;
@@ -103,7 +127,7 @@ class Game {
         this.animationType = 'idle';
         this.remainingGuesses = 3;
         this.subjectHasLeft = false;
-        
+
         // Clear UI
         this.uiManager.messageHistory.innerHTML = '';
         this.uiManager.messageInput.value = '';
@@ -113,25 +137,18 @@ class Game {
         document.getElementById('success-count').textContent = '0';
         document.getElementById('total-count').textContent = '0';
         document.getElementById('success-rate').textContent = '0%';
-        
+
         // Hide game UI elements
         this.uiManager.nextSubjectButton.style.display = 'none';
-        
+
         // Hide settings menu
         document.getElementById('settings-menu').style.display = 'none';
         this.settingsOpen = false;
-        
+
         // Show main menu
         document.getElementById('main-menu').style.display = 'flex';
-        
-        // Remove character if present
-        if (this.currentCharacterSprite && this.currentCharacterSprite.mesh) {
-            this.renderer.scene.remove(this.currentCharacterSprite.mesh);
-            this.currentCharacterSprite.mesh.traverse((child) => {
-                if (child.geometry) child.geometry.dispose();
-                if (child.material) child.material.dispose();
-            });
-        }
+
+
     }
 
     async cleanup() {
@@ -190,7 +207,7 @@ class Game {
         this.audioEnabled = !this.audioEnabled;
         const btn = document.getElementById('toggle-sound');
         btn.classList.toggle('disabled', !this.audioEnabled);
-        btn.textContent = this.audioEnabled ? '<span class="icon">🔊</span><span class="label">Game Audio</span>' : '<span class="icon">🔇</span><span class="label">Game Audio (Off)</span>';
+        btn.innerHTML = this.audioEnabled ? '<span class="icon">🔊</span><span class="label">Game Audio</span>' : '<span class="icon">🔇</span><span class="label">Game Audio (Off)</span>';
 
         if (this.audioEnabled) {
             this.audioManager.backgroundTrack.play();
