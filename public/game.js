@@ -95,13 +95,13 @@ class Game {
         const buyButtons = document.querySelectorAll('.buy-button');
 
         openShop.addEventListener('click', () => {
-            settingsMenu.style.display = 'none';
+            document.getElementById('main-menu').style.display = 'none';
             shopMenu.style.display = 'flex';
         });
 
         closeShop.addEventListener('click', () => {
             shopMenu.style.display = 'none';
-            settingsMenu.style.display = 'flex';
+            document.getElementById('main-menu').style.display = 'flex';
         });
 
         // Add non-functional buy handlers
