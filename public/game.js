@@ -35,6 +35,7 @@ class Game {
         this.noise = new Noise();
         this.audioEnabled = true;
         this.firstGame = true;
+        this.notes = 0;
     }
 
     async initialize(startGameplay = false) {
@@ -120,6 +121,8 @@ class Game {
         this.currentCodeWord = null;
         this.successCount = 0;
         this.totalCount = 0;
+        // Don't reset notes when returning to menu
+        document.getElementById('notes-count').textContent = this.notes;
         this.currentCharacterSprite = null;
         this.isAnimating = false;
         this.animationType = 'idle';
