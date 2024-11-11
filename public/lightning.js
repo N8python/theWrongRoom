@@ -3,10 +3,7 @@ import * as THREE from 'https://unpkg.com/three@0.170.0/build/three.module.js';
 class Lightning {
     constructor(scene) {
         this.scene = scene;
-        this.startTime = performance.now();
-        this.duration = 200 + Math.random() * 300; // Random duration between 200-500ms
-        this.isDone = false;
-
+        
         // Load lightning texture
         const texture = new THREE.TextureLoader().load('sprites/lightning.png');
         texture.magFilter = THREE.NearestFilter;
@@ -22,6 +19,16 @@ class Lightning {
 
         const geometry = new THREE.PlaneGeometry(1, 4);
         this.mesh = new THREE.Mesh(geometry, material);
+        this.mesh.visible = false;
+        scene.add(this.mesh);
+        
+        this.reset();
+    }
+
+    reset() {
+        this.startTime = performance.now();
+        this.duration = 200 + Math.random() * 300; // Random duration between 200-500ms
+        this.isDone = false;
         
         // Random position and rotation
         this.mesh.position.set(
@@ -32,15 +39,14 @@ class Lightning {
         
         this.mesh.rotation.z = (Math.random() - 0.5) * Math.PI / 4; // Random rotation
         this.mesh.scale.set(0.5 + Math.random() * 0.5, 0.5 + Math.random() * 0.5, 1);
-        
-        scene.add(this.mesh);
+        this.mesh.visible = true;
     }
 
     update(currentTime) {
         const age = currentTime - this.startTime;
         
         if (age > this.duration) {
-            this.scene.remove(this.mesh);
+            this.mesh.visible = false;
             this.isDone = true;
             return;
         }

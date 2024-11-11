@@ -8,6 +8,8 @@ class Renderer {
     constructor(game) {
         this.game = game;
         this.lightnings = [];
+        this.lightningPool = [];
+        this.maxLightnings = 3;
         this.lastLightningTime = 0;
         this.lightningFrequency = 5000; // Average ms between strikes
         this.lightningVariance = 2000; // Variance in timing
@@ -296,15 +298,27 @@ float snoise(vec3 v){
             const now = currentTime;
             if (now - this.lastLightningTime > this.lightningFrequency + (Math.random() * 2 - 1) * this.lightningVariance) {
                 this.lastLightningTime = now;
-                const lightning = new Lightning(this.scene);
-                this.lightnings.push(lightning);
+                if (this.lightnings.length < this.maxLightnings) {
+                    let lightning;
+                    if (this.lightningPool.length > 0) {
+                        lightning = this.lightningPool.pop();
+                        lightning.reset();
+                    } else {
+                        lightning = new Lightning(this.scene);
+                    }
+                    this.lightnings.push(lightning);
+                }
             }
 
             // Update existing lightnings
-            this.lightnings = this.lightnings.filter(lightning => {
+            for (let i = this.lightnings.length - 1; i >= 0; i--) {
+                const lightning = this.lightnings[i];
                 lightning.update(now);
-                return !lightning.isDone;
-            });
+                if (lightning.isDone) {
+                    this.lightnings.splice(i, 1);
+                    this.lightningPool.push(lightning);
+                }
+            }
 
             this.composer.render();
         } else {
