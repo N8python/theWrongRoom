@@ -3,6 +3,7 @@ import * as tts from './piper-tts-web/dist/piper-tts-web.js';
 export class DialogueManager {
     constructor(game) {
         this.game = game;
+        this.currentLevel = this.game.sessionManager.currentLevel;
         this.currentLine = 0;
         this.bossFrames = [];
         this.currentFrame = 0;
@@ -209,6 +210,8 @@ export class DialogueManager {
         this.currentLine = 0;
         this.currentFrame = 0;
         this.frameTime = performance.now();
+        // Sync the current level with session manager
+        this.currentLevel = this.game.sessionManager.currentLevel;
         document.body.appendChild(this.overlay);
         this.updateDialogue();
         this.animate();
