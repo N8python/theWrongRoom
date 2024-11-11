@@ -439,6 +439,30 @@
             background-color: #6a583f;
             transform: scale(1.05);
         }
+
+        .buy-button {
+            background-color: #5a4836;
+            color: #e6d4b6;
+            border: 1px solid #e6d4b6;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: "Pixelify Sans";
+        }
+
+        .buy-button:hover {
+            background-color: #6a583f;
+            transform: scale(1.05);
+        }
+
+        .shop-items {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .shop-item {
+            font-size: 18px;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js"></script>
 </head>
@@ -516,6 +540,10 @@
                     <span class="icon">🏠</span>
                     <span class="label">Back to Main Menu</span>
                 </button>
+                <button id="open-shop" class="audio-toggle" title="Office Improvement Opportunities">
+                    <span class="icon">💼</span>
+                    <span class="label">Office Improvement Opportunities</span>
+                </button>
             </div>
             <button id="close-settings" class="close-settings">Back to Game</button>
         </div>
@@ -550,6 +578,24 @@
         </div>
     </div>
     <img src="sprites/background-interrogation.png" style="display: none;" id="background-interrogation">
+    <div id="shop-menu" class="settings-menu" style="display: none;">
+        <div class="settings-content" style="min-width: 400px;">
+            <h2>Office Improvement Opportunities</h2>
+            <div class="shop-items" style="margin: 20px 0;">
+                <div class="shop-item" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(90, 72, 54, 0.5); border-radius: 8px; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center;">
+                        <span style="font-size: 24px; margin-right: 12px;">🍭</span>
+                        <span>Ohio Lollipop</span>
+                    </div>
+                    <button class="buy-button" data-item="ohio-lollipop" data-price="1" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px;">
+                        <img src="sprites/note.png" style="width: 24px; height: 24px; image-rendering: pixelated;">
+                        <span>1</span>
+                    </button>
+                </div>
+            </div>
+            <button id="close-shop" class="close-settings">Back to Settings</button>
+        </div>
+    </div>
     <script type="importmap">
         { "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/" } }
     </script>
