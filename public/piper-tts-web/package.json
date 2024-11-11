@@ -1,0 +1,60 @@
+{
+  "name": "@mintplex-labs/piper-tts-web",
+  "private": false,
+  "version": "1.0.4",
+  "description": "Fork of @diffusion-studio/vits-web for easier built-in PiperTTS use.",
+  "type": "module",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "module": "./dist/piper-tts-web.js",
+  "types": "./dist/index.d.ts",
+  "author": "team@mintplexlabs.com",
+  "exports": {
+    ".": {
+      "import": "./dist/piper-tts-web.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Mintplex-Labs/piper-tts-web.git"
+  },
+  "homepage": "https://github.com/Mintplex-Labs/piper-tts-web#readme",
+  "license": "MIT",
+  "keywords": [
+    "vits",
+    "webassembly",
+    "emscripten",
+    "audio",
+    "browser",
+    "tts",
+    "text-to-speech",
+    "speech synthesis",
+    "web ai",
+    "webnn",
+    "piperTTS",
+    "AnythingLLM"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "rm -r -f ./dist && tsc && vite build",
+    "preview": "vite preview",
+    "test": "npx playwright test --project=chromium",
+    "verify": "yarn build && cd scripts && node refresh-and-validate.mjs && cd .."
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.35.1",
+    "object-deep-compare": "^1.2.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.1",
+    "vite-plugin-dts": "^3.9.1"
+  },
+  "peerDependencies": {
+    "onnxruntime-web": "^1.18.0"
+  }
+}

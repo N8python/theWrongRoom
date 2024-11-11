@@ -36,7 +36,7 @@ class Game {
         this.noise = new Noise();
         this.audioEnabled = true;
         this.firstGame = true;
-        this.notes = 0;
+        this.notes = 999;
     }
 
     async initialize(startGameplay = false) {

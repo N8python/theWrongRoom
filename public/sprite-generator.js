@@ -69,6 +69,7 @@ export async function generateRandomSprite(sex) {
             console.log(availableImages, layer);
 
             const randomImg = availableImages[Math.floor(Math.random() * availableImages.length)];
+            ctx.filter = 'sepia(0.9) brightness(0.5)';
             ctx.drawImage(randomImg, 0, 0);
         }
     }
