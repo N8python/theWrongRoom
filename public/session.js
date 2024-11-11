@@ -6,6 +6,7 @@ import { maleSpeakers, femaleSpeakers } from './speaker-gender.js';
 class SessionManager {
     constructor(game) {
         this.game = game;
+        this.currentLevel = 1;
         this.resistances = ['NONE', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
         this.emotions = ['angry', 'defensive', 'in denial', 'fearful', 'nervous', 'reluctant', 'suspicious', 'uncooperative', 'pleading', 'confused', 'hostile', 'evasive', 'calm', 'cooperative', 'confident'];
         const backgrounds = [

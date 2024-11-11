@@ -30,10 +30,19 @@ document.addEventListener('DOMContentLoaded', async() => {
     document.getElementById('main-menu').style.display = 'flex';
     
     // Add start game button listener
-    document.getElementById('start-game').addEventListener('click', async () => {
-        document.getElementById('main-menu').style.display = 'none';
-        // Start with dialogue
-        game.dialogueManager.start();
+    document.getElementById('start-game').addEventListener('click', () => {
+        document.getElementById('start-game').style.display = 'none';
+        document.getElementById('clearance-selection').style.display = 'block';
+    });
+
+    document.querySelectorAll('.clearance-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const level = parseInt(button.dataset.level);
+            game.sessionManager.currentLevel = level;
+            document.getElementById('main-menu').style.display = 'none';
+            // Start with dialogue
+            game.dialogueManager.start();
+        });
     });
 
     window.addEventListener('beforeunload', async() => await game.cleanup());

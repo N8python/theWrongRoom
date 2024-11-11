@@ -423,6 +423,22 @@
                 transform: scale(1);
             }
         }
+
+        .clearance-button {
+            font-size: 1.2em;
+            padding: 12px 24px;
+            background-color: #5a4836;
+            color: #e6d4b6;
+            border: 2px solid #e6d4b6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clearance-button:hover {
+            background-color: #6a583f;
+            transform: scale(1.05);
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js"></script>
 </head>
@@ -512,6 +528,21 @@
             <!--<h1>The Wrong Room</h1>-->
             <image src="sprites/title.png" style="width: 100%; height: auto; margin-bottom: 24px;" class="grow-and-shrink">
                 <button id="start-game">Start Game</button>
+                <div id="clearance-selection" style="display: none; margin-top: 24px;">
+                    <h2 style="margin-bottom: 16px; color: #e6d4b6;">Select Clearance Level</h2>
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+                        <button class="clearance-button" data-level="1">I</button>
+                        <button class="clearance-button" data-level="2">II</button>
+                        <button class="clearance-button" data-level="3">III</button>
+                        <button class="clearance-button" data-level="4">IV</button>
+                        <button class="clearance-button" data-level="5">V</button>
+                        <button class="clearance-button" data-level="6">VI</button>
+                        <button class="clearance-button" data-level="7">VII</button>
+                        <button class="clearance-button" data-level="8">VIII</button>
+                        <button class="clearance-button" data-level="9">IX</button>
+                        <button class="clearance-button" data-level="10">X</button>
+                    </div>
+                </div>
         </div>
     </div>
     <img src="sprites/background-interrogation.png" style="display: none;" id="background-interrogation">
