@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interrogation</title>
+    <title>The Wrong Room</title>
     <!-- Include Google Font for pixelated text -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -192,7 +192,7 @@
             color: #a89b86;
             cursor: not-allowed;
         }
-
+        
         .settings-button {
             position: fixed;
             bottom: 24px;
@@ -211,12 +211,12 @@
             align-items: center;
             justify-content: center;
         }
-
+        
         .settings-button:hover {
             background-color: #6a583f;
             transform: scale(1.05);
         }
-
+        
         .settings-menu {
             position: fixed;
             top: 0;
@@ -230,7 +230,7 @@
             justify-content: center;
             align-items: center;
         }
-
+        
         .settings-content {
             background: #3e2f23;
             border: 2px solid #e6d4b6;
@@ -241,20 +241,20 @@
             flex-direction: column;
             gap: 24px;
         }
-
+        
         .settings-content h2 {
             margin: 0;
             color: #e6d4b6;
             text-align: center;
             font-size: 28px;
         }
-
+        
         .settings-buttons {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
-
+        
         .audio-toggle {
             display: flex;
             align-items: center;
@@ -269,34 +269,34 @@
             transition: all 0.2s;
             font-size: 18px;
         }
-
+        
         .audio-toggle:hover {
             background-color: #6a583f;
             transform: scale(1.02);
         }
-
+        
         .audio-toggle.disabled {
             background-color: #3e2f23;
             cursor: not-allowed;
         }
-
+        
         .audio-toggle .icon {
             font-size: 24px;
             width: 32px;
             text-align: center;
             opacity: 1;
         }
-
+        
         .audio-toggle.disabled .icon {
             opacity: 0.5;
         }
-
+        
         .audio-toggle .label {
             flex-grow: 1;
             text-align: left;
             opacity: 1;
         }
-
+        
         .close-settings {
             width: 100%;
             padding: 16px;
@@ -309,7 +309,7 @@
             font-size: 18px;
             margin-top: 8px;
         }
-
+        
         .close-settings:hover {
             background-color: #6a583f;
             transform: scale(1.02);
@@ -361,7 +361,7 @@
                 transform: rotate(360deg);
             }
         }
-
+        
         #main-menu {
             position: fixed;
             top: 0;
@@ -374,18 +374,18 @@
             align-items: center;
             z-index: 999;
         }
-
+        
         .menu-content {
             text-align: center;
             color: #e6d4b6;
         }
-
+        
         .menu-content h1 {
             font-size: 3em;
             margin-bottom: 1em;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-
+        
         #start-game {
             font-size: 1.5em;
             padding: 15px 40px;
@@ -396,15 +396,32 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
+        
         #start-game:hover {
             background-color: #6a583f;
             transform: scale(1.05);
         }
-        
         /* Make images pixelated */
+        
         img {
             image-rendering: pixelated;
+        }
+        /* Grow and shrink animation */
+        
+        .grow-and-shrink {
+            animation: grow-and-shrink 10s infinite linear;
+        }
+        
+        @keyframes grow-and-shrink {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js"></script>
@@ -492,8 +509,9 @@
     </div>
     <div id="main-menu" style="display: none;">
         <div class="menu-content">
-            <h1>Interrogation Game</h1>
-            <button id="start-game">Start Game</button>
+            <!--<h1>The Wrong Room</h1>-->
+            <image src="sprites/title.png" style="width: 100%; height: auto; margin-bottom: 24px;" class="grow-and-shrink">
+                <button id="start-game">Start Game</button>
         </div>
     </div>
     <img src="sprites/background-interrogation.png" style="display: none;" id="background-interrogation">
