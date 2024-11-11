@@ -291,6 +291,21 @@ float snoise(vec3 v){
                 this.effectPass.uniforms.flicker.value = 0.75 + 0.25 * flicker;
                 this.effectPass.uniforms.time.value = (currentTime / 1000) % 1000;
             }
+            
+            // Handle lightning
+            const now = currentTime;
+            if (now - this.lastLightningTime > this.lightningFrequency + (Math.random() * 2 - 1) * this.lightningVariance) {
+                this.lastLightningTime = now;
+                const lightning = new Lightning(this.scene);
+                this.lightnings.push(lightning);
+            }
+
+            // Update existing lightnings
+            this.lightnings = this.lightnings.filter(lightning => {
+                lightning.update(now);
+                return !lightning.isDone;
+            });
+
             this.composer.render();
         } else {
             this.renderer.render(this.scene, this.camera);
