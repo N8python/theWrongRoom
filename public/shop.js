@@ -1,6 +1,11 @@
 export class ShopManager {
     constructor(game) {
         this.game = game;
+        this.purchasedUpgrades = {
+            informational: -1,
+            passive: -1,
+            active: -1
+        };
         this.setupShopMenu();
     }
 
@@ -23,40 +28,59 @@ export class ShopManager {
         this.populateShop();
     }
 
-    createUpgradeElement(upgrade) {
+    createUpgradeElement(upgrade, type) {
+        if (!upgrade) return '<div>All upgrades purchased!</div>';
+        
         return `
-            <div class="shop-item" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(90, 72, 54, 0.5); border-radius: 8px; margin-bottom: 12px;">
-                <div style="flex-grow: 1; margin-right: 16px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                        <span style="font-size: 18px; font-weight: bold;">${upgrade.title}</span>
-                    </div>
-                    <div style="font-size: 14px; opacity: 0.8;">${upgrade.description}</div>
+            <div style="flex-grow: 1; margin-right: 16px;">
+                <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 18px; font-weight: bold;">${upgrade.title}</span>
                 </div>
-                <button class="buy-button" data-item="${upgrade.id}" data-price="${upgrade.price}" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; white-space: nowrap;">
-                    <img src="sprites/note.png" style="width: 24px; height: 24px; image-rendering: pixelated;">
-                    <span>${upgrade.price}</span>
-                </button>
+                <div style="font-size: 14px; opacity: 0.8;">${upgrade.description}</div>
             </div>
+            <button class="buy-button" data-type="${type}" data-price="${upgrade.price}" 
+                    style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; white-space: nowrap;"
+                    ${this.game.notes < upgrade.price ? 'disabled' : ''}>
+                <img src="sprites/note.png" style="width: 24px; height: 24px; image-rendering: pixelated;">
+                <span>${upgrade.price}</span>
+            </button>
         `;
     }
 
     async populateShop() {
         const { UPGRADES } = await import('./upgrades.js');
         
-        document.getElementById('informational-upgrades').innerHTML = 
-            UPGRADES.informational_upgrades.map(upgrade => this.createUpgradeElement(upgrade)).join('');
-        document.getElementById('passive-upgrades').innerHTML = 
-            UPGRADES.passive_interrogation_upgrades.map(upgrade => this.createUpgradeElement(upgrade)).join('');
-        document.getElementById('active-upgrades').innerHTML = 
-            UPGRADES.active_interrogation_upgrades.map(upgrade => this.createUpgradeElement(upgrade)).join('');
+        // Update each upgrade section
+        const updateSection = (type, upgrades) => {
+            const currentIndex = this.purchasedUpgrades[type] + 1;
+            const currentUpgrade = upgrades[currentIndex];
+            const element = document.getElementById(`${type}-upgrade`);
+            if (element) {
+                element.innerHTML = this.createUpgradeElement(currentUpgrade, type);
+            }
+        };
+
+        updateSection('informational', UPGRADES.informational_upgrades);
+        updateSection('passive', UPGRADES.passive_interrogation_upgrades);
+        updateSection('active', UPGRADES.active_interrogation_upgrades);
 
         // Add buy handlers
         document.querySelectorAll('.buy-button').forEach(button => {
             button.addEventListener('click', () => {
-                const itemId = button.dataset.item;
+                const type = button.dataset.type;
                 const price = parseInt(button.dataset.price);
-                console.log(`Purchased ${itemId} for ${price} notes`);
-                // For now, purchases are free
+                
+                if (this.game.notes >= price) {
+                    // Deduct notes
+                    this.game.notes -= price;
+                    document.getElementById('notes-count').textContent = this.game.notes;
+                    
+                    // Update purchased state
+                    this.purchasedUpgrades[type]++;
+                    
+                    // Refresh shop display
+                    this.populateShop();
+                }
             });
         });
     }
