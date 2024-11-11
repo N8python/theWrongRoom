@@ -1,11 +1,16 @@
 import * as THREE from 'https://unpkg.com/three@0.170.0/build/three.module.js';
 import { GLTFLoader } from 'https://unpkg.com/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js';
+import { Lightning } from './lightning.js';
 import { initPostProcessing } from './post-processing.js';
 
 class Renderer {
     constructor(game) {
         this.game = game;
+        this.lightnings = [];
+        this.lastLightningTime = 0;
+        this.lightningFrequency = 5000; // Average ms between strikes
+        this.lightningVariance = 2000;  // Variance in timing
     }
 
     async initialize() {
