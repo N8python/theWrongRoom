@@ -10,7 +10,7 @@ class Renderer {
         this.lightnings = [];
         this.lastLightningTime = 0;
         this.lightningFrequency = 5000; // Average ms between strikes
-        this.lightningVariance = 2000;  // Variance in timing
+        this.lightningVariance = 2000; // Variance in timing
     }
 
     async initialize() {
@@ -291,7 +291,7 @@ float snoise(vec3 v){
                 this.effectPass.uniforms.flicker.value = 0.75 + 0.25 * flicker;
                 this.effectPass.uniforms.time.value = (currentTime / 1000) % 1000;
             }
-            
+
             // Handle lightning
             const now = currentTime;
             if (now - this.lastLightningTime > this.lightningFrequency + (Math.random() * 2 - 1) * this.lightningVariance) {
