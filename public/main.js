@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', async() => {
     // Add start game button listener
     document.getElementById('start-game').addEventListener('click', async () => {
         document.getElementById('main-menu').style.display = 'none';
-        // Start the actual gameplay
-        await game.startGameplay();
+        // Start with dialogue
+        game.dialogueManager.start();
     });
 
     window.addEventListener('beforeunload', async() => await game.cleanup());

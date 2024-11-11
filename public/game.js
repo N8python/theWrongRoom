@@ -4,6 +4,7 @@ import { CharacterManager } from './character.js';
 import { MessageManager } from './message.js';
 import { AudioManager } from './audio.js';
 import { SessionManager } from './session.js';
+import { DialogueManager } from './dialogue-manager.js';
 import { TTS } from './constants.js';
 
 class Game {
@@ -14,6 +15,7 @@ class Game {
         this.messageManager = new MessageManager(this);
         this.audioManager = new AudioManager(this);
         this.sessionManager = new SessionManager(this);
+        this.dialogueManager = new DialogueManager(this);
         this.settingsOpen = false;
 
         this.currentSessionId = null;
@@ -36,16 +38,12 @@ class Game {
     }
 
     async initialize(startGameplay = false) {
-        // Initialize components but don't start gameplay loop
-        //    await this.renderer.initialize();
-        //    await this.audioManager.initialize();
-        //    await this.sessionManager.initialize();
-        //    await this.characterManager.initialize();
         if (this.firstGame) {
             await this.renderer.initialize();
             await this.audioManager.initialize();
             await this.sessionManager.initialize();
             await this.characterManager.initialize();
+            await this.dialogueManager.initialize();
             this.uiManager.addEventListeners();
             this.setupSettingsMenu();
         }
