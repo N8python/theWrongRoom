@@ -35,13 +35,39 @@ document.addEventListener('DOMContentLoaded', async() => {
         document.getElementById('clearance-selection').style.display = 'block';
     });
 
+    // Setup clearance buttons
     document.querySelectorAll('.clearance-button').forEach(button => {
+        if (button.id !== 'open-shop') {  // Skip shop button
+            button.addEventListener('click', () => {
+                const level = parseInt(button.dataset.level);
+                game.sessionManager.currentLevel = level;
+                document.getElementById('main-menu').style.display = 'none';
+                // Start with dialogue
+                game.dialogueManager.start();
+            });
+        }
+    });
+
+    // Setup shop functionality
+    const shopMenu = document.getElementById('shop-menu');
+    const openShop = document.getElementById('open-shop');
+    const closeShop = document.getElementById('close-shop');
+    const buyButtons = document.querySelectorAll('.buy-button');
+
+    openShop.addEventListener('click', () => {
+        document.getElementById('main-menu').style.display = 'none';
+        shopMenu.style.display = 'flex';
+    });
+
+    closeShop.addEventListener('click', () => {
+        shopMenu.style.display = 'none';
+        document.getElementById('main-menu').style.display = 'flex';
+    });
+
+    // Add non-functional buy handlers
+    buyButtons.forEach(button => {
         button.addEventListener('click', () => {
-            const level = parseInt(button.dataset.level);
-            game.sessionManager.currentLevel = level;
-            document.getElementById('main-menu').style.display = 'none';
-            // Start with dialogue
-            game.dialogueManager.start();
+            // Empty callback - non-functional for now
         });
     });
 

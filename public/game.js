@@ -88,28 +88,6 @@ class Game {
             await this.returnToMainMenu();
         });
 
-        // Shop functionality
-        const shopMenu = document.getElementById('shop-menu');
-        const openShop = document.getElementById('open-shop');
-        const closeShop = document.getElementById('close-shop');
-        const buyButtons = document.querySelectorAll('.buy-button');
-
-        openShop.addEventListener('click', () => {
-            document.getElementById('main-menu').style.display = 'none';
-            shopMenu.style.display = 'flex';
-        });
-
-        closeShop.addEventListener('click', () => {
-            shopMenu.style.display = 'none';
-            document.getElementById('main-menu').style.display = 'flex';
-        });
-
-        // Add non-functional buy handlers
-        buyButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Empty callback - non-functional for now
-            });
-        });
 
         // Optional: Close settings when pressing Escape key
         document.addEventListener('keydown', (e) => {
