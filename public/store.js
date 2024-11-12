@@ -93,5 +93,3 @@ export function saveGameState() {
     }
 }
 
-// Export for type checking
-export type { GameState };
