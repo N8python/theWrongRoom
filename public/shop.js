@@ -1,7 +1,14 @@
 import { UPGRADES } from './upgrades.js';
+import { saveGameState } from './store.js';
+
 export class ShopManager {
     constructor(game) {
         this.game = game;
+        this.purchasedUpgrades = {
+            informational: 0,
+            passive: 0,
+            active: 0
+        };
         this.setupShopMenu();
     }
 
@@ -54,9 +61,6 @@ export class ShopManager {
     }
 
     async populateShop() {
-        const { UPGRADES } = await
-        import ('./upgrades.js');
-
         // Update each upgrade section
         const updateSection = (type, upgrades) => {
             const currentIndex = this.purchasedUpgrades[type] + 1;
@@ -73,7 +77,8 @@ export class ShopManager {
 
         // Add buy handlers
         document.querySelectorAll('.buy-button').forEach(button => {
-            button.addEventListener('click', () => {
+            button.addEventListener('click', async () => {
+                try {
                 const type = button.dataset.type;
                 const price = parseInt(button.dataset.price);
 
@@ -98,7 +103,10 @@ export class ShopManager {
                     saveGameState();
 
                     // Refresh shop display
-                    this.populateShop();
+                    await this.populateShop();
+                }
+                } catch (error) {
+                    console.error('Error processing purchase:', error);
                 }
             });
         });
