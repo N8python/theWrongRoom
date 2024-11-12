@@ -29,8 +29,8 @@ export class ShopManager {
                            type === 'passive' ? 'passive_interrogation_upgrades' :
                            'active_interrogation_upgrades';
                            
-        // Check if this upgrade is already purchased
-        if (window.gameStore.purchasedUpgrades[upgradeType].includes(upgrade?.price)) {
+        // Check if this upgrade is already purchased by ID
+        if (upgrade && window.gameStore.purchasedUpgradeIds.has(upgrade.id)) {
             return '<div>Upgrade purchased!</div>';
         }
         
@@ -87,14 +87,11 @@ export class ShopManager {
                     
                     // Update both price list and ID tracking
                     window.gameStore.purchasedUpgrades[upgradeType].push(price);
-                    const shortType = type === 'informational' ? 'informational' :
-                                    type === 'passive' ? 'passive' : 'active';
-                    
                     // Find and store the upgrade ID
                     const { UPGRADES } = await import('./upgrades.js');
                     const upgrade = UPGRADES[upgradeType].find(u => u.price === price);
                     if (upgrade) {
-                        window.gameStore.purchasedUpgradeIds[shortType].add(upgrade.id);
+                        window.gameStore.purchasedUpgradeIds.add(upgrade.id);
                     }
                     
                     saveGameState();

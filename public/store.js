@@ -5,12 +5,8 @@ window.gameStore = {
         passive_interrogation_upgrades: [], 
         active_interrogation_upgrades: []
     },
-    // Dictionary to track purchased upgrade IDs
-    purchasedUpgradeIds: {
-        informational: new Set(),
-        passive: new Set(),
-        active: new Set()
-    }
+    // Flat dictionary to track all purchased upgrade IDs
+    purchasedUpgradeIds: new Set()
 };
 
 // Load any saved state from localStorage
