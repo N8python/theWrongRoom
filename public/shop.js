@@ -1,3 +1,4 @@
+import { UPGRADES } from './upgrades.js';
 export class ShopManager {
     constructor(game) {
         this.game = game;
@@ -26,16 +27,16 @@ export class ShopManager {
     createUpgradeElement(upgrade, type) {
         // Convert type to full upgrade type name
         const upgradeType = type === 'informational' ? 'informational_upgrades' :
-                           type === 'passive' ? 'passive_interrogation_upgrades' :
-                           'active_interrogation_upgrades';
-                           
+            type === 'passive' ? 'passive_interrogation_upgrades' :
+            'active_interrogation_upgrades';
+
         // Check if this upgrade is already purchased by ID
         if (upgrade && window.gameStore.purchasedUpgradeIds.has(upgrade.id)) {
             return '<div>Upgrade purchased!</div>';
         }
-        
+
         if (!upgrade) return '<div>All upgrades purchased!</div>';
-        
+
         return `
             <div style="flex-grow: 1; margin-right: 16px;">
                 <div style="display: flex; align-items: center; margin-bottom: 8px;">
@@ -53,8 +54,9 @@ export class ShopManager {
     }
 
     async populateShop() {
-        const { UPGRADES } = await import('./upgrades.js');
-        
+        const { UPGRADES } = await
+        import ('./upgrades.js');
+
         // Update each upgrade section
         const updateSection = (type, upgrades) => {
             const currentIndex = this.purchasedUpgrades[type] + 1;
@@ -74,28 +76,27 @@ export class ShopManager {
             button.addEventListener('click', () => {
                 const type = button.dataset.type;
                 const price = parseInt(button.dataset.price);
-                
+
                 if (this.game.notes >= price) {
                     // Deduct notes
                     this.game.notes -= price;
                     document.getElementById('notes-count').textContent = this.game.notes;
-                    
+
                     // Update purchased state
                     const upgradeType = type === 'informational' ? 'informational_upgrades' :
-                                      type === 'passive' ? 'passive_interrogation_upgrades' :
-                                      'active_interrogation_upgrades';
-                    
+                        type === 'passive' ? 'passive_interrogation_upgrades' :
+                        'active_interrogation_upgrades';
+
                     // Update both price list and ID tracking
                     window.gameStore.purchasedUpgrades[upgradeType].push(price);
                     // Find and store the upgrade ID
-                    const { UPGRADES } = await import('./upgrades.js');
                     const upgrade = UPGRADES[upgradeType].find(u => u.price === price);
                     if (upgrade) {
                         window.gameStore.purchasedUpgradeIds.add(upgrade.id);
                     }
-                    
+
                     saveGameState();
-                    
+
                     // Refresh shop display
                     this.populateShop();
                 }
