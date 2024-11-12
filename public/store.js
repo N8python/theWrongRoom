@@ -74,6 +74,16 @@ try {
     console.error('Failed to load game state:', e);
 }
 
+// Add keyboard shortcut to clear localStorage
+document.addEventListener('keydown', (e) => {
+    if (e.metaKey && e.key.toLowerCase() === 'l') {
+        e.preventDefault();
+        localStorage.clear();
+        console.log('localStorage cleared');
+        window.location.reload();
+    }
+});
+
 /**
  * Saves current game state to localStorage
  * @throws {Error} If serialization or storage fails
