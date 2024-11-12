@@ -49,17 +49,27 @@ class Game {
             this.uiManager.addEventListeners();
             this.setupSettingsMenu();
 
-            // Add flashlight button handler
+            // Add action button handlers
+            const prisonBtn = document.querySelector('button.action-button:nth-child(1)');
             const flashlightBtn = document.querySelector('button.action-button:nth-child(2)');
             const syringeBtn = document.querySelector('button.action-button:nth-child(3)');
+            
+            prisonBtn.addEventListener('click', () => {
+                if (!prisonBtn.disabled && !flashlightBtn.disabled && !syringeBtn.disabled) {
+                    this.messageManager.noLeave = true;
+                    prisonBtn.disabled = true;
+                }
+            });
+
             flashlightBtn.addEventListener('click', () => {
-                if (!flashlightBtn.disabled && !syringeBtn.disabled) {
+                if (!flashlightBtn.disabled && !syringeBtn.disabled && !prisonBtn.disabled) {
                     this.messageManager.prefix = BLINDED[Math.floor(Math.random() * BLINDED.length)];
                     flashlightBtn.disabled = true;
                 }
             });
+
             syringeBtn.addEventListener('click', () => {
-                if (!syringeBtn.disabled && !flashlightBtn.disabled) {
+                if (!syringeBtn.disabled && !flashlightBtn.disabled && !prisonBtn.disabled) {
                     this.messageManager.prefix = COMPLIANCE[Math.floor(Math.random() * COMPLIANCE.length)];
                     syringeBtn.disabled = true;
                 }

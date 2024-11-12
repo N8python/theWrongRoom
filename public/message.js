@@ -5,6 +5,7 @@ class MessageManager {
     constructor(game) {
         this.game = game;
         this.prefix = null;
+        this.noLeave = false;
     }
 
     async handleSendMessage() {
@@ -24,7 +25,7 @@ class MessageManager {
             return;
         }
 
-        if (response.includes('<LEAVES>')) {
+        if (response.includes('<LEAVES>') && !this.noLeave) {
             response = response.replace('<LEAVES>', '');
             this.editLastMessage((msg) => msg.replace('<LEAVES>', ''));
             this.game.currentCharacterSprite.setDirection(this.game.currentCharacterSprite.spriteSheet.FACING.RIGHT);
