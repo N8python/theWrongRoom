@@ -17,6 +17,7 @@ class Game {
         this.audioManager = new AudioManager(this);
         this.sessionManager = new SessionManager(this);
         this.dialogueManager = new DialogueManager(this);
+        this.summaryScreen = null;
         this.settingsOpen = false;
 
         this.currentSessionId = null;
@@ -41,6 +42,8 @@ class Game {
 
     async initialize(startGameplay = false) {
         if (this.firstGame) {
+            const { SummaryScreen } = await import('./summary.js');
+            this.summaryScreen = new SummaryScreen(this);
             await this.renderer.initialize();
             await this.audioManager.initialize();
             await this.sessionManager.initialize();
