@@ -63,8 +63,8 @@ export class ShopManager {
     async populateShop() {
         // Update each upgrade section
         const updateSection = (type, upgrades) => {
-            const currentIndex = this.purchasedUpgrades[type] + 1;
-            const currentUpgrade = upgrades[currentIndex];
+            const nextUpgradeIndex = this.purchasedUpgrades[type];
+            const nextUpgrade = upgrades[nextUpgradeIndex];
             const element = document.getElementById(`${type}-upgrade`);
             if (element) {
                 element.innerHTML = this.createUpgradeElement(currentUpgrade, type);
