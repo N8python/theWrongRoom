@@ -7,7 +7,7 @@ import { SessionManager } from './session.js';
 import { DialogueManager } from './dialogue-manager.js';
 import { ShopManager } from './shop.js';
 import { TTS } from './constants.js';
-
+import { BLINDED } from './exclamations.js';
 class Game {
     constructor() {
         this.uiManager = new UIManager(this);
@@ -48,12 +48,12 @@ class Game {
             await this.dialogueManager.initialize();
             this.uiManager.addEventListeners();
             this.setupSettingsMenu();
-            
+
             // Add flashlight button handler
             const flashlightBtn = document.querySelector('button.action-button:nth-child(2)');
             flashlightBtn.addEventListener('click', () => {
                 if (!flashlightBtn.disabled) {
-                    this.messageManager.prefix = "IVE BEEN BLINDED";
+                    this.messageManager.prefix = BLINDED[Math.floor(Math.random() * BLINDED.length)];
                     flashlightBtn.disabled = true;
                 }
             });

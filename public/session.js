@@ -417,7 +417,7 @@ class SessionManager {
             const notesEarned = 2 * this.currentLevel;
             this.game.notes += notesEarned;
             document.getElementById('notes-count').textContent = this.game.notes;
-            
+
             this.game.uiManager.guessResult.textContent = `✅ Correct! You extracted the code word! (+${notesEarned} notes)`;
             this.game.uiManager.guessResult.style.color = 'green';
             this.endGuessing();
@@ -466,10 +466,8 @@ class SessionManager {
 
         this.game.uiManager.messageInput.disabled = false;
         this.game.uiManager.sendButton.disabled = false;
-        document.getElementById('action-buttons').style.display = 'flex';
 
         this.game.subjectHasLeft = false;
-        document.getElementById('action-buttons').style.display = 'none';
         await this.initializeSession();
     }
 

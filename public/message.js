@@ -56,13 +56,14 @@ class MessageManager {
             audio.onended = () => {
                 this.game.playingAudio = false;
                 // Reset prefix and re-enable flashlight after message sent
-                this.prefix = null;
                 document.querySelector('button.action-button:nth-child(2)').disabled = false;
-        
+                this.prefix = null;
                 this.game.uiManager.messageInput.disabled = false;
                 this.game.uiManager.sendButton.disabled = false;
             }
         } else {
+            document.querySelector('button.action-button:nth-child(2)').disabled = false;
+            this.prefix = null;
             this.game.uiManager.messageInput.disabled = false;
             this.game.uiManager.sendButton.disabled = false;
         }
