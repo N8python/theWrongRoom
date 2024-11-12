@@ -67,7 +67,7 @@ export class ShopManager {
             const nextUpgrade = upgrades[nextUpgradeIndex];
             const element = document.getElementById(`${type}-upgrade`);
             if (element) {
-                element.innerHTML = this.createUpgradeElement(currentUpgrade, type);
+                element.innerHTML = this.createUpgradeElement(nextUpgrade, type);
             }
         };
 
@@ -99,6 +99,9 @@ export class ShopManager {
                     if (upgrade) {
                         window.gameStore.purchasedUpgradeIds.add(upgrade.id);
                     }
+
+                    // Increment the purchased counter
+                    this.purchasedUpgrades[type]++;
 
                     saveGameState();
 
