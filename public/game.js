@@ -57,6 +57,7 @@ class Game {
     }
 
     async startGameplay() {
+        document.getElementById('action-buttons').style.display = 'flex';
         // Start the actual gameplay loop
         await this.sessionManager.initializeSession();
 
@@ -118,6 +119,7 @@ class Game {
         document.getElementById('subject-background').textContent = '';
         document.getElementById('subject-history').textContent = '';
         document.getElementById('subject-secret-type').textContent = '';
+        document.getElementById('action-buttons').style.display = 'none';
         // Reset game state
         this.currentSessionId = null;
         this.currentCodeWord = null;
