@@ -390,7 +390,12 @@ class SessionManager {
         document.getElementById('subject-emotion').textContent = emotion;
         document.getElementById('subject-background').textContent = backgroundString;
         document.getElementById('subject-history').textContent = historyString;
-        document.getElementById('subject-secret-type').textContent = secretString === '' ? 'none' : secretString;
+        if (window.gameStore.purchasedUpgradeIds.has('classified_disclosure') || 
+            window.gameStore.purchasedUpgradeIds.has('pseudomniscience')) {
+            document.getElementById('subject-secret-type').textContent = secretString === '' ? 'none' : secretString;
+        } else {
+            document.getElementById('subject-secret-type').textContent = '???';
+        }
     }
 
     async deleteSession() {
