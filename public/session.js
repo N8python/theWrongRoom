@@ -7,6 +7,7 @@ class SessionManager {
     constructor(game) {
         this.game = game;
         this.currentLevel = 1;
+        this.subjectsInterrogated = 0;
         this.resistances = ['NONE', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
         this.resistanceDownOne = (resistance) => {
             if (resistance === 'NONE') return 'NONE';
@@ -567,8 +568,16 @@ class SessionManager {
     }
 
     async handleNextSubject() {
-        this.game.uiManager.messageHistory.innerHTML = '';
+        this.subjectsInterrogated++;
+        
+        // If we've reached 5 subjects, return to main menu
+        if (this.subjectsInterrogated >= 5) {
+            this.subjectsInterrogated = 0;  // Reset counter
+            await this.game.returnToMainMenu();
+            return;
+        }
 
+        this.game.uiManager.messageHistory.innerHTML = '';
         document.getElementById('guessing-section').style.display = 'none';
         this.game.uiManager.nextSubjectButton.style.display = 'none';
         this.game.uiManager.nextSubjectButton.disabled = true;

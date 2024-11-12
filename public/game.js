@@ -84,6 +84,7 @@ class Game {
 
     async startGameplay() {
         document.getElementById('action-buttons').style.display = 'flex';
+        this.sessionManager.subjectsInterrogated = 0;  // Reset counter when starting new level
         // Start the actual gameplay loop
         await this.sessionManager.initializeSession();
 
