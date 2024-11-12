@@ -7,7 +7,7 @@ import { SessionManager } from './session.js';
 import { DialogueManager } from './dialogue-manager.js';
 import { ShopManager } from './shop.js';
 import { TTS } from './constants.js';
-import { BLINDED } from './exclamations.js';
+import { BLINDED, COMPLIANCE } from './exclamations.js';
 class Game {
     constructor() {
         this.uiManager = new UIManager(this);
@@ -51,10 +51,17 @@ class Game {
 
             // Add flashlight button handler
             const flashlightBtn = document.querySelector('button.action-button:nth-child(2)');
+            const syringeBtn = document.querySelector('button.action-button:nth-child(3)');
             flashlightBtn.addEventListener('click', () => {
-                if (!flashlightBtn.disabled) {
+                if (!flashlightBtn.disabled && !syringeBtn.disabled) {
                     this.messageManager.prefix = BLINDED[Math.floor(Math.random() * BLINDED.length)];
                     flashlightBtn.disabled = true;
+                }
+            });
+            syringeBtn.addEventListener('click', () => {
+                if (!syringeBtn.disabled && !flashlightBtn.disabled) {
+                    this.messageManager.prefix = COMPLIANCE[Math.floor(Math.random() * COMPLIANCE.length)];
+                    syringeBtn.disabled = true;
                 }
             });
         }

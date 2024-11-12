@@ -55,15 +55,12 @@ class MessageManager {
             audio.play();
             audio.onended = () => {
                 this.game.playingAudio = false;
-                // Reset prefix and re-enable flashlight after message sent
-                document.querySelector('button.action-button:nth-child(2)').disabled = false;
-                this.prefix = null;
                 this.game.uiManager.messageInput.disabled = false;
                 this.game.uiManager.sendButton.disabled = false;
+
+
             }
         } else {
-            document.querySelector('button.action-button:nth-child(2)').disabled = false;
-            this.prefix = null;
             this.game.uiManager.messageInput.disabled = false;
             this.game.uiManager.sendButton.disabled = false;
         }
@@ -86,6 +83,10 @@ class MessageManager {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message, prefix: this.prefix })
             });
+            document.querySelector('button.action-button:nth-child(2)').disabled = false;
+            document.querySelector('button.action-button:nth-child(3)').disabled = false;
+            this.prefix = null;
+
             console.timeEnd('Time to first token')
 
             const reader = response.body.getReader();
