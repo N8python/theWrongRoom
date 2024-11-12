@@ -8,6 +8,36 @@ class SessionManager {
         this.game = game;
         this.currentLevel = 1;
         this.resistances = ['NONE', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
+        this.resistanceDownOne = (resistance) => {
+            if (resistance === 'NONE') return 'NONE';
+            if (resistance === 'LOW') return 'NONE';
+            if (resistance === 'MEDIUM') return 'LOW';
+            if (resistance === 'HIGH') return 'MEDIUM';
+            if (resistance === 'CRITICAL') return 'HIGH';
+        };
+        this.emotionReference = {
+            HOSTILE: [
+                "angry",
+                "hostile",
+                "defensive",
+                "uncooperative",
+                "evasive",
+                "suspicious",
+            ],
+            FEARFUL: [
+                "fearful",
+                "nervous",
+                "reluctant",
+                "in denial",
+                "confused",
+                "pleading"
+            ],
+            COOPERATIVE: [
+                "calm",
+                "cooperative",
+                "confident"
+            ]
+        };
         this.emotions = ['angry', 'defensive', 'in denial', 'fearful', 'nervous', 'reluctant', 'suspicious', 'uncooperative', 'pleading', 'confused', 'hostile', 'evasive', 'calm', 'cooperative', 'confident'];
         const backgrounds = [
             // Professional history
@@ -325,8 +355,38 @@ class SessionManager {
                 this.game.presentSpeakerId = combinedSpeakers[Math.floor(Math.random() * combinedSpeakers.length)];
             }
             const profession = faker.person.jobTitle();
-            const resistance = this.sampleFromDistribution(this.getCurrentLevelConfig().resistances);
-            const emotion = this.sampleFromDistribution(this.getCurrentLevelConfig().emotions);
+            let resistance = this.sampleFromDistribution(this.getCurrentLevelConfig().resistances);
+            if (window.gameStore.purchasedUpgradeIds.has('basilisk_beams')) {
+                if (Math.random() < 0.75) {
+                    resistance = this.resistanceDownOne(resistance);
+                }
+            } else if (window.gameStore.purchasedUpgradeIds.has('psychoactive_lights')) {
+                if (Math.random() < 1 / 3) {
+                    resistance = this.resistanceDownOne(resistance);
+                }
+            }
+
+            if (window.gameStore.purchasedUpgradeIds.has('aerosolized_barbiturates')) {
+                resistance = this.resistanceDownOne(resistance);
+            } else if (window.gameStore.purchasedUpgradeIds.has('malaise_gas')) {
+                if (Math.random() < 0.5) {
+                    resistance = this.resistanceDownOne(resistance);
+                }
+            }
+
+            let emotion = this.sampleFromDistribution(this.getCurrentLevelConfig().emotions);
+            if (window.gameStore.purchasedUpgradeIds.has('perfect_pain')) {
+                if (this.emotionReference.HOSTILE.includes(emotion) && Math.random() < 0.8) {
+                    emotion = this.emotionReference.FEARFUL[Math.floor(Math.random() * this.emotionReference.FEARFUL.length)];
+                }
+                if (this.emotionReference.FEARFUL.includes(emotion) && Math.random() < 0.5) {
+                    emotion = this.emotionReference.COOPERATIVE[Math.floor(Math.random() * this.emotionReference.COOPERATIVE.length)];
+                }
+            } else if (window.gameStore.purchasedUpgradeIds.has('shock_conditioning')) {
+                if (this.emotionReference.HOSTILE.includes(emotion) && Math.random() < 0.5) {
+                    emotion = this.emotionReference.FEARFUL[Math.floor(Math.random() * this.emotionReference.FEARFUL.length)];
+                }
+            }
             this.game.currentCodeWord = faker.word.noun(); // : null;
             const background = this.getRandomItem(this.backgrounds);
             const prior = this.getRandomItem(this.priorHistory);
@@ -386,12 +446,15 @@ class SessionManager {
         document.getElementById('subject-name').textContent = name;
         document.getElementById('subject-sex').textContent = sex.charAt(0).toUpperCase() + sex.slice(1);
         document.getElementById('subject-profession').textContent = profession;
-        
+
         // Show resistance if upgrade purchased
         if (window.gameStore.purchasedUpgradeIds.has('resistance_estimation')) {
             document.getElementById('subject-resistance').textContent = resistance;
+            /* Hide                     <span class="upgrade-lock" data-upgrade="resistance_estimation">🔒</span>*/
+            document.querySelector('.upgrade-lock[data-upgrade="resistance_estimation"]').style.display = 'none';
         } else {
             document.getElementById('subject-resistance').textContent = '???';
+            document.querySelector('.upgrade-lock[data-upgrade="resistance_estimation"]').style.display = 'inline';
         }
 
         // Show emotion if upgrade purchased, with 25% error chance for CNNs
@@ -402,29 +465,39 @@ class SessionManager {
             } else {
                 document.getElementById('subject-emotion').textContent = emotion;
             }
+            document.querySelector('.upgrade-lock[data-upgrade="cnns_see_sentiments"]').style.display = 'none';
         } else {
             document.getElementById('subject-emotion').textContent = '???';
+            document.querySelector('.upgrade-lock[data-upgrade="cnns_see_sentiments"]').style.display = 'inline';
         }
 
         // Show background if upgrade purchased
         if (window.gameStore.purchasedUpgradeIds.has('background_check')) {
             document.getElementById('subject-background').textContent = backgroundString;
+            document.querySelector('.upgrade-lock[data-upgrade="background_check"]').style.display = 'none';
         } else {
             document.getElementById('subject-background').textContent = '???';
+            document.querySelector('.upgrade-lock[data-upgrade="background_check"]').style.display = 'inline';
         }
 
         // Show history if upgrade purchased
         if (window.gameStore.purchasedUpgradeIds.has('prior_reports')) {
             document.getElementById('subject-history').textContent = historyString;
+            document.querySelector('.upgrade-lock[data-upgrade="prior_reports"]').style.display = 'none';
         } else {
             document.getElementById('subject-history').textContent = '???';
+            document.querySelector('.upgrade-lock[data-upgrade="prior_reports"]').style.display = 'inline';
         }
 
         // Show secret type based on upgrades
         if (window.gameStore.purchasedUpgradeIds.has('pseudomniscience')) {
             // Always show correct secret type
             document.getElementById('subject-secret-type').textContent = secretString === '' ? 'none' : secretString;
+            document.querySelector('.upgrade-lock[data-upgrade="pseudomniscience"]').style.display = 'none';
+            document.querySelector('.upgrade-lock[data-upgrade="classified_disclosure"]').style.display = 'none';
         } else if (window.gameStore.purchasedUpgradeIds.has('classified_disclosure')) {
+            document.querySelector('.upgrade-lock[data-upgrade="pseudomniscience"]').style.display = 'inline';
+            document.querySelector('.upgrade-lock[data-upgrade="classified_disclosure"]').style.display = 'none';
             // 50% chance to show secret type
             if (Math.random() < 0.5) {
                 document.getElementById('subject-secret-type').textContent = secretString === '' ? 'none' : secretString;
