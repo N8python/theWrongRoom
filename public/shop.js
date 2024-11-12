@@ -1,11 +1,6 @@
 export class ShopManager {
     constructor(game) {
         this.game = game;
-        this.purchasedUpgrades = {
-            informational: -1,
-            passive: -1,
-            active: -1
-        };
         this.setupShopMenu();
     }
 
@@ -29,6 +24,16 @@ export class ShopManager {
     }
 
     createUpgradeElement(upgrade, type) {
+        // Convert type to full upgrade type name
+        const upgradeType = type === 'informational' ? 'informational_upgrades' :
+                           type === 'passive' ? 'passive_interrogation_upgrades' :
+                           'active_interrogation_upgrades';
+                           
+        // Check if this upgrade is already purchased
+        if (window.gameStore.purchasedUpgrades[upgradeType].includes(upgrade?.price)) {
+            return '<div>Upgrade purchased!</div>';
+        }
+        
         if (!upgrade) return '<div>All upgrades purchased!</div>';
         
         return `
@@ -76,7 +81,12 @@ export class ShopManager {
                     document.getElementById('notes-count').textContent = this.game.notes;
                     
                     // Update purchased state
-                    this.purchasedUpgrades[type]++;
+                    const upgradeType = type === 'informational' ? 'informational_upgrades' :
+                                      type === 'passive' ? 'passive_interrogation_upgrades' :
+                                      'active_interrogation_upgrades';
+                    
+                    window.gameStore.purchasedUpgrades[upgradeType].push(price);
+                    saveGameState();
                     
                     // Refresh shop display
                     this.populateShop();
