@@ -4,6 +4,12 @@ window.gameStore = {
         informational_upgrades: [],
         passive_interrogation_upgrades: [], 
         active_interrogation_upgrades: []
+    },
+    // Dictionary to track purchased upgrade IDs
+    purchasedUpgradeIds: {
+        informational: new Set(),
+        passive: new Set(),
+        active: new Set()
     }
 };
 

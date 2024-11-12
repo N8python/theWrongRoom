@@ -85,7 +85,18 @@ export class ShopManager {
                                       type === 'passive' ? 'passive_interrogation_upgrades' :
                                       'active_interrogation_upgrades';
                     
+                    // Update both price list and ID tracking
                     window.gameStore.purchasedUpgrades[upgradeType].push(price);
+                    const shortType = type === 'informational' ? 'informational' :
+                                    type === 'passive' ? 'passive' : 'active';
+                    
+                    // Find and store the upgrade ID
+                    const { UPGRADES } = await import('./upgrades.js');
+                    const upgrade = UPGRADES[upgradeType].find(u => u.price === price);
+                    if (upgrade) {
+                        window.gameStore.purchasedUpgradeIds[shortType].add(upgrade.id);
+                    }
+                    
                     saveGameState();
                     
                     // Refresh shop display
