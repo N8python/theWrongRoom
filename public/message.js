@@ -82,11 +82,13 @@ class MessageManager {
             const response = await fetch(`/sessions/${this.game.currentSessionId}/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message, prefix: this.prefix })
+                body: JSON.stringify({ message, prefix: this.prefix, noLeave: this.noLeave })
             });
+            document.querySelector('button.action-button:nth-child(1)').disabled = false;
             document.querySelector('button.action-button:nth-child(2)').disabled = false;
             document.querySelector('button.action-button:nth-child(3)').disabled = false;
             this.prefix = null;
+            this.noLeave = false;
 
             console.timeEnd('Time to first token')
 

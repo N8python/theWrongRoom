@@ -23,4 +23,13 @@ export const COMPLIANCE = [
     "I'll cooperate with you. I",
     "I'll tell you everything you need to know.",
     "I'm happy to help you.",
+    "I can help you with what you need.",
+    "I'll tell you what I know.",
+    "I'm ready to help you now.",
+    "I'll share the information you want.",
+    "I'm willing to cooperate now.",
+    "Let me help you with what you need.",
+    "I can give you the answers you're looking for.",
+    "I'm ready to share what I know.",
+    "Let me tell you what you need to know."
 ]

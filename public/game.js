@@ -53,9 +53,9 @@ class Game {
             const prisonBtn = document.querySelector('button.action-button:nth-child(1)');
             const flashlightBtn = document.querySelector('button.action-button:nth-child(2)');
             const syringeBtn = document.querySelector('button.action-button:nth-child(3)');
-            
+
             prisonBtn.addEventListener('click', () => {
-                if (!prisonBtn.disabled && !flashlightBtn.disabled && !syringeBtn.disabled) {
+                if (!prisonBtn.disabled) {
                     this.messageManager.noLeave = true;
                     prisonBtn.disabled = true;
                 }
