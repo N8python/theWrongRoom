@@ -386,13 +386,51 @@ class SessionManager {
         document.getElementById('subject-name').textContent = name;
         document.getElementById('subject-sex').textContent = sex.charAt(0).toUpperCase() + sex.slice(1);
         document.getElementById('subject-profession').textContent = profession;
-        document.getElementById('subject-resistance').textContent = resistance;
-        document.getElementById('subject-emotion').textContent = emotion;
-        document.getElementById('subject-background').textContent = backgroundString;
-        document.getElementById('subject-history').textContent = historyString;
-        if (window.gameStore.purchasedUpgradeIds.has('classified_disclosure') || 
-            window.gameStore.purchasedUpgradeIds.has('pseudomniscience')) {
+        
+        // Show resistance if upgrade purchased
+        if (window.gameStore.purchasedUpgradeIds.has('resistance_estimation')) {
+            document.getElementById('subject-resistance').textContent = resistance;
+        } else {
+            document.getElementById('subject-resistance').textContent = '???';
+        }
+
+        // Show emotion if upgrade purchased, with 25% error chance for CNNs
+        if (window.gameStore.purchasedUpgradeIds.has('cnns_see_sentiments')) {
+            if (Math.random() < 0.25) { // 25% chance of wrong emotion
+                const wrongEmotion = this.emotions[Math.floor(Math.random() * this.emotions.length)];
+                document.getElementById('subject-emotion').textContent = wrongEmotion + ' (?)';
+            } else {
+                document.getElementById('subject-emotion').textContent = emotion;
+            }
+        } else {
+            document.getElementById('subject-emotion').textContent = '???';
+        }
+
+        // Show background if upgrade purchased
+        if (window.gameStore.purchasedUpgradeIds.has('background_check')) {
+            document.getElementById('subject-background').textContent = backgroundString;
+        } else {
+            document.getElementById('subject-background').textContent = '???';
+        }
+
+        // Show history if upgrade purchased
+        if (window.gameStore.purchasedUpgradeIds.has('prior_reports')) {
+            document.getElementById('subject-history').textContent = historyString;
+        } else {
+            document.getElementById('subject-history').textContent = '???';
+        }
+
+        // Show secret type based on upgrades
+        if (window.gameStore.purchasedUpgradeIds.has('pseudomniscience')) {
+            // Always show correct secret type
             document.getElementById('subject-secret-type').textContent = secretString === '' ? 'none' : secretString;
+        } else if (window.gameStore.purchasedUpgradeIds.has('classified_disclosure')) {
+            // 50% chance to show secret type
+            if (Math.random() < 0.5) {
+                document.getElementById('subject-secret-type').textContent = secretString === '' ? 'none' : secretString;
+            } else {
+                document.getElementById('subject-secret-type').textContent = '??? (Intel gathering failed)';
+            }
         } else {
             document.getElementById('subject-secret-type').textContent = '???';
         }
