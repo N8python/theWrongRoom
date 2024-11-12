@@ -192,6 +192,29 @@
             color: #a89b86;
             cursor: not-allowed;
         }
+
+        .action-button {
+            width: 48px;
+            height: 48px;
+            padding: 8px;
+            background-color: #5a4836;
+            border: 2px solid #e6d4b6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-button:hover {
+            background-color: #6a583f;
+            transform: scale(1.05);
+        }
+
+        .action-button:disabled {
+            background-color: #3e2f23;
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
         
         .settings-button {
             position: fixed;
@@ -469,6 +492,17 @@
 
 <body>
     <div id="game-container">
+        <div id="action-buttons" style="position: fixed; top: 24px; left: 50%; transform: translateX(-50%); display: none; gap: 12px; background: rgba(62, 47, 35, 0.9); padding: 12px; border-radius: 6px; z-index: 99999; border: 2px solid #e6d4b6;">
+            <button class="action-button">
+                <img src="sprites/jail.png" style="width: 32px; height: 32px; image-rendering: pixelated;">
+            </button>
+            <button class="action-button">
+                <img src="sprites/lamp.png" style="width: 32px; height: 32px; image-rendering: pixelated;">
+            </button>
+            <button class="action-button">
+                <img src="sprites/syringe.png" style="width: 32px; height: 32px; image-rendering: pixelated;">
+            </button>
+        </div>
         <div id="currency-display" style="position: fixed; top: 24px; left: 24px; display: flex; align-items: center; background: rgba(62, 47, 35, 0.9); padding: 12px; border-radius: 6px; z-index: 99999; border: 2px solid #e6d4b6;">
             <img src="sprites/note.png" style="width: 32px; height: 32px; margin-right: 8px; image-rendering: pixelated;">
             <span id="notes-count" style="color: #e6d4b6; font-size: 24px;">0</span>

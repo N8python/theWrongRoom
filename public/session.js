@@ -466,8 +466,10 @@ class SessionManager {
 
         this.game.uiManager.messageInput.disabled = false;
         this.game.uiManager.sendButton.disabled = false;
+        document.getElementById('action-buttons').style.display = 'flex';
 
         this.game.subjectHasLeft = false;
+        document.getElementById('action-buttons').style.display = 'none';
         await this.initializeSession();
     }
 
