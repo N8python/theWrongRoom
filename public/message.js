@@ -4,6 +4,7 @@ import { TTS } from './constants.js';
 class MessageManager {
     constructor(game) {
         this.game = game;
+        this.prefix = null;
     }
 
     async handleSendMessage() {
@@ -54,6 +55,10 @@ class MessageManager {
             audio.play();
             audio.onended = () => {
                 this.game.playingAudio = false;
+                // Reset prefix and re-enable flashlight after message sent
+                this.prefix = null;
+                document.querySelector('button.action-button:nth-child(2)').disabled = false;
+        
                 this.game.uiManager.messageInput.disabled = false;
                 this.game.uiManager.sendButton.disabled = false;
             }
@@ -78,7 +83,7 @@ class MessageManager {
             const response = await fetch(`/sessions/${this.game.currentSessionId}/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message })
+                body: JSON.stringify({ message, prefix: this.prefix })
             });
             console.timeEnd('Time to first token')
 

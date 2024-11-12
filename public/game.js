@@ -48,6 +48,15 @@ class Game {
             await this.dialogueManager.initialize();
             this.uiManager.addEventListeners();
             this.setupSettingsMenu();
+            
+            // Add flashlight button handler
+            const flashlightBtn = document.querySelector('button.action-button:nth-child(2)');
+            flashlightBtn.addEventListener('click', () => {
+                if (!flashlightBtn.disabled) {
+                    this.messageManager.prefix = "IVE BEEN BLINDED";
+                    flashlightBtn.disabled = true;
+                }
+            });
         }
 
         // Only start gameplay if specified
