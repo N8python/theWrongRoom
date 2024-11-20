@@ -5,7 +5,10 @@ import { TTS } from './constants.js';
 document.addEventListener('DOMContentLoaded', async() => {
     // Initialize game instance but don't start gameplay yet
     const game = new Game();
-
+    // Import and initialize shop
+    const { ShopManager } = await
+    import ('./shop.js');
+    new ShopManager(game);
     // Load all assets first
     await initializeSpriteAssets();
 
@@ -48,10 +51,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         }
     });
 
-    // Import and initialize shop
-    const { ShopManager } = await
-    import ('./shop.js');
-    new ShopManager(game);
+
 
     window.addEventListener('beforeunload', async() => await game.cleanup());
 });

@@ -2,7 +2,7 @@ import { faker } from 'https://esm.sh/@faker-js/faker';
 import { generateRandomSprite } from './sprite-generator.js';
 import { SpriteSheet, CharacterSprite } from './sprite-animation.js';
 import { maleSpeakers, femaleSpeakers } from './speaker-gender.js';
-
+import { saveGameState } from './store.js';
 class SessionManager {
     constructor(game) {
         this.game = game;
@@ -577,6 +577,11 @@ class SessionManager {
         // If we've reached 5 subjects, show summary then return to main menu
         if (this.subjectsInterrogated >= 5) {
             this.subjectsInterrogated = 0; // Reset counter
+            if (this.game.successCount >= 2) { // The level is cleared
+                this.game.notes += 10 * this.currentLevel;
+                window.gameStore.notes = this.game.notes;
+                saveGameState();
+            }
             this.game.summaryScreen.show(this.game.successCount, this.game.totalCount);
             return;
         }
