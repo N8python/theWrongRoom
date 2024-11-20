@@ -533,6 +533,8 @@ class SessionManager {
             // Add notes reward
             const notesEarned = 2 * this.currentLevel;
             this.game.notes += notesEarned;
+            window.gameStore.notes = this.game.notes;
+            saveGameState();
             document.getElementById('notes-count').textContent = this.game.notes;
 
             this.game.uiManager.guessResult.textContent = `✅ Correct! You extracted the code word! (+${notesEarned} notes)`;

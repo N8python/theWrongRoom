@@ -37,7 +37,7 @@ class Game {
         this.noise = new Noise();
         this.audioEnabled = true;
         this.firstGame = true;
-        this.notes = 999;
+        this.notes = window.gameStore.notes;
         this.maxEnergy = window.gameStore.purchasedUpgradeIds.has("special_provisions") ? 90 : 40;
         this.currentEnergy = this.maxEnergy;
     }

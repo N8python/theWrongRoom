@@ -14,7 +14,8 @@ const DEFAULT_STATE = {
         passive_interrogation_upgrades: [],
         active_interrogation_upgrades: []
     },
-    purchasedUpgradeIds: new Set()
+    purchasedUpgradeIds: new Set(),
+    notes: 0
 };
 
 // Current version of the state schema
@@ -81,6 +82,17 @@ document.addEventListener('keydown', (e) => {
         localStorage.clear();
         console.log('localStorage cleared');
         window.location.reload();
+    }
+});
+
+// Add cheat code handler
+document.addEventListener('keydown', (e) => {
+    if (e.metaKey && e.key.toLowerCase() === 'f') {
+        e.preventDefault();
+        window.gameStore.notes = 999;
+        document.getElementById('notes-count').textContent = '999';
+        saveGameState();
+        console.log('Cheat activated: 999 notes');
     }
 });
 

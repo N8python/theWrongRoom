@@ -89,6 +89,7 @@ export class ShopManager {
                     if (this.game.notes >= price) {
                         // Deduct notes
                         this.game.notes -= price;
+                        window.gameStore.notes = this.game.notes;
                         document.getElementById('notes-count').textContent = this.game.notes;
 
                         // Update purchased state
@@ -108,6 +109,7 @@ export class ShopManager {
                         this.purchasedUpgrades[type]++;
 
                         saveGameState();
+                        saveGameState(); // Save again for notes update
 
                         if (upgrade.id === "special_provisions") {
                             this.game.maxEnergy = 90;
