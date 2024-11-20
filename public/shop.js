@@ -81,6 +81,7 @@ export class ShopManager {
         // Add buy handlers
         document.querySelectorAll('.buy-button').forEach(button => {
             button.addEventListener('click', async() => {
+
                 try {
                     const type = button.dataset.type;
                     const price = parseInt(button.dataset.price);
@@ -107,6 +108,14 @@ export class ShopManager {
                         this.purchasedUpgrades[type]++;
 
                         saveGameState();
+
+                        // Add action button handlers
+                        const prisonBtn = document.querySelector('button.action-button:nth-child(1)');
+                        const flashlightBtn = document.querySelector('button.action-button:nth-child(2)');
+                        const syringeBtn = document.querySelector('button.action-button:nth-child(3)');
+                        prisonBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("entrapment");
+                        flashlightBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("blinding_flash");
+                        syringeBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("hypnotic_serum");
 
                         // Refresh shop display
                         await this.populateShop();

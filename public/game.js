@@ -57,6 +57,9 @@ class Game {
             const prisonBtn = document.querySelector('button.action-button:nth-child(1)');
             const flashlightBtn = document.querySelector('button.action-button:nth-child(2)');
             const syringeBtn = document.querySelector('button.action-button:nth-child(3)');
+            prisonBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("entrapment");
+            flashlightBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("blinding_flash");
+            syringeBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("hypnotic_serum");
 
             prisonBtn.addEventListener('click', () => {
                 if (!prisonBtn.disabled) {
@@ -151,6 +154,12 @@ class Game {
         document.getElementById('subject-history').textContent = '';
         document.getElementById('subject-secret-type').textContent = '';
         document.getElementById('action-buttons').style.display = 'none';
+        const prisonBtn = document.querySelector('button.action-button:nth-child(1)');
+        const flashlightBtn = document.querySelector('button.action-button:nth-child(2)');
+        const syringeBtn = document.querySelector('button.action-button:nth-child(3)');
+        prisonBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("entrapment");
+        flashlightBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("blinding_flash");
+        syringeBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("hypnotic_serum");
         // Reset game state
         this.currentSessionId = null;
         this.currentCodeWord = null;
