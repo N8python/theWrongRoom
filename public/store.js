@@ -15,7 +15,8 @@ const DEFAULT_STATE = {
         active_interrogation_upgrades: []
     },
     purchasedUpgradeIds: new Set(),
-    notes: 0
+    notes: 0,
+    viewedDialogues: new Set()
 };
 
 // Current version of the state schema
@@ -65,6 +66,12 @@ try {
                 parsed.purchasedUpgradeIds :
                 []
             );
+            
+            migrated.viewedDialogues = new Set(
+                Array.isArray(parsed.viewedDialogues) ?
+                parsed.viewedDialogues :
+                []
+            );
 
             window.gameStore = migrated;
         } else {
@@ -105,6 +112,7 @@ export function saveGameState() {
         const serialized = JSON.stringify({
             ...window.gameStore,
             purchasedUpgradeIds: Array.from(window.gameStore.purchasedUpgradeIds),
+            viewedDialogues: Array.from(window.gameStore.viewedDialogues),
             version: STATE_VERSION
         });
 

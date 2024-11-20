@@ -1,4 +1,5 @@
 import * as tts from './piper-tts-web/dist/piper-tts-web.js';
+import { saveGameState } from './store.js';
 
 export class DialogueManager {
     constructor(game) {
@@ -206,6 +207,13 @@ export class DialogueManager {
     }
 
     start() {
+        // Check if this level's dialogue has already been viewed
+        if (window.gameStore.viewedDialogues.has(this.game.sessionManager.currentLevel.toString())) {
+            // Skip dialogue and start gameplay directly
+            this.game.startGameplay();
+            return;
+        }
+
         this.isActive = true;
         this.currentLine = 0;
         this.currentFrame = 0;
@@ -285,6 +293,10 @@ export class DialogueManager {
         // Set dialogue box to 0
         this.dialogueBox.textContent = '';
         document.body.removeChild(this.overlay);
+
+        // Mark this level's dialogue as viewed
+        window.gameStore.viewedDialogues.add(this.currentLevel.toString());
+        saveGameState();
 
         this.game.startGameplay();
     }
