@@ -86,9 +86,9 @@ class MessageManager {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message, prefix: this.prefix, noLeave: this.noLeave })
             });
-            document.querySelector('button.action-button:nth-child(1)').disabled = false;
-            document.querySelector('button.action-button:nth-child(2)').disabled = false;
-            document.querySelector('button.action-button:nth-child(3)').disabled = false;
+            document.querySelector('button.action-button:nth-child(1)').disabled = !window.gameStore.purchasedUpgradeIds.has("entrapment");
+            document.querySelector('button.action-button:nth-child(2)').disabled = !window.gameStore.purchasedUpgradeIds.has("blinding_flash");
+            document.querySelector('button.action-button:nth-child(3)').disabled = !window.gameStore.purchasedUpgradeIds.has("hypnotic_serum");
             this.prefix = null;
             this.noLeave = false;
 
