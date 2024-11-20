@@ -569,10 +569,10 @@ class SessionManager {
 
     async handleNextSubject() {
         this.subjectsInterrogated++;
-        
+
         // If we've reached 5 subjects, show summary then return to main menu
-        if (this.subjectsInterrogated >= 5) {
-            this.subjectsInterrogated = 0;  // Reset counter
+        if (this.subjectsInterrogated >= 1) {
+            this.subjectsInterrogated = 0; // Reset counter
             this.game.summaryScreen.show(this.game.successCount, this.game.totalCount);
             return;
         }

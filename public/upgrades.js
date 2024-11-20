@@ -45,7 +45,7 @@ export const UPGRADES = {
         {
             "id": "malaise_gas",
             "title": "Malaise Gas",
-            "description": "The interrogation room is flooded with foul-smelling gas that induces extreme discomfort. Has a 33% chance to decrease a suspect's resistance level by one. Stacks with Psychoactive Lights.",
+            "description": "The interrogation room is flooded with foul-smelling gas that induces extreme discomfort. Has a 50% chance to decrease a suspect's resistance level by one. Stacks with Psychoactive Lights.",
             "price": 24
         },
         {

@@ -5,10 +5,10 @@ import { TTS } from './constants.js';
 document.addEventListener('DOMContentLoaded', async() => {
     // Initialize game instance but don't start gameplay yet
     const game = new Game();
-    
+
     // Load all assets first
     await initializeSpriteAssets();
-    
+
     if (TTS) {
         document.getElementById('loading-message').textContent = 'Loading TTS';
         document.getElementById('loading-message').textContent = 'Warming Up TTS Inference';
@@ -20,15 +20,15 @@ document.addEventListener('DOMContentLoaded', async() => {
             document.getElementById('loading-message').textContent = `Loading TTS: ${progress.progress.toFixed(2)}%`;
         });
     }
-    
+
     document.getElementById('loading-message').textContent = 'Initializing Game & Whisper';
     // Initialize game systems but don't start gameplay
     await game.initialize(false);
-    
+
     // Hide loading screen and show main menu
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('main-menu').style.display = 'flex';
-    
+
     // Add start game button listener
     document.getElementById('start-game').addEventListener('click', () => {
         document.getElementById('start-game').style.display = 'none';
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 
     // Setup clearance buttons
     document.querySelectorAll('.clearance-button').forEach(button => {
-        if (button.id !== 'open-shop') {  // Skip shop button
+        if (button.id !== 'open-shop' && button.id !== 'return-to-main-menu') {
             button.addEventListener('click', () => {
                 const level = parseInt(button.dataset.level);
                 game.sessionManager.currentLevel = level;
@@ -49,7 +49,8 @@ document.addEventListener('DOMContentLoaded', async() => {
     });
 
     // Import and initialize shop
-    const { ShopManager } = await import('./shop.js');
+    const { ShopManager } = await
+    import ('./shop.js');
     new ShopManager(game);
 
     window.addEventListener('beforeunload', async() => await game.cleanup());

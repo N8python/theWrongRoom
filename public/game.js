@@ -42,7 +42,8 @@ class Game {
 
     async initialize(startGameplay = false) {
         if (this.firstGame) {
-            const { SummaryScreen } = await import('./summary.js');
+            const { SummaryScreen } = await
+            import ('./summary.js');
             this.summaryScreen = new SummaryScreen(this);
             await this.renderer.initialize();
             await this.audioManager.initialize();
@@ -87,7 +88,7 @@ class Game {
 
     async startGameplay() {
         document.getElementById('action-buttons').style.display = 'flex';
-        this.sessionManager.subjectsInterrogated = 0;  // Reset counter when starting new level
+        this.sessionManager.subjectsInterrogated = 0; // Reset counter when starting new level
         // Start the actual gameplay loop
         await this.sessionManager.initializeSession();
 
@@ -168,6 +169,9 @@ class Game {
         this.uiManager.messageInput.value = '';
         this.uiManager.guessInput.value = '';
         this.uiManager.guessResult.textContent = '';
+        this.uiManager.submitGuessButton.disabled = false;
+        this.uiManager.dontKnowButton.disabled = false;
+
         document.getElementById('guessing-section').style.display = 'none';
         document.getElementById('success-count').textContent = '0';
         document.getElementById('total-count').textContent = '0';

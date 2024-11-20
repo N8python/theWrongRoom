@@ -213,6 +213,8 @@ float snoise(vec3 v){
         lampMesh.position.set(-1, 0.3, -0.5);
         lampMesh.frustumCulled = false;
         this.scene.add(lampMesh);
+        this.lampMesh = lampMesh;
+        this.lampMesh.renderOrder = 1001;
         const lightShine = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({
             /* color: 0xffffaa,
              transparent: true,
@@ -238,6 +240,7 @@ float snoise(vec3 v){
         lightShine.position.set(-1 + 0.1, 1.75 - 0.25, -0.4);
         this.scene.add(lightShine);
         this.lightShine = lightShine;
+        this.lightShine.renderOrder = 1000;
     }
 
     animate() {

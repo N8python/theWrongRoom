@@ -25,7 +25,9 @@ class MessageManager {
             return;
         }
 
-        if (response.includes('<LEAVES>') && !this.noLeave) {
+        //if (response.includes('<LEAVES>') && !this.noLeave) {
+        if (true) {
+
             response = response.replace('<LEAVES>', '');
             this.editLastMessage((msg) => msg.replace('<LEAVES>', ''));
             this.game.currentCharacterSprite.setDirection(this.game.currentCharacterSprite.spriteSheet.FACING.RIGHT);

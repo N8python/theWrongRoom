@@ -45,10 +45,11 @@ export class SummaryScreen {
 
         const returnButton = document.createElement('button');
         returnButton.className = 'clearance-button';
+        returnButton.id = 'return-to-main-menu';
         returnButton.textContent = 'Return to Main Menu';
-        returnButton.onclick = () => {
+        returnButton.onclick = async() => {
             summaryScreen.style.display = 'none';
-            this.game.returnToMainMenu();
+            await this.game.returnToMainMenu();
         };
 
         content.appendChild(title);

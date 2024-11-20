@@ -32,14 +32,9 @@ export class ShopManager {
     }
 
     createUpgradeElement(upgrade, type) {
-        // Convert type to full upgrade type name
-        const upgradeType = type === 'informational' ? 'informational_upgrades' :
-            type === 'passive' ? 'passive_interrogation_upgrades' :
-            'active_interrogation_upgrades';
-
         // Check if this upgrade is already purchased by ID
         if (upgrade && window.gameStore.purchasedUpgradeIds.has(upgrade.id)) {
-            return '<div>Upgrade purchased!</div>';
+            return '<div>All upgrades purchased!</div>';
         }
 
         if (!upgrade) return '<div>All upgrades purchased!</div>';
@@ -61,13 +56,21 @@ export class ShopManager {
     }
 
     async populateShop() {
+        // Compute how many upgrades have been purchased from the window.gameStore
+        const purchasedUpgrades = window.gameStore.purchasedUpgrades;
+        this.purchasedUpgrades = {
+            informational: purchasedUpgrades.informational_upgrades.length,
+            passive: purchasedUpgrades.passive_interrogation_upgrades.length,
+            active: purchasedUpgrades.active_interrogation_upgrades.length
+        };
         // Update each upgrade section
+        const that = this;
         const updateSection = (type, upgrades) => {
-            const nextUpgradeIndex = this.purchasedUpgrades[type];
+            const nextUpgradeIndex = that.purchasedUpgrades[type];
             const nextUpgrade = upgrades[nextUpgradeIndex];
             const element = document.getElementById(`${type}-upgrade`);
             if (element) {
-                element.innerHTML = this.createUpgradeElement(nextUpgrade, type);
+                element.innerHTML = that.createUpgradeElement(nextUpgrade, type);
             }
         };
 
@@ -77,37 +80,37 @@ export class ShopManager {
 
         // Add buy handlers
         document.querySelectorAll('.buy-button').forEach(button => {
-            button.addEventListener('click', async () => {
+            button.addEventListener('click', async() => {
                 try {
-                const type = button.dataset.type;
-                const price = parseInt(button.dataset.price);
+                    const type = button.dataset.type;
+                    const price = parseInt(button.dataset.price);
 
-                if (this.game.notes >= price) {
-                    // Deduct notes
-                    this.game.notes -= price;
-                    document.getElementById('notes-count').textContent = this.game.notes;
+                    if (this.game.notes >= price) {
+                        // Deduct notes
+                        this.game.notes -= price;
+                        document.getElementById('notes-count').textContent = this.game.notes;
 
-                    // Update purchased state
-                    const upgradeType = type === 'informational' ? 'informational_upgrades' :
-                        type === 'passive' ? 'passive_interrogation_upgrades' :
-                        'active_interrogation_upgrades';
+                        // Update purchased state
+                        const upgradeType = type === 'informational' ? 'informational_upgrades' :
+                            type === 'passive' ? 'passive_interrogation_upgrades' :
+                            'active_interrogation_upgrades';
 
-                    // Update both price list and ID tracking
-                    window.gameStore.purchasedUpgrades[upgradeType].push(price);
-                    // Find and store the upgrade ID
-                    const upgrade = UPGRADES[upgradeType].find(u => u.price === price);
-                    if (upgrade) {
-                        window.gameStore.purchasedUpgradeIds.add(upgrade.id);
+                        // Update both price list and ID tracking
+                        window.gameStore.purchasedUpgrades[upgradeType].push(price);
+                        // Find and store the upgrade ID
+                        const upgrade = UPGRADES[upgradeType].find(u => u.price === price);
+                        if (upgrade) {
+                            window.gameStore.purchasedUpgradeIds.add(upgrade.id);
+                        }
+
+                        // Increment the purchased counter
+                        this.purchasedUpgrades[type]++;
+
+                        saveGameState();
+
+                        // Refresh shop display
+                        await this.populateShop();
                     }
-
-                    // Increment the purchased counter
-                    this.purchasedUpgrades[type]++;
-
-                    saveGameState();
-
-                    // Refresh shop display
-                    await this.populateShop();
-                }
                 } catch (error) {
                     console.error('Error processing purchase:', error);
                 }
