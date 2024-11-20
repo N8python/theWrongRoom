@@ -16,7 +16,8 @@ const DEFAULT_STATE = {
     },
     purchasedUpgradeIds: new Set(),
     notes: 0,
-    viewedDialogues: new Set()
+    viewedDialogues: new Set(),
+    unlockedLevel: 1
 };
 
 // Current version of the state schema

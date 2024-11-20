@@ -580,6 +580,10 @@ class SessionManager {
             if (this.game.successCount >= 2) { // The level is cleared
                 this.game.notes += 10 * this.currentLevel;
                 window.gameStore.notes = this.game.notes;
+                // Unlock next level if this was highest unlocked
+                if (this.currentLevel === window.gameStore.unlockedLevel) {
+                    window.gameStore.unlockedLevel = Math.min(10, this.currentLevel + 1);
+                }
                 saveGameState();
             }
             this.game.summaryScreen.show(this.game.successCount, this.game.totalCount);

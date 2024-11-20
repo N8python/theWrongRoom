@@ -41,12 +41,20 @@ document.addEventListener('DOMContentLoaded', async() => {
     // Setup clearance buttons
     document.querySelectorAll('.clearance-button').forEach(button => {
         if (button.id !== 'open-shop' && button.id !== 'return-to-main-menu') {
+            const level = parseInt(button.dataset.level);
+            // Disable buttons for locked levels
+            if (level > window.gameStore.unlockedLevel) {
+                button.disabled = true;
+                button.style.opacity = '0.5';
+                button.style.cursor = 'not-allowed';
+            }
             button.addEventListener('click', () => {
-                const level = parseInt(button.dataset.level);
-                game.sessionManager.currentLevel = level;
-                document.getElementById('main-menu').style.display = 'none';
-                // Start with dialogue
-                game.dialogueManager.start();
+                if (level <= window.gameStore.unlockedLevel) {
+                    game.sessionManager.currentLevel = level;
+                    document.getElementById('main-menu').style.display = 'none';
+                    // Start with dialogue
+                    game.dialogueManager.start();
+                }
             });
         }
     });
