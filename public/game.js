@@ -64,26 +64,25 @@ class Game {
             syringeBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("hypnotic_serum");
 
             prisonBtn.addEventListener('click', () => {
-                if (!prisonBtn.disabled && this.useEnergy(5)) {
+                if (!prisonBtn.disabled && this.useEnergy(10)) {
                     this.messageManager.noLeave = true;
                     prisonBtn.disabled = true;
                 }
             });
 
             flashlightBtn.addEventListener('click', () => {
-                if (!flashlightBtn.disabled && !syringeBtn.disabled && !prisonBtn.disabled && this.useEnergy(10)) {
+                if (!flashlightBtn.disabled && !syringeBtn.disabled && this.useEnergy(20)) {
                     this.messageManager.prefix = BLINDED[Math.floor(Math.random() * BLINDED.length)];
                     flashlightBtn.disabled = true;
                 }
             });
 
             syringeBtn.addEventListener('click', () => {
-                if (!syringeBtn.disabled && !flashlightBtn.disabled && !prisonBtn.disabled && this.useEnergy(15)) {
+                if (!syringeBtn.disabled && !flashlightBtn.disabled && this.useEnergy(40)) {
                     this.messageManager.prefix = COMPLIANCE[Math.floor(Math.random() * COMPLIANCE.length)];
                     syringeBtn.disabled = true;
                 }
             });
-
             // Add energy management methods
             Game.prototype.updateEnergyUI = function() {
                 const bar = document.getElementById('energy-bar');
@@ -92,6 +91,7 @@ class Game {
                 bar.style.width = `${percentage}%`;
                 text.textContent = `${this.currentEnergy}/${this.maxEnergy}`;
             }
+            this.updateEnergyUI();
 
             Game.prototype.useEnergy = function(amount) {
                 if (this.currentEnergy >= amount) {
@@ -174,9 +174,9 @@ class Game {
         document.getElementById('subject-history').textContent = '';
         document.getElementById('subject-secret-type').textContent = '';
         document.getElementById('action-buttons').style.display = 'none';
-        const prisonBtn = document.querySelector('button.action-button:nth-child(1)');
-        const flashlightBtn = document.querySelector('button.action-button:nth-child(2)');
-        const syringeBtn = document.querySelector('button.action-button:nth-child(3)');
+        const prisonBtn = document.getElementById('prison-btn');
+        const flashlightBtn = document.getElementById('flashlight-btn');
+        const syringeBtn = document.getElementById('syringe-btn');
         prisonBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("entrapment");
         flashlightBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("blinding_flash");
         syringeBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("hypnotic_serum");
@@ -203,6 +203,7 @@ class Game {
 
         document.getElementById('guessing-section').style.display = 'none';
         document.getElementById('success-count').textContent = '0';
+        document.getElementById('subjects-left').textContent = '5';
         document.getElementById('total-count').textContent = '0';
         document.getElementById('success-rate').textContent = '0%';
 

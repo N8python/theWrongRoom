@@ -27,11 +27,11 @@ const STATE_VERSION = 1;
  */
 function isValidState(state) {
     if (!state || typeof state !== 'object') return false;
-    
-    const hasValidUpgrades = state.purchasedUpgrades 
-        && Array.isArray(state.purchasedUpgrades.informational_upgrades)
-        && Array.isArray(state.purchasedUpgrades.passive_interrogation_upgrades)
-        && Array.isArray(state.purchasedUpgrades.active_interrogation_upgrades);
+
+    const hasValidUpgrades = state.purchasedUpgrades &&
+        Array.isArray(state.purchasedUpgrades.informational_upgrades) &&
+        Array.isArray(state.purchasedUpgrades.passive_interrogation_upgrades) &&
+        Array.isArray(state.purchasedUpgrades.active_interrogation_upgrades);
 
     return hasValidUpgrades;
 }
@@ -47,24 +47,24 @@ function migrateState(state) {
 }
 
 // Initialize global store
-window.gameStore = {...DEFAULT_STATE};
+window.gameStore = {...DEFAULT_STATE };
 
 // Load saved state
 try {
     const saved = localStorage.getItem('gameStore');
     if (saved) {
         const parsed = JSON.parse(saved);
-        
+
         if (isValidState(parsed)) {
             const migrated = migrateState(parsed);
-            
+
             // Reconstruct Set since JSON doesn't preserve Set type
             migrated.purchasedUpgradeIds = new Set(
-                Array.isArray(parsed.purchasedUpgradeIds) 
-                    ? parsed.purchasedUpgradeIds 
-                    : []
+                Array.isArray(parsed.purchasedUpgradeIds) ?
+                parsed.purchasedUpgradeIds :
+                []
             );
-            
+
             window.gameStore = migrated;
         } else {
             console.warn('Invalid saved state found, using defaults');
@@ -95,11 +95,10 @@ export function saveGameState() {
             purchasedUpgradeIds: Array.from(window.gameStore.purchasedUpgradeIds),
             version: STATE_VERSION
         });
-        
+
         localStorage.setItem('gameStore', serialized);
     } catch (e) {
         console.error('Failed to save game state:', e);
         throw e; // Re-throw to allow caller to handle
     }
 }
-

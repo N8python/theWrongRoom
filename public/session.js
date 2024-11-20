@@ -573,7 +573,7 @@ class SessionManager {
         this.game.updateEnergyUI();
 
         // If we've reached 5 subjects, show summary then return to main menu
-        if (this.subjectsInterrogated >= 1) {
+        if (this.subjectsInterrogated >= 5) {
             this.subjectsInterrogated = 0; // Reset counter
             this.game.summaryScreen.show(this.game.successCount, this.game.totalCount);
             return;
@@ -601,6 +601,7 @@ class SessionManager {
     updateStats() {
         document.getElementById('success-count').textContent = this.game.successCount;
         document.getElementById('total-count').textContent = this.game.totalCount;
+        document.getElementById('subjects-left').textContent = 5 - this.game.totalCount;
         const rate = this.game.totalCount === 0 ? 0 : Math.round((this.game.successCount / this.game.totalCount) * 100);
         document.getElementById('success-rate').textContent = `${rate}%`;
     }
