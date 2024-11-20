@@ -56,9 +56,9 @@ class Game {
             this.setupSettingsMenu();
 
             // Add action button handlers
-            const prisonBtn = document.querySelector('button.action-button:nth-child(1)');
-            const flashlightBtn = document.querySelector('button.action-button:nth-child(2)');
-            const syringeBtn = document.querySelector('button.action-button:nth-child(3)');
+            const prisonBtn = document.getElementById('prison-btn');
+            const flashlightBtn = document.getElementById('flashlight-btn');
+            const syringeBtn = document.getElementById('syringe-btn');
             prisonBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("entrapment");
             flashlightBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("blinding_flash");
             syringeBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("hypnotic_serum");
