@@ -108,6 +108,12 @@ export class ShopManager {
                         this.purchasedUpgrades[type]++;
 
                         saveGameState();
+                        
+                        if (upgrade.id === "special_provisions") {
+                            this.game.maxEnergy = 90;
+                            this.game.currentEnergy = this.game.maxEnergy;
+                            this.game.updateEnergyUI();
+                        }
 
                         // Add action button handlers
                         const prisonBtn = document.querySelector('button.action-button:nth-child(1)');

@@ -569,6 +569,8 @@ class SessionManager {
 
     async handleNextSubject() {
         this.subjectsInterrogated++;
+        this.game.currentEnergy = this.game.maxEnergy;
+        this.game.updateEnergyUI();
 
         // If we've reached 5 subjects, show summary then return to main menu
         if (this.subjectsInterrogated >= 1) {

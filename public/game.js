@@ -38,6 +38,8 @@ class Game {
         this.audioEnabled = true;
         this.firstGame = true;
         this.notes = 999;
+        this.maxEnergy = window.gameStore.purchasedUpgradeIds.has("special_provisions") ? 90 : 40;
+        this.currentEnergy = this.maxEnergy;
     }
 
     async initialize(startGameplay = false) {
@@ -62,25 +64,43 @@ class Game {
             syringeBtn.disabled = !window.gameStore.purchasedUpgradeIds.has("hypnotic_serum");
 
             prisonBtn.addEventListener('click', () => {
-                if (!prisonBtn.disabled) {
+                if (!prisonBtn.disabled && this.useEnergy(5)) {
                     this.messageManager.noLeave = true;
                     prisonBtn.disabled = true;
                 }
             });
 
             flashlightBtn.addEventListener('click', () => {
-                if (!flashlightBtn.disabled && !syringeBtn.disabled && !prisonBtn.disabled) {
+                if (!flashlightBtn.disabled && !syringeBtn.disabled && !prisonBtn.disabled && this.useEnergy(10)) {
                     this.messageManager.prefix = BLINDED[Math.floor(Math.random() * BLINDED.length)];
                     flashlightBtn.disabled = true;
                 }
             });
 
             syringeBtn.addEventListener('click', () => {
-                if (!syringeBtn.disabled && !flashlightBtn.disabled && !prisonBtn.disabled) {
+                if (!syringeBtn.disabled && !flashlightBtn.disabled && !prisonBtn.disabled && this.useEnergy(15)) {
                     this.messageManager.prefix = COMPLIANCE[Math.floor(Math.random() * COMPLIANCE.length)];
                     syringeBtn.disabled = true;
                 }
             });
+
+            // Add energy management methods
+            Game.prototype.updateEnergyUI = function() {
+                const bar = document.getElementById('energy-bar');
+                const text = document.getElementById('energy-text');
+                const percentage = (this.currentEnergy / this.maxEnergy) * 100;
+                bar.style.width = `${percentage}%`;
+                text.textContent = `${this.currentEnergy}/${this.maxEnergy}`;
+            }
+
+            Game.prototype.useEnergy = function(amount) {
+                if (this.currentEnergy >= amount) {
+                    this.currentEnergy -= amount;
+                    this.updateEnergyUI();
+                    return true;
+                }
+                return false;
+            }
         }
 
         // Only start gameplay if specified
