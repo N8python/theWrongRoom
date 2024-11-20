@@ -30,12 +30,12 @@ class Game {
         this.remainingGuesses = 3;
         this.subjectHasLeft = false;
         this.isTranscribing = false;
-        this.isWhisperInitialized = false;
+        this.isWhisperInitialized = window.gameStore.settings.whisper;
         this.mouse = { x: 0, y: 0 };
         this.debugCamera = false;
         this.playingAudio = false;
         this.noise = new Noise();
-        this.audioEnabled = true;
+        this.audioEnabled = window.gameStore.settings.gameAudio;
         this.firstGame = true;
         this.notes = window.gameStore.notes;
         this.maxEnergy = window.gameStore.purchasedUpgradeIds.has("special_provisions") ? 90 : 40;
@@ -44,6 +44,18 @@ class Game {
 
     async initialize(startGameplay = false) {
         if (this.firstGame) {
+            // Initialize UI state from stored settings
+            const btn = document.getElementById('toggle-tts');
+            btn.classList.toggle('disabled', !window.TTS);
+            btn.innerHTML = window.TTS ? '<span class="icon">🗣️</span><span class="label">Voice Synthesis</span>' : '<span class="icon">🔇</span><span class="label">Voice Synthesis (Off)</span>';
+            
+            const whisperBtn = document.getElementById('toggle-whisper');
+            whisperBtn.classList.toggle('disabled', !this.isWhisperInitialized);
+            whisperBtn.innerHTML = this.isWhisperInitialized ? '<span class="icon">🎤</span><span class="label">Voice Recognition</span>' : '<span class="icon">🔇</span><span class="label">Voice Recognition (Off)</span>';
+            
+            const audioBtn = document.getElementById('toggle-sound');
+            audioBtn.classList.toggle('disabled', !this.audioEnabled);
+            audioBtn.innerHTML = this.audioEnabled ? '<span class="icon">🔊</span><span class="label">Game Audio</span>' : '<span class="icon">🔇</span><span class="label">Game Audio (Off)</span>';
             const { SummaryScreen } = await
             import ('./summary.js');
             this.summaryScreen = new SummaryScreen(this);
@@ -259,21 +271,25 @@ class Game {
 
     toggleTTS() {
         window.TTS = !window.TTS;
+        window.gameStore.settings.tts = window.TTS;
         const btn = document.getElementById('toggle-tts');
         btn.classList.toggle('disabled', !window.TTS);
         btn.innerHTML = window.TTS ? '<span class="icon">🗣️</span><span class="label">Voice Synthesis</span>' : '<span class="icon">🔇</span><span class="label">Voice Synthesis (Off)</span>';
+        saveGameState();
     }
 
     toggleWhisper() {
         this.isWhisperInitialized = !this.isWhisperInitialized;
+        window.gameStore.settings.whisper = this.isWhisperInitialized;
         const btn = document.getElementById('toggle-whisper');
         btn.classList.toggle('disabled', !this.isWhisperInitialized);
-        //btn.textContent = this.isWhisperInitialized ? '🎤' : '🔇';
         btn.innerHTML = this.isWhisperInitialized ? '<span class="icon">🎤</span><span class="label">Voice Recognition</span>' : '<span class="icon">🔇</span><span class="label">Voice Recognition (Off)</span>';
+        saveGameState();
     }
 
     toggleGameAudio() {
         this.audioEnabled = !this.audioEnabled;
+        window.gameStore.settings.gameAudio = this.audioEnabled;
         const btn = document.getElementById('toggle-sound');
         btn.classList.toggle('disabled', !this.audioEnabled);
         btn.innerHTML = this.audioEnabled ? '<span class="icon">🔊</span><span class="label">Game Audio</span>' : '<span class="icon">🔇</span><span class="label">Game Audio (Off)</span>';
@@ -287,6 +303,7 @@ class Game {
             this.audioManager.footsteps.pause();
             this.audioManager.lightFlicker.pause();
         }
+        saveGameState();
     }
 }
 

@@ -17,7 +17,12 @@ const DEFAULT_STATE = {
     purchasedUpgradeIds: new Set(),
     notes: 0,
     viewedDialogues: new Set(),
-    unlockedLevel: 1
+    unlockedLevel: 1,
+    settings: {
+        tts: true,
+        whisper: false,
+        gameAudio: true
+    }
 };
 
 // Current version of the state schema
