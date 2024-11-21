@@ -67,6 +67,7 @@ export class SummaryScreen {
         this.statsElement.innerHTML = `
             <p>Code words extracted: ${successCount}/${totalCount}</p>
             <p>Success rate: ${rate}%</p>
+            ${successCount >= 2? '<p>INTERROGATION SUCCESS: NOTE BONUS PROVIDED</p>' : ''}
         `;
         this.summaryScreen.style.display = 'flex';
     }

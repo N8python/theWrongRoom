@@ -6,8 +6,8 @@ import { AudioManager } from './audio.js';
 import { SessionManager } from './session.js';
 import { DialogueManager } from './dialogue-manager.js';
 import { ShopManager } from './shop.js';
-import { TTS } from './constants.js';
 import { BLINDED, COMPLIANCE } from './exclamations.js';
+import { saveGameState } from './store.js';
 class Game {
     constructor() {
         this.uiManager = new UIManager(this);
@@ -48,11 +48,11 @@ class Game {
             const btn = document.getElementById('toggle-tts');
             btn.classList.toggle('disabled', !window.TTS);
             btn.innerHTML = window.TTS ? '<span class="icon">🗣️</span><span class="label">Voice Synthesis</span>' : '<span class="icon">🔇</span><span class="label">Voice Synthesis (Off)</span>';
-            
+
             const whisperBtn = document.getElementById('toggle-whisper');
             whisperBtn.classList.toggle('disabled', !this.isWhisperInitialized);
             whisperBtn.innerHTML = this.isWhisperInitialized ? '<span class="icon">🎤</span><span class="label">Voice Recognition</span>' : '<span class="icon">🔇</span><span class="label">Voice Recognition (Off)</span>';
-            
+
             const audioBtn = document.getElementById('toggle-sound');
             audioBtn.classList.toggle('disabled', !this.audioEnabled);
             audioBtn.innerHTML = this.audioEnabled ? '<span class="icon">🔊</span><span class="label">Game Audio</span>' : '<span class="icon">🔇</span><span class="label">Game Audio (Off)</span>';
@@ -61,6 +61,7 @@ class Game {
             this.summaryScreen = new SummaryScreen(this);
             await this.renderer.initialize();
             await this.audioManager.initialize();
+            this.updateAudio();
             await this.sessionManager.initialize();
             await this.characterManager.initialize();
             await this.dialogueManager.initialize();
@@ -83,7 +84,11 @@ class Game {
             });
 
             flashlightBtn.addEventListener('click', () => {
-                if (!flashlightBtn.disabled && !syringeBtn.disabled && this.useEnergy(20)) {
+                if (!flashlightBtn.disabled && this.useEnergy(20)) {
+                    if (window.gameStore.purchasedUpgradeIds.has("hypnotic_serum") && syringeBtn.disabled) {
+                        // The syringe has been used, so the flashlight cannot be used
+                        return;
+                    }
                     this.messageManager.prefix = BLINDED[Math.floor(Math.random() * BLINDED.length)];
                     flashlightBtn.disabled = true;
                 }
@@ -91,6 +96,10 @@ class Game {
 
             syringeBtn.addEventListener('click', () => {
                 if (!syringeBtn.disabled && !flashlightBtn.disabled && this.useEnergy(40)) {
+                    if (window.gameStore.purchasedUpgradeIds.has("blinding_flash") && flashlightBtn.disabled) {
+                        // The flashlight has been used, so the syringe cannot be used
+                        return;
+                    }
                     this.messageManager.prefix = COMPLIANCE[Math.floor(Math.random() * COMPLIANCE.length)];
                     syringeBtn.disabled = true;
                 }
@@ -126,9 +135,18 @@ class Game {
         this.sessionManager.subjectsInterrogated = 0; // Reset counter when starting new level
         // Start the actual gameplay loop
         await this.sessionManager.initializeSession();
-
+        console.log(window.gameStore);
         // Add audio control listeners
         if (this.firstGame) {
+            /* if (!window.gameStore.settings.gameAudio) {
+                 this.toggleGameAudio();
+             }
+             if (!window.gameStore.settings.whisper) {
+                 this.toggleWhisper();
+             }
+             if (!window.gameStore.settings.tts) {
+                 this.toggleTTS();
+             }*/
             document.getElementById('toggle-tts').addEventListener('click', () => this.toggleTTS());
             document.getElementById('toggle-whisper').addEventListener('click', () => this.toggleWhisper());
             document.getElementById('toggle-sound').addEventListener('click', () => this.toggleGameAudio());
@@ -212,6 +230,7 @@ class Game {
         this.uiManager.guessResult.textContent = '';
         this.uiManager.submitGuessButton.disabled = false;
         this.uiManager.dontKnowButton.disabled = false;
+        this.uiManager.guessInput.disabled = false;
 
         document.getElementById('guessing-section').style.display = 'none';
         document.getElementById('success-count').textContent = '0';
@@ -294,16 +313,20 @@ class Game {
         btn.classList.toggle('disabled', !this.audioEnabled);
         btn.innerHTML = this.audioEnabled ? '<span class="icon">🔊</span><span class="label">Game Audio</span>' : '<span class="icon">🔇</span><span class="label">Game Audio (Off)</span>';
 
+        this.updateAudio();
+        saveGameState();
+    }
+    updateAudio() {
         if (this.audioEnabled) {
             this.audioManager.backgroundTrack.play();
             this.audioManager.backgroundOfficeAmbience.play();
+            this.audioManager.lightFlicker.play();
         } else {
             this.audioManager.backgroundTrack.pause();
             this.audioManager.backgroundOfficeAmbience.pause();
             this.audioManager.footsteps.pause();
             this.audioManager.lightFlicker.pause();
         }
-        saveGameState();
     }
 }
 

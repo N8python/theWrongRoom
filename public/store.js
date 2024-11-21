@@ -5,6 +5,13 @@
  * @property {number[]} purchasedUpgrades.passive_interrogation_upgrades
  * @property {number[]} purchasedUpgrades.active_interrogation_upgrades
  * @property {Set<string>} purchasedUpgradeIds
+ * @property {number} notes
+ * @property {Set<string>} viewedDialogues
+ * @property {number} unlockedLevel
+ * @property {Object} settings
+ * @property {boolean} settings.tts
+ * @property {boolean} settings.whisper
+ * @property {boolean} settings.gameAudio
  */
 
 /** @type {GameState} */
@@ -20,7 +27,7 @@ const DEFAULT_STATE = {
     unlockedLevel: 1,
     settings: {
         tts: true,
-        whisper: false,
+        whisper: true,
         gameAudio: true
     }
 };
@@ -54,61 +61,6 @@ function migrateState(state) {
     return state;
 }
 
-// Initialize global store
-window.gameStore = {...DEFAULT_STATE };
-
-// Load saved state
-try {
-    const saved = localStorage.getItem('gameStore');
-    if (saved) {
-        const parsed = JSON.parse(saved);
-
-        if (isValidState(parsed)) {
-            const migrated = migrateState(parsed);
-
-            // Reconstruct Set since JSON doesn't preserve Set type
-            migrated.purchasedUpgradeIds = new Set(
-                Array.isArray(parsed.purchasedUpgradeIds) ?
-                parsed.purchasedUpgradeIds :
-                []
-            );
-            
-            migrated.viewedDialogues = new Set(
-                Array.isArray(parsed.viewedDialogues) ?
-                parsed.viewedDialogues :
-                []
-            );
-
-            window.gameStore = migrated;
-        } else {
-            console.warn('Invalid saved state found, using defaults');
-        }
-    }
-} catch (e) {
-    console.error('Failed to load game state:', e);
-}
-
-// Add keyboard shortcut to clear localStorage
-document.addEventListener('keydown', (e) => {
-    if (e.metaKey && e.key.toLowerCase() === 'l') {
-        e.preventDefault();
-        localStorage.clear();
-        console.log('localStorage cleared');
-        window.location.reload();
-    }
-});
-
-// Add cheat code handler
-document.addEventListener('keydown', (e) => {
-    if (e.metaKey && e.key.toLowerCase() === 'f') {
-        e.preventDefault();
-        window.gameStore.notes = 999;
-        document.getElementById('notes-count').textContent = '999';
-        saveGameState();
-        console.log('Cheat activated: 999 notes');
-    }
-});
-
 /**
  * Saves current game state to localStorage
  * @throws {Error} If serialization or storage fails
@@ -127,4 +79,70 @@ export function saveGameState() {
         console.error('Failed to save game state:', e);
         throw e; // Re-throw to allow caller to handle
     }
+}
+
+/**
+ * Initializes the global game store and sets up event listeners
+ * @returns {GameState} The initialized game state
+ */
+export function initializeGameStore() {
+    // Initialize with default state
+    window.gameStore = {...DEFAULT_STATE };
+
+    // Load saved state
+    try {
+        const saved = localStorage.getItem('gameStore');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+
+            if (isValidState(parsed)) {
+                const migrated = migrateState(parsed);
+
+                // Reconstruct Sets since JSON doesn't preserve Set type
+                migrated.purchasedUpgradeIds = new Set(
+                    Array.isArray(parsed.purchasedUpgradeIds) ?
+                    parsed.purchasedUpgradeIds : []
+                );
+
+                migrated.viewedDialogues = new Set(
+                    Array.isArray(parsed.viewedDialogues) ?
+                    parsed.viewedDialogues : []
+                );
+
+                //window.gameStore = migrated;
+                // Copy over common keys
+                for (const key in migrated) {
+                    window.gameStore[key] = migrated[key];
+                }
+            } else {
+                console.warn('Invalid saved state found, using defaults');
+            }
+        }
+    } catch (e) {
+        console.error('Failed to load game state:', e);
+    }
+
+    // Add keyboard shortcut to clear localStorage
+    document.addEventListener('keydown', (e) => {
+        if (e.metaKey && e.key.toLowerCase() === 'l') {
+            e.preventDefault();
+            localStorage.clear();
+            console.log('localStorage cleared');
+            window.location.reload();
+        }
+    });
+
+    // Add cheat code handler
+    document.addEventListener('keydown', (e) => {
+        if (e.metaKey && e.key.toLowerCase() === 'f') {
+            e.preventDefault();
+            window.gameStore.notes = 999;
+            document.getElementById('notes-count').textContent = '999';
+            saveGameState();
+            console.log('Cheat activated: 999 notes');
+        }
+    });
+
+    window.TTS = window.gameStore.settings.tts;
+    return window.gameStore;
 }

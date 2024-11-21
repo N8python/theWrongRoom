@@ -1,6 +1,5 @@
 import { pipeline } from './runtimes/transformers.js';
 import * as tts from './piper-tts-web/dist/piper-tts-web.js';
-import { TTS } from './constants.js';
 
 class AudioManager {
     constructor(game) {
@@ -12,23 +11,21 @@ class AudioManager {
     }
 
     async initialize() {
-        if (TTS) {
-            try {
-                this.game.transcriber = await pipeline('automatic-speech-recognition', 'onnx-community/whisper-tiny.en', {
-                    device: 'webgpu',
-                    local_files_only: true,
-                    progress_callback: (progress) => {
-                        if (progress.loaded) {
-                            document.getElementById('loading-message').textContent = `Loading Whisper: ${progress.progress.toFixed(2)}%`;
-                        }
+        try {
+            this.game.transcriber = await pipeline('automatic-speech-recognition', 'onnx-community/whisper-tiny.en', {
+                device: 'webgpu',
+                local_files_only: true,
+                progress_callback: (progress) => {
+                    if (progress.loaded) {
+                        document.getElementById('loading-message').textContent = `Loading Whisper: ${progress.progress.toFixed(2)}%`;
                     }
-                });
-                this.game.isWhisperInitialized = true;
-                this.audioContext = new AudioContext({ sampleRate: 16000 }); // Whisper expects 16kHz
-                console.log('Whisper model loaded successfully');
-            } catch (err) {
-                console.error('Error loading Whisper model:', err);
-            }
+                }
+            });
+            this.game.isWhisperInitialized = true;
+            this.audioContext = new AudioContext({ sampleRate: 16000 }); // Whisper expects 16kHz
+            console.log('Whisper model loaded successfully');
+        } catch (err) {
+            console.error('Error loading Whisper model:', err);
         }
         this.footsteps = await this.loadAudio('sound/footsteps.mp3');
         this.footsteps.volume = 0.1;
@@ -41,14 +38,20 @@ class AudioManager {
     async initBackgroundTrack() {
         this.backgroundTrack = await this.loadAudio('sound/interrogation.mp3');
         this.backgroundTrack.loop = true;
-        this.backgroundTrack.volume = 0.01;
+        this.backgroundTrack.volume = 0.1;
         this.backgroundOfficeAmbience = await this.loadAudio('sound/office.mp3');
         this.backgroundOfficeAmbience.loop = true;
-        this.backgroundOfficeAmbience.volume = 0.04;
+        this.backgroundOfficeAmbience.volume = 0.25;
+        this.lightFlicker = await this.loadAudio('sound/flicker-light.mp3');
+        this.lightFlicker.loop = true;
+        this.lightFlicker.volume = 0.2;
 
         const startAudio = () => {
-            this.backgroundTrack.play();
-            this.backgroundOfficeAmbience.play();
+            if (this.game.audioEnabled) {
+                this.backgroundTrack.play();
+                this.backgroundOfficeAmbience.play();
+                this.lightFlicker.play();
+            }
             this.canPlay = true;
             // Remove listeners after first interaction
             ['click', 'keydown', 'touchstart'].forEach(event => {
@@ -63,14 +66,14 @@ class AudioManager {
     }
 
     async initAmbientNoise() {
-        this.lightFlicker = await this.loadAudio('sound/spooky-flicker.wav');
-        const that = this;
-        async function play() {
+        //this.lightFlicker = await this.loadAudio('sound/flicker-light.wav');
+        // const that = this;
+        /*async function play() {
             const timeToLight = Math.random() * 1000 + 2000;
             await new Promise(resolve => setTimeout(resolve, timeToLight));
             try {
                 this.lightFlicker.currentTime = 0;
-                // Randomize speed
+                this.lightFlicker.volume = this.game.audioEnabled ? 1.0 : 0.0;
                 this.lightFlicker.playbackRate = Math.random() * 0.5 + 0.75;
                 that.lightFlicker.play();
                 this.lightFlicker.onended = async() => {
@@ -78,10 +81,11 @@ class AudioManager {
                     play();
                 }
             } catch (e) {
+                console.log(e);
                 play();
             }
-        }
-        play();
+        }*/
+        //play();
     }
 
 

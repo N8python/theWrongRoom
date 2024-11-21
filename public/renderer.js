@@ -75,7 +75,8 @@ class Renderer {
         // Add rainbow gas
         const gas = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.ShaderMaterial({
             uniforms: {
-                time: { value: 0 }
+                time: { value: 0 },
+                scale: { value: 0.1 }
             },
             depthWrite: false,
             vertexShader: `
@@ -87,6 +88,7 @@ class Renderer {
             `,
             fragmentShader: /*glsl*/ `
                 uniform float time;
+                uniform float scale;
                 varying vec2 vUv;
                 vec3 hsv2rgb(vec3 c)
 {
@@ -180,7 +182,7 @@ float snoise(vec3 v){
                     vec2 sampleUv = vUv;
                     sampleUv.xy *= 2.0;
                     //vec3 color = vec3(0.5 + 0.5 * sin(time + vUv.x * 10.0));
-                    float iTime = 0.1 * time;
+                    float iTime = scale * time;
                     float alpha = fbm(vec3(sampleUv, -iTime));
                     vec3 color = hsv2rgb(vec3(fbm(vec3(sampleUv, iTime + fbm(vec3(sampleUv, iTime)))), 1.0, 1.0));
                     color = clamp(color, vec3(0.0), vec3(1.0));
@@ -277,8 +279,13 @@ float snoise(vec3 v){
             this.camera.position.lerp(targetPosition, 0.1);
         }
         this.gas.material.uniforms.time.value = currentTime / 1000;
-        const shineSize = this.game.noise.simplex2(currentTime / 1000, 0);
+        this.gas.material.uniforms.scale.value = window.gameStore.purchasedUpgradeIds.has("aerosolized_barbiturates") ? 0.2 : 0.1;
+        this.gas.visible = window.gameStore.purchasedUpgradeIds.has("malaise_gas");
+        const shineFrequency = (window.gameStore.purchasedUpgradeIds.has("basilisk_beams") ? 2 : 1);
+        const shineSize = this.game.noise.simplex2(currentTime * shineFrequency / 1000, 0) * (window.gameStore.purchasedUpgradeIds.has("basilisk_beams") ? 1.5 : 1);
         this.lightShine.scale.set(1 + 0.25 * shineSize, 1 + 0.25 * shineSize, 1);
+        this.lampMesh.visible = window.gameStore.purchasedUpgradeIds.has("psychoactive_lights");
+        this.lightShine.visible = window.gameStore.purchasedUpgradeIds.has("psychoactive_lights");
         // Render the scene
         if (this.composer) {
             const currentTime = performance.now();
@@ -299,7 +306,8 @@ float snoise(vec3 v){
 
             // Handle lightning
             const now = currentTime;
-            if (now - this.lastLightningTime > this.lightningFrequency + (Math.random() * 2 - 1) * this.lightningVariance) {
+            this.lightningFrequency = window.gameStore.purchasedUpgradeIds.has("perfect_pain") ? 5000 : 10000;
+            if ((now - this.lastLightningTime > this.lightningFrequency + (Math.random() * 2 - 1) * this.lightningVariance) && window.gameStore.purchasedUpgradeIds.has("shock_conditioning")) {
                 this.lastLightningTime = now;
                 if (this.lightnings.length < this.maxLightnings) {
                     let lightning;

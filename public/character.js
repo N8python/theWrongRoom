@@ -1,6 +1,6 @@
 import { generateRandomSprite } from './sprite-generator.js';
 import { SpriteSheet, CharacterSprite } from './sprite-animation.js';
-import { faker } from 'https://esm.sh/@faker-js/faker';
+import { faker } from './faker/index.js';
 
 class CharacterManager {
     constructor(game) {
@@ -27,7 +27,7 @@ class CharacterManager {
     handleAnimation() {
         if (this.game.animationType === 'entrance') {
             if (this.game.currentCharacterSprite.x < 0) {
-                if (!this.game.audioManager.footsteps.isPlaying && this.game.audioManager.canPlay) {
+                if (!this.game.audioManager.footsteps.isPlaying && this.game.audioManager.canPlay && this.game.audioEnabled) {
                     this.game.audioManager.footsteps.play();
                 }
                 this.game.currentCharacterSprite.x += 0.015; // Adjust speed

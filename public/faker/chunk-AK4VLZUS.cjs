@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports, "__esModule", {value: true});var _chunkCGZKEYQHcjs = require('./chunk-CGZKEYQH.cjs');var m=new (0, _chunkCGZKEYQHcjs.n)({locale:_chunkCGZKEYQHcjs.o});exports.a = m;

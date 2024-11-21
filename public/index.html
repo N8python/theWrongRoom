@@ -5,10 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Wrong Room</title>
-    <!-- Include Google Font for pixelated text -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+    <!-- Include pixelify-sans.css -->
+    <link rel="stylesheet" href="pixelify-sans.css">
     <style>
         /* Reset some default styles */
         
@@ -498,9 +496,9 @@
     <div id="game-container">
         <div id="action-buttons" style="position: fixed; top: 24px; left: 50%; transform: translateX(-50%); display: none; gap: 12px; background: rgba(62, 47, 35, 0.9); padding: 12px; border-radius: 6px; z-index: 99999; border: 2px solid #e6d4b6;">
             <div style="position: absolute; top: -24px; left: 0; width: 100%; display: flex; align-items: center; gap: 8px;">
-                <img src="sprites/energy.png" style="width: 24px; height: 24px; image-rendering: pixelated;">
+                <span class="icon" style="filter: sepia(1)">⚡️</span>
                 <div style="flex-grow: 1; height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px;">
-                    <div id="energy-bar" style="width: 100%; height: 100%; background: #4fc3f7; border-radius: 4px; transition: width 0.3s;"></div>
+                    <div id="energy-bar" style="width: 100%; height: 100%; background: #e6d4b6; border-radius: 4px; transition: width 0.3s;"></div>
                 </div>
                 <span id="energy-text" style="color: #e6d4b6; font-size: 14px;">40/40</span>
             </div>
@@ -551,6 +549,7 @@
                 <h3 style="margin-top: 0; margin-bottom: 18px; color: #e6d4b6;">Information Reconnaissance</h3>
                 <div class="stats">
                     <p>Code words extracted: <span id="success-count">0</span>/<span id="total-count">0</span> (<span id="success-rate">0%</span>)</p>
+                    <p>Subjects left: <span id="subjects-left">5</span></p>
                 </div>
                 <div id="guessing-section" style="display: none;">
                     <input type="text" id="code-word-guess" placeholder="Guess the code word...">
@@ -645,9 +644,8 @@
         </div>
     </div>
     <script type="importmap">
-        { "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/" } }
+        { "imports": { "three": "./three/build/three.module.min.js", "three/addons/": "./three/examples/jsm/" } }
     </script>
-    <script src="store.js" type="module"></script>
     <script src="main.js" type="module"></script>
 </body>
 

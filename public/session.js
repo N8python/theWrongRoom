@@ -1,4 +1,4 @@
-import { faker } from 'https://esm.sh/@faker-js/faker';
+import { faker } from './faker/index.js';
 import { generateRandomSprite } from './sprite-generator.js';
 import { SpriteSheet, CharacterSprite } from './sprite-animation.js';
 import { maleSpeakers, femaleSpeakers } from './speaker-gender.js';
@@ -534,6 +534,7 @@ class SessionManager {
             const notesEarned = 2 * this.currentLevel;
             this.game.notes += notesEarned;
             window.gameStore.notes = this.game.notes;
+            this.game.shop.populateShop();
             saveGameState();
             document.getElementById('notes-count').textContent = this.game.notes;
 
@@ -580,10 +581,26 @@ class SessionManager {
             if (this.game.successCount >= 2) { // The level is cleared
                 this.game.notes += 10 * this.currentLevel;
                 window.gameStore.notes = this.game.notes;
+                this.game.shop.populateShop();
                 // Unlock next level if this was highest unlocked
                 if (this.currentLevel === window.gameStore.unlockedLevel) {
                     window.gameStore.unlockedLevel = Math.min(10, this.currentLevel + 1);
                 }
+                document.querySelectorAll('.clearance-button').forEach(button => {
+                    if (button.id !== 'open-shop' && button.id !== 'return-to-main-menu') {
+                        const level = parseInt(button.dataset.level);
+                        // Disable buttons for locked levels
+                        if (level > window.gameStore.unlockedLevel) {
+                            button.disabled = true;
+                            button.style.opacity = '0.5';
+                            button.style.cursor = 'not-allowed';
+                        } else {
+                            button.disabled = false;
+                            button.style.opacity = '1';
+                            button.style.cursor = 'pointer';
+                        }
+                    }
+                });
                 saveGameState();
             }
             this.game.summaryScreen.show(this.game.successCount, this.game.totalCount);

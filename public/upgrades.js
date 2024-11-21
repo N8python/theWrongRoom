@@ -76,25 +76,25 @@ export const UPGRADES = {
     "active_interrogation_upgrades": [{
             "id": "entrapment",
             "title": "Entrapment",
-            "description": "Once per shift, preemptively lock both the entrance and exit to the interrogation room. This will buy you five turns of dialogue during which the suspect is not able to leave.",
+            "description": "Expend a minor amount of energy to preemptively lock both the entrance and exit to the interrogation room. This will buy you five turns of dialogue during which the suspect is not able to leave. Energy is refilled to full after the suspect leaves.",
             "price": 16
         },
         {
             "id": "blinding_flash",
             "title": "Blinding Flash",
-            "description": "Once per shift, flash a subject with a horrifyingly bright light. This stuns and terrifies them.",
+            "description": "Expend a decent amount of energy to flash a subject with a horrifyingly bright light. This stuns and terrifies them.",
             "price": 32
         },
         {
             "id": "hypnotic_serum",
             "title": "Hypnotic Serum",
-            "description": "Once per shift, inject a suspect with a serum to enhance compliance. Before they realize what they are saying, they'll start their next message ready to comply.",
+            "description": "Expend a large amount of energy to inject a suspect with a serum to enhance compliance. Before they realize what they are saying, they'll start their next message ready to comply.",
             "price": 64
         },
         {
             "id": "special_provisions",
             "title": "Special Provisions",
-            "description": "All abilities that could previously only be used once per shift can now be used twice per shift.",
+            "description": "Doubles your total energy capacity then some. This will allow you to use more active interrogation techniques.",
             "price": 128
         }
     ]

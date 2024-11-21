@@ -1,5 +1,4 @@
 import * as tts from './piper-tts-web/dist/piper-tts-web.js';
-import { TTS } from './constants.js';
 
 class MessageManager {
     constructor(game) {
@@ -25,8 +24,7 @@ class MessageManager {
             return;
         }
 
-        //if (response.includes('<LEAVES>') && !this.noLeave) {
-        if (true) {
+        if (response.includes('<LEAVES>') && !this.noLeave) {
 
             response = response.replace('<LEAVES>', '');
             this.editLastMessage((msg) => msg.replace('<LEAVES>', ''));
