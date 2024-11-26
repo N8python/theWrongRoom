@@ -1,0 +1,58 @@
+{
+    "name": "wrong-room",
+    "productName": "The Wrong Room",
+    "description": "It's up to you to root out corruption at Norne. Unlimited choices. Limited time.",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-builder",
+        "build:dev": "electron-builder --dir",
+        "build:win": "electron-builder --win --arm64 --x64",
+        "build:mac": "electron-builder --mac",
+        "build:linux": "electron-builder --linux --arm64 --x64 -l AppImage"
+    },
+    "build": {
+        "icon": "icon.png",
+        "asar": false,
+        "mac": {
+            "identity": "Apple Development: nathanbreslow@icloud.com (2N3697W9SX)"
+        },
+        "win": {
+            "target": "zip"
+        },
+        "linux": {
+            "target": "zip",
+            "category": "Game"
+        }
+    },
+    "type": "module",
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@mintplex-labs/piper-tts-web": "^1.0.4",
+        "@node-llama-cpp/linux-arm64": "^3.2.0",
+        "@node-llama-cpp/linux-armv7l": "^3.2.0",
+        "@node-llama-cpp/linux-x64": "^3.2.0",
+        "@node-llama-cpp/linux-x64-cuda": "^3.2.0",
+        "@node-llama-cpp/linux-x64-vulkan": "^3.2.0",
+        "@node-llama-cpp/mac-arm64-metal": "^3.2.0",
+        "@node-llama-cpp/mac-x64": "^3.2.0",
+        "@node-llama-cpp/win-arm64": "^3.2.0",
+        "@node-llama-cpp/win-x64": "^3.2.0",
+        "@node-llama-cpp/win-x64-cuda": "^3.2.0",
+        "@node-llama-cpp/win-x64-vulkan": "^3.2.0",
+        "cors": "^2.8.5",
+        "express": "^4.21.1",
+        "node-llama-cpp": "^3.2.0",
+        "openai": "^4.70.2",
+        "readline-sync": "^1.4.10",
+        "uuid": "^11.0.2"
+    },
+    "devDependencies": {
+        "@faker-js/faker": "^9.2.0",
+        "electron": "^33.2.0",
+        "electron-builder": "^25.1.8"
+    }
+}
