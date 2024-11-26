@@ -4,3 +4,4 @@ node_modules
 *.onnx
 *.gguf
 dist
+public/models
