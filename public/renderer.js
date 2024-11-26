@@ -1,6 +1,6 @@
-import * as THREE from 'https://unpkg.com/three@0.170.0/build/three.module.js';
-import { GLTFLoader } from 'https://unpkg.com/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from 'https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Lightning } from './lightning.js';
 import { initPostProcessing } from './post-processing.js';
 
@@ -73,10 +73,40 @@ class Renderer {
         backgroundMesh.scale.set(3, 3, 1.5);
         this.scene.add(backgroundMesh);
         // Add rainbow gas
+        const video = document.createElement('video');
+        video.src = 'noise.webm';
+        video.loop = true;
+        video.muted = true;
+        video.playsInline = true;
+        video.autoplay = true;
+        this.gasVideo = video;
+
+        // Wait for video to be loaded
+        await new Promise((resolve) => {
+            let isForward = true;
+
+            video.addEventListener('loadeddata', () => {
+                resolve();
+            });
+
+            video.loop = true;
+
+            video.load();
+        });
+
+        // Create video texture
+        const videoTexture = new THREE.VideoTexture(video);
+        videoTexture.minFilter = THREE.NearestFilter;
+        videoTexture.magFilter = THREE.NearestFilter;
+        videoTexture.format = THREE.RGBFormat;
+
+        // Start playing the video
+        await video.play();
         const gas = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.ShaderMaterial({
             uniforms: {
                 time: { value: 0 },
-                scale: { value: 0.1 }
+                scale: { value: 0.1 },
+                tDiffuse: { value: videoTexture }
             },
             depthWrite: false,
             vertexShader: `
@@ -89,6 +119,7 @@ class Renderer {
             fragmentShader: /*glsl*/ `
                 uniform float time;
                 uniform float scale;
+                uniform sampler2D tDiffuse;
                 varying vec2 vUv;
                 vec3 hsv2rgb(vec3 c)
 {
@@ -180,11 +211,12 @@ float snoise(vec3 v){
 }
                 void main() {
                     vec2 sampleUv = vUv;
-                    sampleUv.xy *= 2.0;
+                    //sampleUv.xy *= 2.0;
                     //vec3 color = vec3(0.5 + 0.5 * sin(time + vUv.x * 10.0));
                     float iTime = scale * time;
-                    float alpha = fbm(vec3(sampleUv, -iTime));
-                    vec3 color = hsv2rgb(vec3(fbm(vec3(sampleUv, iTime + fbm(vec3(sampleUv, iTime)))), 1.0, 1.0));
+                   // float alpha = fbm(vec3(sampleUv, -iTime));
+                    float alpha = texture2D(tDiffuse, sampleUv).r * 2.0 - 1.0;
+                    vec3 color = hsv2rgb(vec3(texture2D(tDiffuse, sampleUv).g * 2.0 - 1.0, 1.0, 1.0));
                     color = clamp(color, vec3(0.0), vec3(1.0));
                     alpha = clamp(alpha, 0.0, 1.0);
                     // Apply sepia
@@ -279,7 +311,8 @@ float snoise(vec3 v){
             this.camera.position.lerp(targetPosition, 0.1);
         }
         this.gas.material.uniforms.time.value = currentTime / 1000;
-        this.gas.material.uniforms.scale.value = window.gameStore.purchasedUpgradeIds.has("aerosolized_barbiturates") ? 0.2 : 0.1;
+        // this.gas.material.uniforms.scale.value = window.gameStore.purchasedUpgradeIds.has("aerosolized_barbiturates") ? 0.2 : 0.1;
+        this.gasVideo.playbackRate = window.gameStore.purchasedUpgradeIds.has("aerosolized_barbiturates") ? 2 : 1;
         this.gas.visible = window.gameStore.purchasedUpgradeIds.has("malaise_gas");
         const shineFrequency = (window.gameStore.purchasedUpgradeIds.has("basilisk_beams") ? 2 : 1);
         const shineSize = this.game.noise.simplex2(currentTime * shineFrequency / 1000, 0) * (window.gameStore.purchasedUpgradeIds.has("basilisk_beams") ? 1.5 : 1);

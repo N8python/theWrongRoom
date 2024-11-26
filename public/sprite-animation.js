@@ -1,5 +1,5 @@
 // Import three.js
-import * as THREE from 'https://unpkg.com/three@0.170.0/build/three.module.js';
+import * as THREE from 'three';
 
 export class SpriteSheet {
     constructor(canvas, frameWidth = 16, frameHeight = 32) {

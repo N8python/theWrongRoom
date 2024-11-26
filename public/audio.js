@@ -13,7 +13,11 @@ class AudioManager {
     async initialize() {
         try {
             this.game.transcriber = await pipeline('automatic-speech-recognition', 'onnx-community/whisper-tiny.en', {
-                device: 'webgpu',
+                device: navigator.gpu ? 'webgpu' : 'wasm',
+                dtype: {
+                    encoder_model: 'fp32', // 'fp16' works too
+                    decoder_model_merged: 'fp32', // or 'fp32' ('fp16' is broken)
+                },
                 local_files_only: true,
                 progress_callback: (progress) => {
                     if (progress.loaded) {
@@ -48,9 +52,7 @@ class AudioManager {
 
         const startAudio = () => {
             if (this.game.audioEnabled) {
-                this.backgroundTrack.play();
-                this.backgroundOfficeAmbience.play();
-                this.lightFlicker.play();
+                this.game.updateAudio();
             }
             this.canPlay = true;
             // Remove listeners after first interaction
@@ -99,6 +101,13 @@ class AudioManager {
     }
 
     async startTranscription() {
+        const currentBackgroundVolume = this.backgroundTrack.volume;
+        const currentAmbienceVolume = this.backgroundOfficeAmbience.volume;
+        const currentFlickerVolume = this.lightFlicker.volume;
+
+        this.backgroundTrack.volume = 0;
+        this.backgroundOfficeAmbience.volume = 0;
+        this.lightFlicker.volume = 0;
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: {
@@ -120,6 +129,9 @@ class AudioManager {
             };
 
             this.mediaRecorder.onstop = async() => {
+                this.backgroundTrack.volume = currentBackgroundVolume;
+                this.backgroundOfficeAmbience.volume = currentAmbienceVolume;
+                this.lightFlicker.volume = currentFlickerVolume;
                 this.game.uiManager.recordingIndicator.style.display = 'none';
                 this.game.transcriptionStarted = performance.now();
                 const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
@@ -145,6 +157,9 @@ class AudioManager {
 
             this.mediaRecorder.start();
         } catch (err) {
+            this.backgroundTrack.volume = currentBackgroundVolume;
+            this.backgroundOfficeAmbience.volume = currentAmbienceVolume;
+            this.lightFlicker.volume = currentFlickerVolume;
             console.error('Error starting transcription:', err);
             this.game.isTranscribing = false;
             this.game.uiManager.recordingIndicator.style.display = 'none';

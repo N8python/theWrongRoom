@@ -11,7 +11,7 @@ var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "
 var _createPiperPhonemize, _modelConfig, _ort, _ortSession, _progressCallback, _wasmPaths, _logger;
 const HF_BASE = "https://huggingface.co/diffusionstudio/piper-voices/resolve/main";
 const ONNX_BASE = "https://cdnjs.cloudflare.com/ajax/libs/onnxruntime-web/1.18.0/";
-const WASM_BASE = "https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize";
+const WASM_BASE = "./piper_phonemize";
 const PATH_MAP = {
   "ar_JO-kareem-low": "ar/ar_JO/kareem/low/ar_JO-kareem-low.onnx",
   "ar_JO-kareem-medium": "ar/ar_JO/kareem/medium/ar_JO-kareem-medium.onnx",
@@ -280,7 +280,7 @@ const _TtsSession = class _TtsSession {
   async init() {
     const { createPiperPhonemize } = await import("./piper-o91UDS6e.js");
     __privateSet(this, _createPiperPhonemize, createPiperPhonemize);
-    __privateSet(this, _ort, (await import("https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/esm/ort.min.js")));
+    __privateSet(this, _ort, (await import("./ort.min.js")));
     __privateGet(this, _ort).env.allowLocalModels = false;
     __privateGet(this, _ort).env.wasm.numThreads = navigator.hardwareConcurrency;
     __privateGet(this, _ort).env.wasm.wasmPaths = __privateGet(this, _wasmPaths).onnxWasm;
