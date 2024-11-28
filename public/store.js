@@ -35,6 +35,10 @@ const DEFAULT_STATE = {
 // Current version of the state schema
 const STATE_VERSION = 1;
 
+// Get the server URL from the current window location
+const SERVER_URL = window.location.origin;
+const GAME_STATE_KEY = 'gameState';
+
 /**
  * Validates the structure of loaded state
  * @param {any} state
@@ -62,83 +66,126 @@ function migrateState(state) {
 }
 
 /**
- * Saves current game state to localStorage
+ * Saves current game state to server
  * @throws {Error} If serialization or storage fails
  */
-export function saveGameState() {
+export async function saveGameState() {
     try {
-        const serialized = JSON.stringify({
+        const serialized = {
             ...window.gameStore,
             purchasedUpgradeIds: Array.from(window.gameStore.purchasedUpgradeIds),
             viewedDialogues: Array.from(window.gameStore.viewedDialogues),
             version: STATE_VERSION
+        };
+
+        const response = await fetch(`${SERVER_URL}/data/${GAME_STATE_KEY}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(serialized)
         });
 
-        localStorage.setItem('gameStore', serialized);
+        if (!response.ok) {
+            throw new Error(`Failed to save game state: ${response.statusText}`);
+        }
     } catch (e) {
         console.error('Failed to save game state:', e);
-        throw e; // Re-throw to allow caller to handle
+        throw e;
+    }
+}
+
+/**
+ * Loads game state from server
+ * @returns {Promise<GameState|null>}
+ */
+async function loadGameState() {
+    try {
+        const response = await fetch(`${SERVER_URL}/data/${GAME_STATE_KEY}`);
+
+        if (response.status === 404) {
+            return null;
+        }
+
+        if (!response.ok) {
+            throw new Error(`Failed to load game state: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        return result.data;
+    } catch (e) {
+        console.error('Failed to load game state:', e);
+        return null;
+    }
+}
+
+/**
+ * Clears game state from server
+ */
+async function clearGameState() {
+    try {
+        await fetch(`${SERVER_URL}/data/${GAME_STATE_KEY}`, {
+            method: 'DELETE'
+        });
+    } catch (e) {
+        console.error('Failed to clear game state:', e);
     }
 }
 
 /**
  * Initializes the global game store and sets up event listeners
- * @returns {GameState} The initialized game state
+ * @returns {Promise<GameState>} The initialized game state
  */
-export function initializeGameStore() {
+export async function initializeGameStore() {
     // Initialize with default state
     window.gameStore = {...DEFAULT_STATE };
 
     // Load saved state
     try {
-        const saved = localStorage.getItem('gameStore');
-        if (saved) {
-            const parsed = JSON.parse(saved);
+        const saved = await loadGameState();
 
-            if (isValidState(parsed)) {
-                const migrated = migrateState(parsed);
+        if (saved && isValidState(saved)) {
+            const migrated = migrateState(saved);
 
-                // Reconstruct Sets since JSON doesn't preserve Set type
-                migrated.purchasedUpgradeIds = new Set(
-                    Array.isArray(parsed.purchasedUpgradeIds) ?
-                    parsed.purchasedUpgradeIds : []
-                );
+            // Reconstruct Sets since JSON doesn't preserve Set type
+            migrated.purchasedUpgradeIds = new Set(
+                Array.isArray(saved.purchasedUpgradeIds) ?
+                saved.purchasedUpgradeIds : []
+            );
 
-                migrated.viewedDialogues = new Set(
-                    Array.isArray(parsed.viewedDialogues) ?
-                    parsed.viewedDialogues : []
-                );
+            migrated.viewedDialogues = new Set(
+                Array.isArray(saved.viewedDialogues) ?
+                saved.viewedDialogues : []
+            );
 
-                //window.gameStore = migrated;
-                // Copy over common keys
-                for (const key in migrated) {
-                    window.gameStore[key] = migrated[key];
-                }
-            } else {
-                console.warn('Invalid saved state found, using defaults');
+            // Copy over common keys
+            for (const key in migrated) {
+                window.gameStore[key] = migrated[key];
             }
+        } else if (saved) {
+            console.warn('Invalid saved state found, using defaults');
         }
     } catch (e) {
         console.error('Failed to load game state:', e);
     }
 
-    // Add keyboard shortcut to clear localStorage
-    document.addEventListener('keydown', (e) => {
+    // Add keyboard shortcut to clear server state
+    document.addEventListener('keydown', async(e) => {
         if (e.metaKey && e.key.toLowerCase() === 'l') {
             e.preventDefault();
-            localStorage.clear();
-            console.log('localStorage cleared');
+            await clearGameState();
+            console.log('Game state cleared');
             window.location.reload();
         }
     });
 
     // Add cheat code handler
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', async(e) => {
         if (e.metaKey && e.key.toLowerCase() === 'f') {
             e.preventDefault();
             window.gameStore.notes = 999;
             document.getElementById('notes-count').textContent = '999';
-            saveGameState();
+            await saveGameState();
             console.log('Cheat activated: 999 notes');
         }
     });

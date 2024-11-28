@@ -46,7 +46,7 @@ export class DialogueManager {
                 "Though that's no way to get a promotion.",
                 "Don't worry. Get through Clearance II and you can buy some of our patented...",
                 "...enhanced interrogation techniques.",
-                "Once again, extract two code words. Good luck."
+                "Once again, extract two different code words from two different suspects to gain access to the next clearance level. Good luck."
             ],
             3: [
                 "You've done well. Better than most.",

@@ -135,14 +135,30 @@ class AudioManager {
                 this.game.uiManager.recordingIndicator.style.display = 'none';
                 this.game.transcriptionStarted = performance.now();
                 const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+
+                // [[BIG SHOT]] DEBUG PRINTS!!
+                console.log('[[AUDIO CHUNKS LENGTH]]:', this.audioChunks.length);
+                console.log('[[BLOB SIZE IN BYTES]]:', audioBlob.size);
+
                 const audioFloat32 = await this.convertBlobToFloat32Array(audioBlob);
 
-                // Process with Whisper
-                console.time();
-                const result = await this.game.transcriber(audioFloat32);
-                console.timeEnd();
+                // MORE [[HOT DEALS]] ON DEBUG INFO!!
+                console.log('[[FLOAT32 ARRAY LENGTH]]:', audioFloat32.length);
+                console.log('[[SAMPLE RATE CHECK]]:', audioFloat32.length / (performance.now() - this.game.transcriptionStarted) * 1000, 'Hz');
 
-                // Add transcribed text to input with a space
+                // Process with Whisper
+                console.time('[[WHISPER PROCESSING TIME]]');
+                console.log('[[SENDING TO WHISPER]]:', {
+                    arrayLength: audioFloat32.length,
+                    firstFewSamples: audioFloat32.slice(0, 5),
+                    maxAmplitude: Math.max(...audioFloat32.map(Math.abs))
+                });
+
+                const result = await this.game.transcriber(audioFloat32);
+                console.timeEnd('[[WHISPER PROCESSING TIME]]');
+                console.log('[[WHISPER RESULT]]:', result);
+
+                // Rest of your code...
                 if (result.text.trim() && !(result.text.includes("BLANK_AUDIO"))) {
                     this.game.uiManager.messageInput.value += (this.game.uiManager.messageInput.value ? ' ' : '') + result.text.trim();
                     await this.game.handleSendMessage();
@@ -152,7 +168,6 @@ class AudioManager {
                 stream.getTracks().forEach(track => track.stop());
                 this.audioChunks = [];
                 this.game.isTranscribing = false;
-
             };
 
             this.mediaRecorder.start();

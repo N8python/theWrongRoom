@@ -8,6 +8,7 @@ const imageCache = {
     extras: []
 };
 
+const properOrder = ["skin", "shoes", "pants", "top", "hair", "extras"];
 // Load an image and return a promise
 function loadImage(src) {
     return new Promise((resolve, reject) => {
@@ -47,7 +48,7 @@ export async function generateRandomSprite(sex) {
     const ctx = canvas.getContext('2d');
 
     // Draw a random image from each layer
-    for (const layer of Object.keys(imageCache)) {
+    for (const layer of properOrder) {
         const images = imageCache[layer];
         if (images.length > 0) {
             let availableImages = images;

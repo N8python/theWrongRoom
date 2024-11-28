@@ -6,16 +6,32 @@ const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 const { getLlama, LlamaChatSession } = require('node-llama-cpp');
 const fs = require('fs');*/
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, session } from 'electron';
 import path from 'path';
 import express from 'express';
 import cors from 'cors';
 import { v4 as uuidv4 } from 'uuid';
 import { getLlama, LlamaChatSession, TokenBias } from 'node-llama-cpp';
 import fs from 'fs';
-
-
+import Store from 'electron-store';
+let isCreatingWindow = false;
+const store = new Store();
 async function createWindow() {
+    const gotTheLock = app.requestSingleInstanceLock();
+
+    if (!gotTheLock) {
+        app.quit();
+        return;
+    }
+
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        const windows = BrowserWindow.getAllWindows();
+        if (windows.length) {
+            const window = windows[0];
+            if (window.isMinimized()) window.restore();
+            window.focus();
+        }
+    });
     const __dirname = app.getAppPath();
     // Initialize Express app
     const expressApp = express();
@@ -180,6 +196,97 @@ async function createWindow() {
         }
     });
 
+    expressApp.post('/data/:key', (req, res) => {
+        try {
+            const { key } = req.params;
+            const data = req.body;
+
+            // Save data using electron-store
+            store.set(key, data);
+
+            res.json({
+                success: true,
+                message: 'Data saved successfully',
+                key
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+
+    // Load data endpoint
+    expressApp.get('/data/:key', (req, res) => {
+        try {
+            const { key } = req.params;
+
+            // Load data using electron-store
+            const data = store.get(key);
+
+            if (data === undefined) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'Data not found'
+                });
+            }
+
+            res.json({
+                success: true,
+                data
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+
+    // List all keys endpoint
+    expressApp.get('/data', (req, res) => {
+        try {
+            const keys = store.store;
+            res.json({
+                success: true,
+                keys
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+
+    // Delete data endpoint
+    expressApp.delete('/data/:key', (req, res) => {
+        try {
+            const { key } = req.params;
+
+            if (!store.has(key)) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'Data not found'
+                });
+            }
+
+            store.delete(key);
+
+            res.json({
+                success: true,
+                message: 'Data deleted successfully',
+                key
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+
     // Helper function to close a session and cleanup resources
     async function closeSession(sessionId) {
         const sessionData = sessions.get(sessionId);
@@ -223,9 +330,23 @@ async function createWindow() {
     }
 
     // Start the server
-    const PORT = process.env.PORT || 40000;
-    expressApp.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+    const server = expressApp.listen(0, () => {
+        const PORT = server.address().port;
+        // Create the browser window
+        const win = new BrowserWindow({
+            width: 1280,
+            height: 720,
+            webPreferences: {
+                nodeIntegration: false,
+                contextIsolation: true,
+                sandbox: false,
+                permissions: ['microphone']
+            }
+        });
+
+        // Load the Express app in the BrowserWindow
+        win.loadURL(`http://localhost:${PORT}`);
+        isCreatingWindow = false;
     });
 
     // Set up periodic session cleanup
@@ -241,30 +362,19 @@ async function createWindow() {
         }
     }, 10000);
 
-    // Create the browser window
-    const win = new BrowserWindow({
-        width: 1280,
-        height: 720,
-        webPreferences: {
-            nodeIntegration: false,
-            contextIsolation: true,
-        }
-    });
 
-    // Load the Express app in the BrowserWindow
-    win.loadURL(`http://localhost:${PORT}`);
 }
 
 app.whenReady().then(createWindow);
 
+// Quit when all windows are closed
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    app.quit();
 });
 
 app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+    if (BrowserWindow.getAllWindows().length === 0 && !isCreatingWindow) {
+        isCreatingWindow = true;
         createWindow();
     }
 });

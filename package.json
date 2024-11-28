@@ -16,7 +16,11 @@
         "icon": "icon.png",
         "asar": false,
         "mac": {
-            "identity": "Apple Development: nathanbreslow@icloud.com (2N3697W9SX)"
+            "identity": "Nathan Breslow (CU5RGUMUPC)",
+            "hardenedRuntime": true,
+            "gatekeeperAssess": false,
+            "entitlements": "entitlements.mac.plist",
+            "entitlementsInherit": "entitlements.mac.plist"
         },
         "win": {
             "target": "zip"
@@ -44,6 +48,7 @@
         "@node-llama-cpp/win-x64-cuda": "^3.2.0",
         "@node-llama-cpp/win-x64-vulkan": "^3.2.0",
         "cors": "^2.8.5",
+        "electron-store": "^10.0.0",
         "express": "^4.21.1",
         "node-llama-cpp": "^3.2.0",
         "openai": "^4.70.2",
