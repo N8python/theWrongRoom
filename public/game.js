@@ -80,6 +80,9 @@ class Game {
                 if (!prisonBtn.disabled && this.useEnergy(10)) {
                     this.messageManager.noLeave = true;
                     prisonBtn.disabled = true;
+                    if (this.audioEnabled) {
+                        this.audioManager.doorSlam.play();
+                    }
                 }
             });
 
@@ -91,6 +94,10 @@ class Game {
                     }
                     this.messageManager.prefix = BLINDED[Math.floor(Math.random() * BLINDED.length)];
                     flashlightBtn.disabled = true;
+                    this.renderer.effectPass.uniforms.flicker.value = 5.0;
+                    setTimeout(() => {
+                        this.renderer.effectPass.uniforms.flicker.value = 0.75;
+                    }, 100);
                 }
             });
 
@@ -102,6 +109,9 @@ class Game {
                     }
                     this.messageManager.prefix = COMPLIANCE[Math.floor(Math.random() * COMPLIANCE.length)];
                     syringeBtn.disabled = true;
+                    if (this.audioEnabled) {
+                        this.audioManager.syringe.play();
+                    }
                 }
             });
             // Add energy management methods

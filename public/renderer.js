@@ -333,7 +333,9 @@ float snoise(vec3 v){
                     frequency *= 2;
                     amplitude *= 0.5;
                 }
-                this.effectPass.uniforms.flicker.value = 0.75 + 0.25 * flicker;
+                if (this.effectPass.uniforms.flicker.value < 2) {
+                    this.effectPass.uniforms.flicker.value = 0.75 + 0.25 * flicker;
+                }
                 this.effectPass.uniforms.time.value = (currentTime / 1000) % 1000;
             }
 

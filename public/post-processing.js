@@ -77,7 +77,7 @@ const PostProcessingShader = {
             // Apply chromatic aberration
             vec4 texel = chromaticAberration(tDiffuse, curvedUv);
             if (curvedUv.x < 0.0 || curvedUv.x > 1.0 || curvedUv.y < 0.0 || curvedUv.y > 1.0) {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
                 return;
             }
 
@@ -91,7 +91,11 @@ const PostProcessingShader = {
 
             // Apply scanlines with external flicker
             texel = scanlineEffect(curvedUv, texel);
-            texel.rgb = pow(texel.rgb, vec3(1.0 / flicker));
+            if (flicker < 2.0) {
+                texel.rgb = pow(texel.rgb, vec3(1.0 / flicker));
+            } else {
+                texel.rgb *= flicker;
+            }
 
             // Static noise with temporal variation
             float n = hash13(vec3(gl_FragCoord.xy, time)) * noiseIntensity;

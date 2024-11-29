@@ -34,6 +34,8 @@ class AudioManager {
         this.footsteps = await this.loadAudio('sound/footsteps.mp3');
         this.footsteps.volume = 0.1;
         this.footsteps.playbackRate = 1.375;
+        this.doorSlam = await this.loadAudio('sound/door-slam.wav');
+        this.syringe = await this.loadAudio('sound/syringe.wav');
         await this.initBackgroundTrack();
         await this.initAmbientNoise();
 

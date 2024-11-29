@@ -76,7 +76,7 @@ export const UPGRADES = {
     "active_interrogation_upgrades": [{
             "id": "entrapment",
             "title": "Entrapment",
-            "description": "Expend a minor amount of energy to preemptively lock both the entrance and exit to the interrogation room. This will buy you five turns of dialogue during which the suspect is not able to leave. Energy is refilled to full after the suspect leaves.",
+            "description": "Expend a minor amount of energy to preemptively lock both the entrance and exit to the interrogation room. This will buy you a turn of dialogue during which the suspect is not able to leave. Energy is refilled to full after the suspect leaves.",
             "price": 16
         },
         {

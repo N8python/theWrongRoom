@@ -14,7 +14,7 @@ export class DialogueManager {
         ];*/
         this.dialogueLines = {
             1: [
-                "Welcome to the Norne Corporation's Private Investigation Division.",
+                "Welcome to the Norne Corporation's Private Investigation Division. (Click to continue or skip)",
                 "Your application was accepted, and we are honored to have you at PID.",
                 "You are now an official investigator - and have been supplied with Clearance I.",
                 "Norne is a multinational corporation with a long history of innovation and excellence.",
@@ -140,6 +140,134 @@ export class DialogueManager {
                 "q u i t."
             ]
         }
+        this.spokenLines = {
+            1: [
+                "Welcome to the Norne Corporation's Private Investigation Division.",
+                "Your application was accepted, and we are honored to have you at P.I.D.",
+                "You are now an official investigator - and have been supplied with Clearance One.",
+                "Norne is a multinational corporation with a long history of innovation and excellence.",
+                "We are proud to be at the forefront of technological advancement.",
+                "Unfortunately, when a corporation grows as large as Norne, there are bound to be... complications.",
+                "That's where you come in.",
+                "We'll send a constant stream of suspicious employees your way.",
+                "These employees have been flagged as possessing 'code words'.",
+                "These words are typically used in relation to illicit activities.",
+                "Your job is to extract as many of these code words as you can.",
+                "You will be rewarded for each code word you extract.",
+                "Since this is your first day, we'll send you the easiest cases.",
+                "Five absolute chumps.",
+                "These folks should be a breeze to crack. Some may even want to help.",
+                "But don't think it'll always be this easy.",
+                "If you manage to extract two code words, you'll be promoted to Investigation Clearance Two.",
+                "Well ta-ta - and best of luck.",
+                "We're counting on you.",
+                "Oh, and one more thing...",
+                "Don't fuck this up."
+            ],
+            2: [
+                "Great job on your first day at Norne.",
+                "We've given you Investigation Clearance Two.",
+                "Today should be only mildly more difficult.",
+                "Just assume the folks coming in will be a bit less kind.",
+                "And a bit more paranoid.",
+                "If you ever get tired, you can always try your hand at Clearance One again.",
+                "Though that's no way to get a promotion.",
+                "Don't worry. Get through Clearance Two and you can buy some of our patented...",
+                "...enhanced interrogation techniques.",
+                "Once again, extract two different code words from two different suspects to gain access to the next clearance level. Good luck."
+            ],
+            3: [
+                "You've done well. Better than most.",
+                "Congratulations on Clearance Three.",
+                "You shouldn't notice too much of a change.",
+                "These guys are just rougher around the edges.",
+                "Interrogation is a funny thing, you know?",
+                "It can feel so formulaic. Same beats, same story.",
+                "But sometimes... sometimes... I feel like those at the other end of the table...",
+                "Have more freedom than me."
+            ],
+            4: [
+                "Congratulations.",
+                "You know at this point, there isn't too much difference?",
+                "The people at Clearance Four are barely different from the ones at Clearance Three.",
+                "We made all these clearances up, you know.",
+                "It's an arbitrary system to encourage you.",
+                "Investigators in general. To keep moving.",
+                "To keep extracting.",
+                "But you know what?",
+                "...",
+                "Never mind. Extract two code words from the next five.",
+                "And you'll be promoted to Clearance Five."
+            ],
+            5: [
+                "You know, a few years back, I was in your shoes.",
+                "I was an investigator.",
+                "I was good at it, too.",
+                "I was the best.",
+                "I extracted code words like nobody else.",
+                "Sometimes I even got three in one interrogation.",
+                "One day I got a call from the higher-ups.",
+                "They said they wanted me to be a part of something big.",
+                "...",
+                "And here I am.",
+                "You know, I never did get that promotion to Clearance Five.",
+                "Heh."
+            ],
+            6: [
+                "I was lying.",
+                "There is a difference at the higher clearances.",
+                "The people here are hard to crack... conventionally.",
+                "But I'm sure you've already bought the necessary upgrades for your office.",
+                "Malaise gas...",
+                "Psychoactive lights...",
+                "The works.",
+                "If you ever find these upper levels too difficult...",
+                "Go back to the lower ones.",
+                "Make some easy money.",
+                "Buy some more upgrades for your office.",
+                "And then you'll be able to crack these guys.",
+                "Real original, huh?"
+            ],
+            7: [
+                "I just realized. I never asked your name.",
+                "What is it?",
+                "Never mind. Best not to get that personal.",
+                "I just realized I never introduced myself.",
+                "I'm...",
+                "I...",
+                "Why do I feel like I'm the one being interrogated?",
+                "Ha ha ha."
+            ],
+            8: [
+                "Well, well, well. Clearance Eight.",
+                "I only knew two other guys who made it this far.",
+                "One of them is dead.",
+                "The other one is my boss.",
+                "I wonder which one you'll be."
+            ],
+            9: [
+                "...",
+                "Are you immersed?",
+                "Challenged?",
+                "Fulfilled?"
+            ],
+            10: [
+                "You know, Clearance Ten is for people who never break.",
+                "You'll never get anything out of them.",
+                "Maybe if you go back and get all the gadgets...",
+                "You'll be able to break them.",
+                "But then what?",
+                "You've turned Clearance Ten into Clearance One.",
+                "Congratulations.",
+                "Thank you for your time at Norne.",
+                "This is where I'd offer you a promotion.",
+                "Or a five-year contract.",
+                "Or stock options.",
+                "Or assets that bundle subprime mortgages together into convenient profit-generating securities.",
+                "But if you want my honest advice?",
+                "quit."
+            ]
+        }
         this.currentLevel = 1;
         this.isActive = false;
         this.frameRate = 200; // ms per frame
@@ -246,8 +374,9 @@ export class DialogueManager {
         this.currentText = '';
         this.charIndex = 0;
         this.lastTypeTime = performance.now();
+        this.spokenText = this.spokenLines[this.currentLevel][this.currentLine];
         const wav = await tts.predict({
-            text: this.targetText,
+            text: this.spokenText,
             voiceId: 'en_GB-vctk-medium',
             speakerId: 89
         });

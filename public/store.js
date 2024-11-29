@@ -185,7 +185,7 @@ export async function initializeGameStore() {
             e.preventDefault();
             window.gameStore.notes = 999;
             document.getElementById('notes-count').textContent = '999';
-            await saveGameState();
+            saveGameState();
             console.log('Cheat activated: 999 notes');
         }
     });
