@@ -60,7 +60,14 @@ window.addEventListener('load', async() => {
         }
     });
 
+    // Add guide button listener
+    document.getElementById('open-guide').addEventListener('click', () => {
+        document.getElementById('guide-modal').style.display = 'flex';
+    });
 
+    document.getElementById('close-guide').addEventListener('click', () => {
+        document.getElementById('guide-modal').style.display = 'none';
+    });
 
     window.addEventListener('beforeunload', async() => await game.cleanup());
 });
