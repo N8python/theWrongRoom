@@ -579,6 +579,9 @@ class SessionManager {
 
         // If we've reached 5 subjects, show summary then return to main menu
         if (this.subjectsInterrogated >= 5) {
+            // Show these guys
+            this.game.uiManager.submitGuessButton.style.display = 'block';
+            this.game.uiManager.dontKnowButton.style.display = 'block';
             this.subjectsInterrogated = 0; // Reset counter
             if (this.game.successCount >= 2) { // The level is cleared
                 this.game.notes += 10 * this.currentLevel;
