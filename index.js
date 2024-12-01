@@ -1,11 +1,3 @@
-// main.js
-/*const { app, BrowserWindow } = require('electron');
-const path = require('path');
-const express = require('express');
-const cors = require('cors');
-const { v4: uuidv4 } = require('uuid');
-const { getLlama, LlamaChatSession } = require('node-llama-cpp');
-const fs = require('fs');*/
 import { app, BrowserWindow, session } from 'electron';
 import path from 'path';
 import express from 'express';

@@ -488,6 +488,38 @@
         .shop-item {
             font-size: 18px;
         }
+        
+        .action-button {
+            position: relative;
+            /* Required for positioning the tooltip */
+        }
+        
+        .action-button::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 5px 10px;
+            background: rgba(62, 47, 35, 0.9);
+            color: #e6d4b6;
+            border: 1px solid #e6d4b6;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.1s;
+        }
+        
+        .action-button:hover::before {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #next-subject {
+            margin-top: 20px;
+        }
     </style>
     <script src="noise.js"></script>
 </head>
@@ -502,13 +534,13 @@
                 </div>
                 <span id="energy-text" style="color: #e6d4b6; font-size: 14px;">40/40</span>
             </div>
-            <button id="prison-btn" class="action-button">
+            <button id="prison-btn" class="action-button" data-tooltip="Lock Door">
                 <img src="sprites/jail.png" style="width: 32px; height: 32px; image-rendering: pixelated;">
             </button>
-            <button id="flashlight-btn" class="action-button">
+            <button id="flashlight-btn" class="action-button" data-tooltip="Blinding Light">
                 <img src="sprites/flashlight.png" style="width: 32px; height: 32px; image-rendering: pixelated;">
             </button>
-            <button id="syringe-btn" class="action-button">
+            <button id="syringe-btn" class="action-button" data-tooltip="Hypnotic Serum">
                 <img src="sprites/syringe.png" style="width: 32px; height: 32px; image-rendering: pixelated;">
             </button>
         </div>
@@ -561,6 +593,7 @@
                     <div id="guess-result"></div>
                     <div id="guesses-remaining">Remaining guesses: 3</div>
                 </div>
+                <button id="next-subject" style="display: none;" disabled>Next Subject</button>
             </div>
 
         </div>
@@ -569,7 +602,6 @@
         <div id="input-container">
             <input type="text" id="message-input" placeholder="Type your message...">
             <button id="send-button">Send</button>
-            <button id="next-subject" style="display: none;" disabled>Next Subject</button>
         </div>
     </div>
 

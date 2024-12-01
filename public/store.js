@@ -180,7 +180,7 @@ export async function initializeGameStore() {
     });
 
     // Add cheat code handler
-    document.addEventListener('keydown', async(e) => {
+    /*document.addEventListener('keydown', async(e) => {
         if (e.metaKey && e.key.toLowerCase() === 'f') {
             e.preventDefault();
             window.gameStore.notes = 999;
@@ -188,7 +188,7 @@ export async function initializeGameStore() {
             saveGameState();
             console.log('Cheat activated: 999 notes');
         }
-    });
+    });*/
 
     window.TTS = window.gameStore.settings.tts;
     return window.gameStore;

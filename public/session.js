@@ -565,6 +565,8 @@ class SessionManager {
         this.game.uiManager.guessInput.disabled = true;
         this.game.uiManager.submitGuessButton.disabled = true;
         this.game.uiManager.dontKnowButton.disabled = true;
+        this.game.uiManager.submitGuessButton.style.display = 'none';
+        this.game.uiManager.dontKnowButton.style.display = 'none';
         this.game.uiManager.nextSubjectButton.style.display = 'block';
         this.game.totalCount++;
         this.updateStats();
@@ -614,6 +616,8 @@ class SessionManager {
         this.game.uiManager.guessInput.value = '';
         this.game.uiManager.guessResult.textContent = '';
         this.game.uiManager.guessInput.disabled = false;
+        this.game.uiManager.submitGuessButton.style.display = 'block';
+        this.game.uiManager.dontKnowButton.style.display = 'block';
         this.game.uiManager.submitGuessButton.disabled = false;
         this.game.uiManager.dontKnowButton.disabled = false;
         this.game.remainingGuesses = 3;

@@ -61,14 +61,14 @@ class UIManager {
         document.addEventListener('keydown', async(e) => {
             // Only activate push-to-talk when NOT typing in the input box
             if (e.code === 'Space' && !this.game.isTranscribing &&
-                this.game.isWhisperInitialized && document.activeElement !== this.messageInput && !this.game.playingAudio) {
+                this.game.isWhisperInitialized && document.activeElement !== this.messageInput && this.game.currentCharacterSprite !== null) {
                 this.game.hasTranscribedOnce = true;
                 e.preventDefault(); // Prevent space from scrolling
                 await this.game.startTranscription();
             }
-            if (e.code === 'KeyD' && document.activeElement !== this.messageInput) {
+            /*if (e.code === 'KeyD' && document.activeElement !== this.messageInput) {
                 this.game.debugCamera = !this.game.debugCamera;
-            }
+            }*/
         });
 
         document.addEventListener('keyup', (e) => {

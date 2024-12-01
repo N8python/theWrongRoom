@@ -2,7 +2,7 @@ import { initializeSpriteAssets } from './sprite-generator.js';
 import { Game } from './game.js';
 import { initializeGameStore } from './store.js';
 import * as tts from './piper-tts-web/dist/piper-tts-web.js';
-window.addEventListener('load', async() => {
+async function main() {
     await initializeGameStore();
     // Initialize game instance but don't start gameplay yet
     const game = new Game();
@@ -70,4 +70,5 @@ window.addEventListener('load', async() => {
     });
 
     window.addEventListener('beforeunload', async() => await game.cleanup());
-});
+}
+main();
